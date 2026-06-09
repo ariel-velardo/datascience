@@ -1,4 +1,112 @@
-﻿# AGENTS.md
+﻿param(
+    [switch]$Execute
+)
+
+$ErrorActionPreference = "Stop"
+
+$Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+$DryRun = -not $Execute.IsPresent
+
+$Projetos = Join-Path $Root "projetos"
+$Starbucks = Join-Path $Projetos "starbucks-customer-rewards-program-dataset"
+$Causal = Join-Path $Projetos "inferencia-causal"
+
+$RootVenv = Join-Path $Root ".venv"
+$ArchivedRootVenv = Join-Path $Root ".venv_workspace_antiga"
+
+$RootAgents = Join-Path $Root "AGENTS.md"
+$RootGitignore = Join-Path $Root ".gitignore"
+
+$CausalPlaybooks = Join-Path $Causal "playbooks_tecnicos"
+$StarbucksPlaybooks = Join-Path $Starbucks "playbooks_tecnicos"
+
+function Write-Step {
+    param([string]$Message)
+
+    Write-Host ""
+    Write-Host "### $Message" -ForegroundColor Cyan
+}
+
+function Require-Path {
+    param(
+        [string]$Path,
+        [string]$Description
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        throw "NÃ£o encontrei $Description em: $Path"
+    }
+}
+
+function Ensure-Dir {
+    param([string]$Path)
+
+    if (Test-Path -LiteralPath $Path) {
+        Write-Host "[OK] Pasta jÃ¡ existe: $Path"
+        return
+    }
+
+    if ($DryRun) {
+        Write-Host "[PREVIEW] Criaria pasta: $Path"
+    }
+    else {
+        New-Item -ItemType Directory -Path $Path -Force | Out-Null
+        Write-Host "[OK] Pasta criada: $Path"
+    }
+}
+
+function Add-Gitignore-Line {
+    param([string]$Line)
+
+    if (-not (Test-Path -LiteralPath $RootGitignore)) {
+        if ($DryRun) {
+            Write-Host "[PREVIEW] Criaria .gitignore"
+            return
+        }
+        else {
+            New-Item -ItemType File -Path $RootGitignore -Force | Out-Null
+        }
+    }
+
+    $Content = Get-Content -LiteralPath $RootGitignore -Raw -ErrorAction SilentlyContinue
+
+    if ($Content -match [regex]::Escape($Line)) {
+        Write-Host "[OK] .gitignore jÃ¡ contÃ©m: $Line"
+        return
+    }
+
+    if ($DryRun) {
+        Write-Host "[PREVIEW] Adicionaria ao .gitignore: $Line"
+    }
+    else {
+        Add-Content -LiteralPath $RootGitignore -Value $Line -Encoding UTF8
+        Write-Host "[OK] Adicionado ao .gitignore: $Line"
+    }
+}
+
+function Archive-RootVenv {
+    if (-not (Test-Path -LiteralPath $RootVenv)) {
+        Write-Host "[OK] NÃ£o existe .venv na raiz."
+        return
+    }
+
+    if (Test-Path -LiteralPath $ArchivedRootVenv) {
+        Write-Host "[AVISO] JÃ¡ existe .venv_workspace_antiga. A .venv atual da raiz serÃ¡ mantida."
+        return
+    }
+
+    if ($DryRun) {
+        Write-Host "[PREVIEW] Renomearia .venv da raiz para .venv_workspace_antiga"
+    }
+    else {
+        Rename-Item -LiteralPath $RootVenv -NewName ".venv_workspace_antiga"
+        Write-Host "[OK] .venv da raiz arquivada como .venv_workspace_antiga"
+    }
+}
+
+function Write-Agents {
+    $AgentsContent = @'
+# AGENTS.md
 
 ## 1. Escopo do Workspace
 
@@ -378,3 +486,109 @@ Para tarefas de revisÃ£o:
 2. evidÃªncia;
 3. correÃ§Ã£o recomendada;
 4. indicaÃ§Ã£o se Ã© bloqueador ou nÃ£o.
+'@
+
+    if (-not (Test-Path -LiteralPath $RootAgents)) {
+        if ($DryRun) {
+            Write-Host "[PREVIEW] Criaria AGENTS.md na raiz"
+        }
+        else {
+            Set-Content -LiteralPath $RootAgents -Value $AgentsContent -Encoding UTF8
+            Write-Host "[OK] AGENTS.md criado na raiz"
+        }
+        return
+    }
+
+    $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    $BackupPath = Join-Path $Root "AGENTS.backup_$Timestamp.md"
+
+    if ($DryRun) {
+        Write-Host "[PREVIEW] Criaria backup do AGENTS atual em: $BackupPath"
+        Write-Host "[PREVIEW] Substituiria o conteÃºdo de AGENTS.md pela nova versÃ£o"
+    }
+    else {
+        Copy-Item -LiteralPath $RootAgents -Destination $BackupPath
+        Set-Content -LiteralPath $RootAgents -Value $AgentsContent -Encoding UTF8
+        Write-Host "[OK] Backup criado: $BackupPath"
+        Write-Host "[OK] AGENTS.md atualizado"
+    }
+}
+
+function Sync-Starbucks-Playbooks {
+    Require-Path $CausalPlaybooks "playbooks tÃ©cnicos de inferÃªncia causal"
+
+    Ensure-Dir $StarbucksPlaybooks
+
+    $MarkdownFiles = Get-ChildItem -LiteralPath $CausalPlaybooks -Filter "*.md" -File
+
+    if ($MarkdownFiles.Count -eq 0) {
+        Write-Host "[AVISO] Nenhum arquivo .md encontrado em: $CausalPlaybooks"
+        return
+    }
+
+    foreach ($File in $MarkdownFiles) {
+        $Destination = Join-Path $StarbucksPlaybooks $File.Name
+
+        if ($DryRun) {
+            Write-Host "[PREVIEW] Copiaria playbook: $($File.FullName) -> $Destination"
+        }
+        else {
+            Copy-Item -LiteralPath $File.FullName -Destination $Destination -Force
+            Write-Host "[OK] Playbook copiado/atualizado: $($File.Name)"
+        }
+    }
+}
+
+Write-Host ""
+Write-Host "Raiz detectada: $Root" -ForegroundColor Yellow
+
+Require-Path $Projetos "pasta projetos"
+Require-Path $Starbucks "projeto Starbucks"
+Require-Path $Causal "projeto InferÃªncia Causal"
+
+if ($DryRun) {
+    Write-Host ""
+    Write-Host "Modo atual: PREVIEW. Nada serÃ¡ alterado." -ForegroundColor Yellow
+    Write-Host "Para executar de verdade, rode:"
+    Write-Host ".\pos_reorganizacao_datascience.ps1 -Execute"
+}
+else {
+    Write-Host ""
+    Write-Host "Modo atual: EXECUÃ‡ÃƒO REAL." -ForegroundColor Green
+}
+
+Write-Step "Atualizando .gitignore"
+
+Add-Gitignore-Line ""
+Add-Gitignore-Line "# Ambientes virtuais"
+Add-Gitignore-Line ".venv/"
+Add-Gitignore-Line ".venv*/"
+Add-Gitignore-Line "**/.venv/"
+Add-Gitignore-Line ".venv_workspace_antiga/"
+
+Write-Step "Arquivando .venv antiga da raiz"
+Write-Host "[AVISO] Arquivamento da .venv da raiz pulado temporariamente. Ela será mantida, mas ignorada pelo .gitignore."
+Write-Step "Atualizando AGENTS.md da raiz"
+
+Write-Agents
+
+Write-Step "Copiando playbooks tÃ©cnicos para o projeto Starbucks"
+
+Sync-Starbucks-Playbooks
+
+Write-Host ""
+Write-Host "Processo finalizado." -ForegroundColor Green
+
+if ($DryRun) {
+    Write-Host ""
+    Write-Host "Nada foi alterado. Para aplicar, rode:"
+    Write-Host ".\pos_reorganizacao_datascience.ps1 -Execute"
+}
+else {
+    Write-Host ""
+    Write-Host "Valide com:"
+    Write-Host "tree /F .\projetos\starbucks-customer-rewards-program-dataset"
+    Write-Host "tree /F .\projetos\inferencia-causal"
+}
+
+

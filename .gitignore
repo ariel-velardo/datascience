@@ -1,0 +1,34 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dados sensÃ­veis ou grandes
+*.csv
+*.xlsx
+*.parquet
+*.db
+*.sqlite
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+# Ambientes virtuais
+.venv*/
+**/.venv/
+.venv_workspace_antiga/
+
+# Backups locais do workspace
+_workspace_admin/backups/
