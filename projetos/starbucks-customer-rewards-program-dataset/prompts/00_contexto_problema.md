@@ -21,7 +21,7 @@ Restrições:
 * Seja objetivo.
 
 Contexto recebido do case:
-[cole aqui o enunciado, briefing ou explicação que eles passarem]
+[........................]
 
 Arquivos recebidos:
 
