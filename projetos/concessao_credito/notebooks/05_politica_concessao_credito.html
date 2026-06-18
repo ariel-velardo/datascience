@@ -12374,17 +12374,1048 @@ if (outputEl) {{
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e4fd191d">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e57d5ffb">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="9.8-Consolida%C3%A7%C3%A3o-da-interpreta%C3%A7%C3%A3o-do-modelo">9.8 Consolidação da interpretação do modelo<a class="anchor-link" href="#9.8-Consolida%C3%A7%C3%A3o-da-interpreta%C3%A7%C3%A3o-do-modelo">¶</a></h3><p>Agora o meu objetivo é verificar se o score de PD está apoiado em sinais coerentes com uma política de crédito. E pra isso, eu vou comparar  a importância das variáveis por duas óticas:</p>
+<ul>
+<li><strong>Permutation importance</strong>: mede quanto a AUC piora quando a variável é embaralhada;</li>
+<li><strong>SHAP agregado</strong>: mede quanto cada variável contribui, em média, para a formação do score.</li>
+</ul>
+<p>Além disso, eu vou avaliar a direção dos efeitos das principais variáveis numéricas, verificando se os maiores valores estão associados a aumento ou redução da inadimplência observada.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ebfb06bb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [43]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span> 
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Consolidação das importâncias do modelo</span>
+
+<span class="n">top_importancia_perm</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">importancia_permutacao</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"variavel"</span><span class="p">:</span> <span class="s2">"variavel_original"</span><span class="p">,</span>
+        <span class="s2">"importancia_media"</span><span class="p">:</span> <span class="s2">"permutation_importance"</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="p">[[</span><span class="s2">"variavel_original"</span><span class="p">,</span> <span class="s2">"variavel_exibicao"</span><span class="p">,</span> <span class="s2">"permutation_importance"</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">top_importancia_shap</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">importancia_shap_agregada</span>
+    <span class="p">[[</span><span class="s2">"variavel_original"</span><span class="p">,</span> <span class="s2">"variavel_exibicao"</span><span class="p">,</span> <span class="s2">"shap_medio_absoluto"</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">resumo_importancia_modelo</span> <span class="o">=</span> <span class="n">top_importancia_shap</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+    <span class="n">top_importancia_perm</span><span class="p">,</span>
+    <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">"variavel_original"</span><span class="p">,</span> <span class="s2">"variavel_exibicao"</span><span class="p">],</span>
+    <span class="n">how</span><span class="o">=</span><span class="s2">"outer"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"shap_medio_absoluto"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"shap_medio_absoluto"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"permutation_importance"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"permutation_importance"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Normalização apenas para comparar escalas diferentes no mesmo gráfico.</span>
+<span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"shap_normalizado"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"shap_medio_absoluto"</span><span class="p">]</span>
+    <span class="o">/</span> <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"shap_medio_absoluto"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"permutation_normalizada"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"permutation_importance"</span><span class="p">]</span>
+    <span class="o">/</span> <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"permutation_importance"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"score_importancia_consolidado"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mf">0.50</span> <span class="o">*</span> <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"shap_normalizado"</span><span class="p">]</span>
+    <span class="o">+</span> <span class="mf">0.50</span> <span class="o">*</span> <span class="n">resumo_importancia_modelo</span><span class="p">[</span><span class="s2">"permutation_normalizada"</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">resumo_importancia_modelo</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_importancia_modelo</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"score_importancia_consolidado"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">resumo_importancia_modelo</span><span class="p">)</span>
+
+<span class="n">resumo_importancia_modelo</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_resumo_importancia_modelo.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>variavel_original</th>
+<th>variavel_exibicao</th>
+<th>shap_medio_absoluto</th>
+<th>permutation_importance</th>
+<th>shap_normalizado</th>
+<th>permutation_normalizada</th>
+<th>score_importancia_consolidado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>cat_escolaridade</td>
+<td>Escolaridade</td>
+<td>0.8603</td>
+<td>0.0935</td>
+<td>1.0000</td>
+<td>1.0000</td>
+<td>1.0000</td>
+</tr>
+<tr>
+<th>1</th>
+<td>comprometimento_renda</td>
+<td>Comprometimento de renda</td>
+<td>0.5956</td>
+<td>0.0893</td>
+<td>0.6923</td>
+<td>0.9558</td>
+<td>0.8240</td>
+</tr>
+<tr>
+<th>2</th>
+<td>flag_cliente_ativo</td>
+<td>Cliente ativo</td>
+<td>0.3855</td>
+<td>0.0551</td>
+<td>0.4481</td>
+<td>0.5894</td>
+<td>0.5187</td>
+</tr>
+<tr>
+<th>3</th>
+<td>valor_restritivos</td>
+<td>Valor de restritivos</td>
+<td>0.4303</td>
+<td>0.0352</td>
+<td>0.5002</td>
+<td>0.3766</td>
+<td>0.4384</td>
+</tr>
+<tr>
+<th>4</th>
+<td>tempo_conta_anos</td>
+<td>Tempo de conta</td>
+<td>0.2989</td>
+<td>0.0254</td>
+<td>0.3475</td>
+<td>0.2719</td>
+<td>0.3097</td>
+</tr>
+<tr>
+<th>5</th>
+<td>idade_concessao</td>
+<td>Idade na concessão</td>
+<td>0.1755</td>
+<td>0.0123</td>
+<td>0.2040</td>
+<td>0.1320</td>
+<td>0.1680</td>
+</tr>
+<tr>
+<th>6</th>
+<td>restritivos_sobre_renda</td>
+<td>Restritivos / renda</td>
+<td>0.1569</td>
+<td>0.0032</td>
+<td>0.1824</td>
+<td>0.0342</td>
+<td>0.1083</td>
+</tr>
+<tr>
+<th>7</th>
+<td>valor_parcela</td>
+<td>Valor da parcela</td>
+<td>0.0341</td>
+<td>-0.0002</td>
+<td>0.0396</td>
+<td>-0.0022</td>
+<td>0.0187</td>
+</tr>
+<tr>
+<th>8</th>
+<td>valor_emprestado</td>
+<td>Valor emprestado</td>
+<td>0.0208</td>
+<td>-0.0001</td>
+<td>0.0242</td>
+<td>-0.0014</td>
+<td>0.0114</td>
+</tr>
+<tr>
+<th>9</th>
+<td>valor_taxa</td>
+<td>Taxa</td>
+<td>0.0178</td>
+<td>0.0001</td>
+<td>0.0207</td>
+<td>0.0016</td>
+<td>0.0111</td>
+</tr>
+<tr>
+<th>10</th>
+<td>valor_renda</td>
+<td>Renda</td>
+<td>0.0160</td>
+<td>0.0000</td>
+<td>0.0186</td>
+<td>0.0001</td>
+<td>0.0094</td>
+</tr>
+<tr>
+<th>11</th>
+<td>valor_prazo</td>
+<td>Prazo</td>
+<td>0.0044</td>
+<td>-0.0000</td>
+<td>0.0051</td>
+<td>-0.0004</td>
+<td>0.0024</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=72420145">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [44]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tabela executiva com as principais variáveis</span>
+
+<span class="n">principais_variaveis_modelo</span> <span class="o">=</span> <span class="n">resumo_importancia_modelo</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">principais_variaveis_modelo</span><span class="p">[</span><span class="s2">"leitura_negocio"</span><span class="p">]</span> <span class="o">=</span> <span class="n">principais_variaveis_modelo</span><span class="p">[</span>
+    <span class="s2">"variavel_original"</span>
+<span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span>
+    <span class="s2">"cat_escolaridade"</span><span class="p">:</span> <span class="s2">"Perfil cadastral associado ao risco observado."</span><span class="p">,</span>
+    <span class="s2">"comprometimento_renda"</span><span class="p">:</span> <span class="s2">"Capacidade de pagamento e pressão da parcela sobre a renda."</span><span class="p">,</span>
+    <span class="s2">"flag_cliente_ativo"</span><span class="p">:</span> <span class="s2">"Relacionamento ativo com a instituição."</span><span class="p">,</span>
+    <span class="s2">"valor_restritivos"</span><span class="p">:</span> <span class="s2">"Pressão financeira prévia e histórico restritivo."</span><span class="p">,</span>
+    <span class="s2">"tempo_conta_anos"</span><span class="p">:</span> <span class="s2">"Histórico de relacionamento com o banco."</span><span class="p">,</span>
+    <span class="s2">"restritivos_sobre_renda"</span><span class="p">:</span> <span class="s2">"Peso dos restritivos em relação à renda declarada."</span><span class="p">,</span>
+    <span class="s2">"idade_concessao"</span><span class="p">:</span> <span class="s2">"Perfil etário associado ao comportamento de pagamento."</span><span class="p">,</span>
+    <span class="s2">"valor_parcela"</span><span class="p">:</span> <span class="s2">"Esforço mensal necessário para honrar a operação."</span><span class="p">,</span>
+    <span class="s2">"valor_emprestado"</span><span class="p">:</span> <span class="s2">"Exposição financeira da operação."</span><span class="p">,</span>
+    <span class="s2">"valor_renda"</span><span class="p">:</span> <span class="s2">"Capacidade financeira declarada."</span><span class="p">,</span>
+    <span class="s2">"valor_taxa"</span><span class="p">:</span> <span class="s2">"Condição financeira da operação."</span><span class="p">,</span>
+    <span class="s2">"valor_prazo"</span><span class="p">:</span> <span class="s2">"Horizonte de pagamento da operação."</span><span class="p">,</span>
+<span class="p">})</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">"Variável com contribuição identificada pelo modelo."</span><span class="p">)</span>
+
+<span class="n">principais_variaveis_modelo</span> <span class="o">=</span> <span class="n">principais_variaveis_modelo</span><span class="p">[</span>
+    <span class="p">[</span>
+        <span class="s2">"variavel_exibicao"</span><span class="p">,</span>
+        <span class="s2">"shap_medio_absoluto"</span><span class="p">,</span>
+        <span class="s2">"permutation_importance"</span><span class="p">,</span>
+        <span class="s2">"score_importancia_consolidado"</span><span class="p">,</span>
+        <span class="s2">"leitura_negocio"</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">principais_variaveis_modelo</span><span class="p">)</span>
+
+<span class="n">principais_variaveis_modelo</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_principais_variaveis_modelo.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>variavel_exibicao</th>
+<th>shap_medio_absoluto</th>
+<th>permutation_importance</th>
+<th>score_importancia_consolidado</th>
+<th>leitura_negocio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Escolaridade</td>
+<td>0.8603</td>
+<td>0.0935</td>
+<td>1.0000</td>
+<td>Perfil cadastral associado ao risco observado.</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Comprometimento de renda</td>
+<td>0.5956</td>
+<td>0.0893</td>
+<td>0.8240</td>
+<td>Capacidade de pagamento e pressão da parcela s...</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Cliente ativo</td>
+<td>0.3855</td>
+<td>0.0551</td>
+<td>0.5187</td>
+<td>Relacionamento ativo com a instituição.</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Valor de restritivos</td>
+<td>0.4303</td>
+<td>0.0352</td>
+<td>0.4384</td>
+<td>Pressão financeira prévia e histórico restritivo.</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Tempo de conta</td>
+<td>0.2989</td>
+<td>0.0254</td>
+<td>0.3097</td>
+<td>Histórico de relacionamento com o banco.</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Idade na concessão</td>
+<td>0.1755</td>
+<td>0.0123</td>
+<td>0.1680</td>
+<td>Perfil etário associado ao comportamento de pa...</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Restritivos / renda</td>
+<td>0.1569</td>
+<td>0.0032</td>
+<td>0.1083</td>
+<td>Peso dos restritivos em relação à renda declar...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=515d5f82">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [45]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Gráfico comparativo das importâncias normalizadas</span>
+
+<span class="n">plot_importancia_consolidada</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_importancia_modelo</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">plot_importancia_consolidada</span> <span class="o">=</span> <span class="n">plot_importancia_consolidada</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+    <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"variavel_exibicao"</span><span class="p">],</span>
+    <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"shap_normalizado"</span><span class="p">,</span> <span class="s2">"permutation_normalizada"</span><span class="p">],</span>
+    <span class="n">var_name</span><span class="o">=</span><span class="s2">"metodo"</span><span class="p">,</span>
+    <span class="n">value_name</span><span class="o">=</span><span class="s2">"importancia_normalizada"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plot_importancia_consolidada</span><span class="p">[</span><span class="s2">"metodo"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">plot_importancia_consolidada</span><span class="p">[</span><span class="s2">"metodo"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">replace</span><span class="p">({</span>
+        <span class="s2">"shap_normalizado"</span><span class="p">:</span> <span class="s2">"SHAP"</span><span class="p">,</span>
+        <span class="s2">"permutation_normalizada"</span><span class="p">:</span> <span class="s2">"Permutation importance"</span><span class="p">,</span>
+    <span class="p">})</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">plot_importancia_consolidada</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">"importancia_normalizada"</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">"variavel_exibicao"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"metodo"</span><span class="p">,</span>
+    <span class="n">orientation</span><span class="o">=</span><span class="s2">"h"</span><span class="p">,</span>
+    <span class="n">barmode</span><span class="o">=</span><span class="s2">"group"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">"importancia_normalizada"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">aplicar_layout</span><span class="p">(</span>
+    <span class="n">fig</span><span class="p">,</span>
+    <span class="n">titulo</span><span class="o">=</span><span class="s2">"Importância consolidada das variáveis do modelo"</span><span class="p">,</span>
+    <span class="n">subtitulo</span><span class="o">=</span><span class="s2">"Comparação entre SHAP e permutation importance em escala normalizada"</span><span class="p">,</span>
+    <span class="n">mostrar_legenda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s2">"%</span><span class="si">{text:.2f}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">"outside"</span><span class="p">,</span>
+    <span class="n">cliponaxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">l</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span>
+        <span class="n">r</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">=</span><span class="mi">105</span><span class="p">,</span>
+        <span class="n">b</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Importância normalizada"</span><span class="p">,</span>
+    <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+    <span class="n">automargin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">salvar_figura</span><span class="p">(</span>
+    <span class="n">fig</span><span class="p">,</span>
+    <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"05_importancia_consolidada_modelo.html"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:600px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="dae4841e-d175-40b9-9794-c508a5cf737f" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("dae4841e-d175-40b9-9794-c508a5cf737f")) {                    Plotly.newPlot(                        "dae4841e-d175-40b9-9794-c508a5cf737f",                        [{"alignmentgroup":"True","hovertemplate":"metodo=SHAP\u003cbr\u003eimportancia_normalizada=%{text}\u003cbr\u003evariavel_exibicao=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"SHAP","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"SHAP","offsetgroup":"SHAP","orientation":"h","showlegend":true,"text":{"dtype":"f8","bdata":"AAAAAAAA8D9HmIn97CbmP90dSy9Prdw\u002fyVpAmYAB4D8p0hET3zzWP83QARCBG8o\u002fLv6yuZpZxz8="},"textposition":"outside","x":{"dtype":"f8","bdata":"AAAAAAAA8D9HmIn97CbmP90dSy9Prdw\u002fyVpAmYAB4D8p0hET3zzWP83QARCBG8o\u002fLv6yuZpZxz8="},"xaxis":"x","y":["Escolaridade","Comprometimento de renda","Cliente ativo","Valor de restritivos","Tempo de conta","Idade na concessão","Restritivos \u002f renda"],"yaxis":"y","type":"bar","cliponaxis":false,"texttemplate":"%{text:.2f}"},{"alignmentgroup":"True","hovertemplate":"metodo=Permutation importance\u003cbr\u003eimportancia_normalizada=%{text}\u003cbr\u003evariavel_exibicao=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Permutation importance","marker":{"color":"#64BE28","pattern":{"shape":""}},"name":"Permutation importance","offsetgroup":"Permutation importance","orientation":"h","showlegend":true,"text":{"dtype":"f8","bdata":"AAAAAAAA8D8X2jl1jZXuP61S4O5F3OI\u002f7ytjuQQb2D9M8IIOCWfRP2OiNjr55MA\u002f8neI9O2AoT8="},"textposition":"outside","x":{"dtype":"f8","bdata":"AAAAAAAA8D8X2jl1jZXuP61S4O5F3OI\u002f7ytjuQQb2D9M8IIOCWfRP2OiNjr55MA\u002f8neI9O2AoT8="},"xaxis":"x","y":["Escolaridade","Comprometimento de renda","Cliente ativo","Valor de restritivos","Tempo de conta","Idade na concessão","Restritivos \u002f renda"],"yaxis":"y","type":"bar","cliponaxis":false,"texttemplate":"%{text:.2f}"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Importância normalizada"},"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","range":[0,1.15]},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":""},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","automargin":true},"legend":{"title":{"text":"metodo"},"tracegroupgap":0},"barmode":"group","title":{"text":"Importância consolidada das variáveis do modelo\u003cbr\u003e\u003csup\u003eComparação entre SHAP e permutation importance em escala normalizada\u003c\u002fsup\u003e"},"height":600,"showlegend":true,"hovermode":"x unified","margin":{"l":280,"r":160,"t":105,"b":90}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('dae4841e-d175-40b9-9794-c508a5cf737f');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c066dbce">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="9.9-Dire%C3%A7%C3%A3o-consolidada-dos-efeitos">9.9 Direção consolidada dos efeitos<a class="anchor-link" href="#9.9-Dire%C3%A7%C3%A3o-consolidada-dos-efeitos">¶</a></h3><p>Aqui eu vou resumir se a inadimplência observada aumenta ou diminui quando a variável passa das faixas de menor valor para as faixas de maior valor.</p>
+<p>Isso é importante porque ajuda a verificar se os sinais do modelo estão coerentes com a lógica esperada de risco de crédito.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e4fd191d">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [46]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Consolidação da direção dos efeitos das variáveis numéricas</span>
+
+<span class="n">resumo_direcao_variaveis</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">variavel</span> <span class="ow">in</span> <span class="n">top_variaveis_numericas</span><span class="p">:</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">analise_faixas_variaveis</span><span class="p">[</span>
+        <span class="n">analise_faixas_variaveis</span><span class="p">[</span><span class="s2">"variavel"</span><span class="p">]</span> <span class="o">==</span> <span class="n">variavel</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"valor_medio"</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">primeira_faixa</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ultima_faixa</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">delta_bad_rate</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ultima_faixa</span><span class="p">[</span><span class="s2">"taxa_inadimplencia"</span><span class="p">]</span>
+        <span class="o">-</span> <span class="n">primeira_faixa</span><span class="p">[</span><span class="s2">"taxa_inadimplencia"</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">delta_pd_media</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ultima_faixa</span><span class="p">[</span><span class="s2">"pd_media"</span><span class="p">]</span>
+        <span class="o">-</span> <span class="n">primeira_faixa</span><span class="p">[</span><span class="s2">"pd_media"</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">delta_bad_rate</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">direcao_observada</span> <span class="o">=</span> <span class="s2">"Aumenta risco"</span>
+    <span class="k">elif</span> <span class="n">delta_bad_rate</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">direcao_observada</span> <span class="o">=</span> <span class="s2">"Reduz risco"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">direcao_observada</span> <span class="o">=</span> <span class="s2">"Neutra"</span>
+
+    <span class="n">resumo_direcao_variaveis</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">"variavel"</span><span class="p">:</span> <span class="n">variavel</span><span class="p">,</span>
+        <span class="s2">"variavel_exibicao"</span><span class="p">:</span> <span class="n">nomes_variaveis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">variavel</span><span class="p">,</span> <span class="n">variavel</span><span class="p">),</span>
+        <span class="s2">"bad_rate_menor_faixa"</span><span class="p">:</span> <span class="n">primeira_faixa</span><span class="p">[</span><span class="s2">"taxa_inadimplencia"</span><span class="p">],</span>
+        <span class="s2">"bad_rate_maior_faixa"</span><span class="p">:</span> <span class="n">ultima_faixa</span><span class="p">[</span><span class="s2">"taxa_inadimplencia"</span><span class="p">],</span>
+        <span class="s2">"delta_bad_rate"</span><span class="p">:</span> <span class="n">delta_bad_rate</span><span class="p">,</span>
+        <span class="s2">"pd_media_menor_faixa"</span><span class="p">:</span> <span class="n">primeira_faixa</span><span class="p">[</span><span class="s2">"pd_media"</span><span class="p">],</span>
+        <span class="s2">"pd_media_maior_faixa"</span><span class="p">:</span> <span class="n">ultima_faixa</span><span class="p">[</span><span class="s2">"pd_media"</span><span class="p">],</span>
+        <span class="s2">"delta_pd_media"</span><span class="p">:</span> <span class="n">delta_pd_media</span><span class="p">,</span>
+        <span class="s2">"direcao_observada"</span><span class="p">:</span> <span class="n">direcao_observada</span><span class="p">,</span>
+    <span class="p">})</span>
+
+<span class="n">resumo_direcao_variaveis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">resumo_direcao_variaveis</span><span class="p">)</span>
+
+<span class="n">resumo_direcao_variaveis</span><span class="p">[</span><span class="s2">"leitura_credito"</span><span class="p">]</span> <span class="o">=</span> <span class="n">resumo_direcao_variaveis</span><span class="p">[</span>
+    <span class="s2">"variavel"</span>
+<span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span>
+    <span class="s2">"comprometimento_renda"</span><span class="p">:</span> <span class="s2">"Quanto maior o comprometimento, maior a pressão sobre a renda."</span><span class="p">,</span>
+    <span class="s2">"valor_restritivos"</span><span class="p">:</span> <span class="s2">"Quanto maior o valor restritivo, maior o sinal de risco prévio."</span><span class="p">,</span>
+    <span class="s2">"restritivos_sobre_renda"</span><span class="p">:</span> <span class="s2">"Quanto maior o peso dos restritivos sobre a renda, maior a fragilidade financeira."</span><span class="p">,</span>
+    <span class="s2">"tempo_conta_anos"</span><span class="p">:</span> <span class="s2">"Maior tempo de conta tende a indicar relacionamento mais maduro."</span><span class="p">,</span>
+    <span class="s2">"idade_concessao"</span><span class="p">:</span> <span class="s2">"Clientes mais jovens tendem a apresentar maior risco na amostra."</span><span class="p">,</span>
+    <span class="s2">"valor_parcela"</span><span class="p">:</span> <span class="s2">"Parcelas maiores aumentam o esforço mensal de pagamento."</span><span class="p">,</span>
+    <span class="s2">"valor_emprestado"</span><span class="p">:</span> <span class="s2">"Valores maiores aumentam a exposição financeira."</span><span class="p">,</span>
+    <span class="s2">"valor_renda"</span><span class="p">:</span> <span class="s2">"Maior renda tende a aumentar capacidade de pagamento, mas não deve ser usada isoladamente."</span><span class="p">,</span>
+    <span class="s2">"valor_taxa"</span><span class="p">:</span> <span class="s2">"Taxas maiores podem refletir maior custo da operação."</span><span class="p">,</span>
+    <span class="s2">"valor_prazo"</span><span class="p">:</span> <span class="s2">"Prazos maiores alteram o horizonte de risco da operação."</span><span class="p">,</span>
+<span class="p">})</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">"Relação observada na safra de validação."</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">resumo_direcao_variaveis</span><span class="p">)</span>
+
+<span class="n">resumo_direcao_variaveis</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_resumo_direcao_variaveis.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>variavel</th>
+<th>variavel_exibicao</th>
+<th>bad_rate_menor_faixa</th>
+<th>bad_rate_maior_faixa</th>
+<th>delta_bad_rate</th>
+<th>pd_media_menor_faixa</th>
+<th>pd_media_maior_faixa</th>
+<th>delta_pd_media</th>
+<th>direcao_observada</th>
+<th>leitura_credito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>comprometimento_renda</td>
+<td>Comprometimento de renda</td>
+<td>0.0164</td>
+<td>0.1614</td>
+<td>0.1449</td>
+<td>0.0279</td>
+<td>0.1619</td>
+<td>0.1341</td>
+<td>Aumenta risco</td>
+<td>Quanto maior o comprometimento, maior a pressã...</td>
+</tr>
+<tr>
+<th>1</th>
+<td>valor_restritivos</td>
+<td>Valor de restritivos</td>
+<td>0.0637</td>
+<td>0.2271</td>
+<td>0.1634</td>
+<td>0.0734</td>
+<td>0.2193</td>
+<td>0.1459</td>
+<td>Aumenta risco</td>
+<td>Quanto maior o valor restritivo, maior o sinal...</td>
+</tr>
+<tr>
+<th>2</th>
+<td>tempo_conta_anos</td>
+<td>Tempo de conta</td>
+<td>0.1912</td>
+<td>0.0699</td>
+<td>-0.1213</td>
+<td>0.1771</td>
+<td>0.0853</td>
+<td>-0.0918</td>
+<td>Reduz risco</td>
+<td>Maior tempo de conta tende a indicar relaciona...</td>
+</tr>
+<tr>
+<th>3</th>
+<td>idade_concessao</td>
+<td>Idade na concessão</td>
+<td>0.1768</td>
+<td>0.0761</td>
+<td>-0.1007</td>
+<td>0.1742</td>
+<td>0.1001</td>
+<td>-0.0741</td>
+<td>Reduz risco</td>
+<td>Clientes mais jovens tendem a apresentar maior...</td>
+</tr>
+<tr>
+<th>4</th>
+<td>restritivos_sobre_renda</td>
+<td>Restritivos / renda</td>
+<td>0.0637</td>
+<td>0.2127</td>
+<td>0.1490</td>
+<td>0.0734</td>
+<td>0.2134</td>
+<td>0.1400</td>
+<td>Aumenta risco</td>
+<td>Quanto maior o peso dos restritivos sobre a re...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7afdb042">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [47]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Gráfico da direção dos efeitos</span>
+
+<span class="n">plot_direcao</span> <span class="o">=</span> <span class="n">resumo_direcao_variaveis</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">plot_direcao</span><span class="p">[</span><span class="s2">"delta_bad_rate_pp"</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_direcao</span><span class="p">[</span><span class="s2">"delta_bad_rate"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="n">plot_direcao</span> <span class="o">=</span> <span class="n">plot_direcao</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"delta_bad_rate_pp"</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">plot_direcao</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">"delta_bad_rate_pp"</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">"variavel_exibicao"</span><span class="p">,</span>
+    <span class="n">orientation</span><span class="o">=</span><span class="s2">"h"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">"delta_bad_rate_pp"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">aplicar_layout</span><span class="p">(</span>
+    <span class="n">fig</span><span class="p">,</span>
+    <span class="n">titulo</span><span class="o">=</span><span class="s2">"Direção dos efeitos das variáveis principais"</span><span class="p">,</span>
+    <span class="n">subtitulo</span><span class="o">=</span><span class="s2">"Variação da inadimplência observada entre a menor e a maior faixa da variável"</span><span class="p">,</span>
+    <span class="n">mostrar_legenda</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s2">"%</span><span class="si">{text:.1f}</span><span class="s2"> p.p."</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">"outside"</span><span class="p">,</span>
+    <span class="n">cliponaxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">520</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">l</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span>
+        <span class="n">r</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+        <span class="n">t</span><span class="o">=</span><span class="mi">105</span><span class="p">,</span>
+        <span class="n">b</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Variação da inadimplência observada"</span><span class="p">,</span>
+    <span class="n">ticksuffix</span><span class="o">=</span><span class="s2">" p.p."</span><span class="p">,</span>
+    <span class="n">zeroline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+    <span class="n">automargin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">salvar_figura</span><span class="p">(</span>
+    <span class="n">fig</span><span class="p">,</span>
+    <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"05_direcao_efeitos_variaveis_principais.html"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="6d2949cf-2b52-437e-8727-9459a092682b" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("6d2949cf-2b52-437e-8727-9459a092682b")) {                    Plotly.newPlot(                        "6d2949cf-2b52-437e-8727-9459a092682b",                        [{"hovertemplate":"delta_bad_rate_pp=%{text}\u003cbr\u003evariavel_exibicao=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"","orientation":"h","showlegend":false,"text":{"dtype":"f8","bdata":"rE4p7z9BKMA25umj1SQkwDBt5fiG+yxAR7WLoQLOLUDN2Oi3WVcwQA=="},"textposition":"outside","x":{"dtype":"f8","bdata":"rE4p7z9BKMA25umj1SQkwDBt5fiG+yxAR7WLoQLOLUDN2Oi3WVcwQA=="},"xaxis":"x","y":["Tempo de conta","Idade na concessão","Comprometimento de renda","Restritivos \u002f renda","Valor de restritivos"],"yaxis":"y","type":"bar","cliponaxis":false,"texttemplate":"%{text:.1f} p.p."}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Variação da inadimplência observada"},"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":true,"linecolor":"#D9DED8","ticksuffix":" p.p."},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":""},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","automargin":true},"legend":{"tracegroupgap":0},"barmode":"relative","title":{"text":"Direção dos efeitos das variáveis principais\u003cbr\u003e\u003csup\u003eVariação da inadimplência observada entre a menor e a maior faixa da variável\u003c\u002fsup\u003e"},"height":520,"showlegend":false,"hovermode":"x unified","margin":{"l":280,"r":150,"t":105,"b":90}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('6d2949cf-2b52-437e-8727-9459a092682b');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=56aca182">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="9.10-S%C3%ADntese-executiva-da-interpreta%C3%A7%C3%A3o">9.10 Síntese executiva da interpretação<a class="anchor-link" href="#9.10-S%C3%ADntese-executiva-da-interpreta%C3%A7%C3%A3o">¶</a></h3><p>Aqui eu consolido os argumentos finais da interpretação do modelo em uma tabela executiva.</p>
+<p>Essa tabela vai ser usada como ponte entre a modelagem de PD e a política de concessão.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1a3441e8">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [48]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Síntese executiva final da interpretação</span>
+
+<span class="n">top_5_shap</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">importancia_shap_agregada</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)[</span><span class="s2">"variavel_exibicao"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">top_5_perm</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">importancia_permutacao</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)[</span><span class="s2">"variavel_exibicao"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">variaveis_comuns_top5</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="nb">set</span><span class="p">(</span><span class="n">top_5_shap</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">top_5_perm</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">variaveis_aumentam_risco</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_direcao_variaveis</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"delta_bad_rate &gt; 0"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"variavel_exibicao"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">variaveis_reduzem_risco</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resumo_direcao_variaveis</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"delta_bad_rate &lt; 0"</span><span class="p">)</span>
+    <span class="p">[</span><span class="s2">"variavel_exibicao"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">resumo_argumentos_interpretacao</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s2">"argumento"</span><span class="p">:</span> <span class="s2">"Convergência entre métodos"</span><span class="p">,</span>
+        <span class="s2">"evidencia"</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">"Variáveis comuns entre SHAP e permutation importance: "</span>
+            <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variaveis_comuns_top5</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="s2">"leitura"</span><span class="p">:</span> <span class="s2">"Os dois métodos apontam dimensões semelhantes de risco."</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"argumento"</span><span class="p">:</span> <span class="s2">"Capacidade de pagamento"</span><span class="p">,</span>
+        <span class="s2">"evidencia"</span><span class="p">:</span> <span class="s2">"Comprometimento de renda aparece entre as variáveis mais relevantes."</span><span class="p">,</span>
+        <span class="s2">"leitura"</span><span class="p">:</span> <span class="s2">"A política deve limitar parcela e valor máximo conforme renda disponível."</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"argumento"</span><span class="p">:</span> <span class="s2">"Restritivos financeiros"</span><span class="p">,</span>
+        <span class="s2">"evidencia"</span><span class="p">:</span> <span class="s2">"Valor de restritivos e/ou restritivos sobre renda aparecem como sinais relevantes."</span><span class="p">,</span>
+        <span class="s2">"leitura"</span><span class="p">:</span> <span class="s2">"Restritivos devem atuar como redutores de limite ou gatilho de análise manual."</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"argumento"</span><span class="p">:</span> <span class="s2">"Relacionamento com a instituição"</span><span class="p">,</span>
+        <span class="s2">"evidencia"</span><span class="p">:</span> <span class="s2">"Cliente ativo e tempo de conta aparecem entre os sinais do modelo."</span><span class="p">,</span>
+        <span class="s2">"leitura"</span><span class="p">:</span> <span class="s2">"Relacionamento mais sólido pode justificar condições menos restritivas."</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"argumento"</span><span class="p">:</span> <span class="s2">"Direção dos efeitos"</span><span class="p">,</span>
+        <span class="s2">"evidencia"</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">"Aumentam risco: "</span>
+            <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variaveis_aumentam_risco</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">". Reduzem risco: "</span>
+            <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variaveis_reduzem_risco</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">"."</span>
+        <span class="p">),</span>
+        <span class="s2">"leitura"</span><span class="p">:</span> <span class="s2">"A direção observada é compatível com a lógica esperada de crédito."</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"argumento"</span><span class="p">:</span> <span class="s2">"Uso recomendado do score"</span><span class="p">,</span>
+        <span class="s2">"evidencia"</span><span class="p">:</span> <span class="s2">"O score separa risco, mas não deve ser usado como corte binário isolado."</span><span class="p">,</span>
+        <span class="s2">"leitura"</span><span class="p">:</span> <span class="s2">"A PD deve alimentar faixas de aprovação, revisão, recusa e limite máximo."</span>
+    <span class="p">},</span>
+<span class="p">])</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">resumo_argumentos_interpretacao</span><span class="p">)</span>
+
+<span class="n">resumo_argumentos_interpretacao</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_argumentos_interpretacao_modelo.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8-sig"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>argumento</th>
+<th>evidencia</th>
+<th>leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Convergência entre métodos</td>
+<td>Variáveis comuns entre SHAP e permutation impo...</td>
+<td>Os dois métodos apontam dimensões semelhantes ...</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Capacidade de pagamento</td>
+<td>Comprometimento de renda aparece entre as vari...</td>
+<td>A política deve limitar parcela e valor máximo...</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Restritivos financeiros</td>
+<td>Valor de restritivos e/ou restritivos sobre re...</td>
+<td>Restritivos devem atuar como redutores de limi...</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Relacionamento com a instituição</td>
+<td>Cliente ativo e tempo de conta aparecem entre ...</td>
+<td>Relacionamento mais sólido pode justificar con...</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Direção dos efeitos</td>
+<td>Aumentam risco: Comprometimento de renda, Valo...</td>
+<td>A direção observada é compatível com a lógica ...</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Uso recomendado do score</td>
+<td>O score separa risco, mas não deve ser usado c...</td>
+<td>A PD deve alimentar faixas de aprovação, revis...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=245eeb8a">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="9.11-Conclus%C3%A3o-da-interpreta%C3%A7%C3%A3o-do-modelo">9.11 Conclusão da interpretação do modelo<a class="anchor-link" href="#9.11-Conclus%C3%A3o-da-interpreta%C3%A7%C3%A3o-do-modelo">¶</a></h3><p>A interpretação do modelo indica que o score de PD está apoiado em sinais coerentes com uma decisão de concessão de crédito.</p>
+<p>As variáveis mais relevantes estão associadas a perfil cadastral, capacidade de pagamento, restritivos financeiros e relacionamento com a instituição. Essa leitura é consistente com a política proposta, que combina risco estimado, comprometimento de renda, restritivos e limite máximo sugerido.</p>
+<p>A comparação entre SHAP e permutation importance reforça que o modelo não está dependendo de uma única variável isolada. Ele combina diferentes dimensões de risco, o que torna a política mais defensável.</p>
+<p>A análise de direção dos efeitos também sustenta a decisão: variáveis ligadas a maior pressão financeira tendem a aumentar a inadimplência observada, enquanto variáveis associadas a maior relacionamento tendem a reduzir o risco.</p>
+<p>Com isso, o modelo pode ser usado como insumo da política de crédito. A recomendação é não utilizar a PD como regra binária única, mas sim como uma camada objetiva de mensuração de risco combinada com capacidade de pagamento, restritivos financeiros e regras de limite.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b8c1e622">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="10.-Encerramento-do-notebook-e-exporta%C3%A7%C3%A3o-para-simula%C3%A7%C3%A3o-de-cen%C3%A1rios">10. Encerramento do notebook e exportação para simulação de cenários<a class="anchor-link" href="#10.-Encerramento-do-notebook-e-exporta%C3%A7%C3%A3o-para-simula%C3%A7%C3%A3o-de-cen%C3%A1rios">¶</a></h2><p>Nesse notebook eu tentei construir a primeira versão da política de concessão e validar a coerência do modelo candidato por meio de interpretação global e local.</p>
+<p>Na próxima etapa, eu quero comparar diferentes cenários de política, variando o nível de conservadorismo das regras de aprovação, análise manual, recusa e limite máximo concedido.</p>
+<p>Para isso, exporto a base já enriquecida com:</p>
+<ul>
+<li>PD estimada;</li>
+<li>faixa de risco;</li>
+<li>decisão da política inicial;</li>
+<li>valor máximo sugerido;</li>
+<li>variáveis de capacidade de pagamento;</li>
+<li>variáveis de restritivos;</li>
+<li>target observado de inadimplência em 12 meses.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -12396,9 +13427,36 @@ if (outputEl) {{
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span> 
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Exporta a base preparada para o notebook de cenários</span>
+
+<span class="n">caminho_base_cenarios</span> <span class="o">=</span> <span class="n">PROCESSED_DIR</span> <span class="o">/</span> <span class="s2">"base_politica_validacao_com_score.parquet"</span>
+
+<span class="n">df_politica</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span>
+    <span class="n">caminho_base_cenarios</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Base para simulação de cenários salva em:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">caminho_base_cenarios</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Dimensão da base exportada:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_politica</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ac6b62fb">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="11.-Conclus%C3%A3o-do-notebook">11. Conclusão do notebook<a class="anchor-link" href="#11.-Conclus%C3%A3o-do-notebook">¶</a></h2><p>O modelo candidato foi aplicado à safra de validação e transformado em uma política inicial de concessão.</p>
+<p>A política inicial mostrou uma boa capacidade de redução de inadimplência nos clientes aprovados, mas também reduziu significativamente a exposição financeira. Por isso, eu vou tratar ela como um cenário conservador.</p>
+<p>A interpretação do modelo confirmou que o score de PD está apoiado em variáveis coerentes com crédito, como capacidade de pagamento, restritivos financeiros, relacionamento e perfil cadastral.</p>
+<p>No próximo notebook, eu vou comparar cenários conservador, equilibrado e expansivo para definir a recomendação final de política de concessão.</p>
 </div>
 </div>
 </div>

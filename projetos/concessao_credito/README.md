@@ -59,7 +59,8 @@ Rodar os notebooks na ordem:
 4. `03_eda_credito.ipynb`
 5. `04_modelagem_pd.ipynb`
 6. `05_politica_concessao.ipynb`
-7. `99_relatorio_final.ipynb`
+7. `06_cenarios_politica_recomendacao.ipynb`
+8. `99_relatorio_final.ipynb`
 
 ## Saidas esperadas
 
