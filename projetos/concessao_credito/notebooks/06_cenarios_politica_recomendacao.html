@@ -7892,7 +7892,7 @@ a.anchor-link {
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
-<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">"notebook_connected+png"</span>
+<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">"notebook_connected"</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
 
 <span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">".."</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
@@ -7903,7 +7903,6 @@ a.anchor-link {
 <span class="kn">from</span><span class="w"> </span><span class="nn">src.concessao_credito.plots</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">registrar_template_credito</span><span class="p">,</span>
     <span class="n">aplicar_layout</span><span class="p">,</span>
-    <span class="n">salvar_figura</span><span class="p">,</span>
     <span class="n">CORES</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -10436,7 +10435,7 @@ Base salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\data\processed
 <div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Score x decisao por cenario</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Score por decisão e faixa de risco por cenário</span>
 <span class="n">df_score_dec</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">df_cenarios</span>
     <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"cenario"</span><span class="p">,</span> <span class="s2">"faixa_risco"</span><span class="p">,</span> <span class="s2">"decisao_cenario"</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -10449,8 +10448,11 @@ Base salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\data\processed
     <span class="p">)</span>
     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="p">)</span>
-<span class="n">df_score_dec</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_score_decisao_cenarios.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Score x decisao salvo -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_score_decisao_cenarios.csv'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">df_score_dec</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_score_por_decisao_cenarios.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Score por decisão salvo -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_score_por_decisao_cenarios.csv'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">df_score_dec</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -10464,7 +10466,7 @@ Base salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\data\processed
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Score x decisao salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\tables\politica_score_decisao_cenarios.csv
+<pre>Score por decisão salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\tables\politica_score_por_decisao_cenarios.csv
 </pre>
 </div>
 </div>
@@ -10836,9 +10838,9 @@ Base salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\data\processed
 <span class="n">fig1</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Taxa de aprovação automática (%)"</span><span class="p">)</span>
 <span class="n">fig1</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Inadimplência dos aprovados (%)"</span><span class="p">)</span>
 
-<span class="n">salvar_figura</span><span class="p">(</span><span class="n">fig1</span><span class="p">,</span> <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"06_tradeoff_cenarios_politica.html"</span><span class="p">)</span>
+<span class="c1"># O HTML consolidado do notebook deve ser gerado depois com jupyter nbconvert.</span>
 <span class="n">fig1</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Salvo -&gt; </span><span class="si">{</span><span class="n">FIGURES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'06_tradeoff_cenarios_politica.html'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -10862,9 +10864,9 @@ Base salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\data\processed
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="cbdd2284-14a8-4958-9e87-766f121f8a00" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("cbdd2284-14a8-4958-9e87-766f121f8a00")) {                    Plotly.newPlot(                        "cbdd2284-14a8-4958-9e87-766f121f8a00",                        [{"hovertemplate":"\u003cb\u003eConservador\u003c\u002fb\u003e\u003cbr\u003eAprovacao automatica: 74.9%\u003cbr\u003eInadimplencia aprovados: 3.90%\u003cbr\u003eExposicao aprovada: R$ 23.5 MM\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#1B5C0B","line":{"color":"white","width":1.5},"opacity":0.88,"size":37.59124608686823},"mode":"markers+text","name":"Conservador","text":["Conservador"],"textfont":{"color":"#2F3D32","size":13},"textposition":"top center","x":[74.8868778280543],"y":[3.9000274649821476],"type":"scatter"},{"hovertemplate":"\u003cb\u003eEquilibrado\u003c\u002fb\u003e\u003cbr\u003eAprovacao automatica: 75.0%\u003cbr\u003eInadimplencia aprovados: 3.90%\u003cbr\u003eExposicao aprovada: R$ 27.2 MM\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#64BE28","line":{"color":"white","width":1.5},"opacity":0.88,"size":43.583377687307284},"mode":"markers+text","name":"Equilibrado","text":["Equilibrado"],"textfont":{"color":"#2F3D32","size":13},"textposition":"top center","x":[74.96914849856027],"y":[3.8957475994513033],"type":"scatter"},{"hovertemplate":"\u003cb\u003eExpansivo\u003c\u002fb\u003e\u003cbr\u003eAprovacao automatica: 86.7%\u003cbr\u003eInadimplencia aprovados: 6.74%\u003cbr\u003eExposicao aprovada: R$ 34.2 MM\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#F2C400","line":{"color":"white","width":1.5},"opacity":0.88,"size":54.7072281340434},"mode":"markers+text","name":"Expansivo","text":["Expansivo"],"textfont":{"color":"#2F3D32","size":13},"textposition":"top center","x":[86.65158371040724],"y":[6.741039639211962],"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"shapes":[{"line":{"color":"#6B756B","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":12.299465240641712,"y1":12.299465240641712,"yref":"y"}],"annotations":[{"showarrow":false,"text":"Taxa historica (12.3%)","x":1,"xanchor":"left","xref":"x domain","y":12.299465240641712,"yanchor":"middle","yref":"y"}],"title":{"text":"Trade-off entre aprovação automática e inadimplência dos aprovados\u003cbr\u003e\u003csup\u003eTamanho do ponto proporcional à exposição aprovada (R$ MM) | Linha = taxa histórica\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Taxa de aprovação automática (%)"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Inadimplência dos aprovados (%)"}}},                        {"responsive": true}                    ).then(function(){
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="08a124b1-0b82-4646-88b6-af543de40664" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("08a124b1-0b82-4646-88b6-af543de40664")) {                    Plotly.newPlot(                        "08a124b1-0b82-4646-88b6-af543de40664",                        [{"hovertemplate":"\u003cb\u003eConservador\u003c\u002fb\u003e\u003cbr\u003eAprovacao automatica: 74.9%\u003cbr\u003eInadimplencia aprovados: 3.90%\u003cbr\u003eExposicao aprovada: R$ 23.5 MM\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#1B5C0B","line":{"color":"white","width":1.5},"opacity":0.88,"size":37.59124608686823},"mode":"markers+text","name":"Conservador","text":["Conservador"],"textfont":{"color":"#2F3D32","size":13},"textposition":"top center","x":[74.8868778280543],"y":[3.9000274649821476],"type":"scatter"},{"hovertemplate":"\u003cb\u003eEquilibrado\u003c\u002fb\u003e\u003cbr\u003eAprovacao automatica: 75.0%\u003cbr\u003eInadimplencia aprovados: 3.90%\u003cbr\u003eExposicao aprovada: R$ 27.2 MM\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#64BE28","line":{"color":"white","width":1.5},"opacity":0.88,"size":43.583377687307284},"mode":"markers+text","name":"Equilibrado","text":["Equilibrado"],"textfont":{"color":"#2F3D32","size":13},"textposition":"top center","x":[74.96914849856027],"y":[3.8957475994513033],"type":"scatter"},{"hovertemplate":"\u003cb\u003eExpansivo\u003c\u002fb\u003e\u003cbr\u003eAprovacao automatica: 86.7%\u003cbr\u003eInadimplencia aprovados: 6.74%\u003cbr\u003eExposicao aprovada: R$ 34.2 MM\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#F2C400","line":{"color":"white","width":1.5},"opacity":0.88,"size":54.7072281340434},"mode":"markers+text","name":"Expansivo","text":["Expansivo"],"textfont":{"color":"#2F3D32","size":13},"textposition":"top center","x":[86.65158371040724],"y":[6.741039639211962],"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"shapes":[{"line":{"color":"#6B756B","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":12.299465240641712,"y1":12.299465240641712,"yref":"y"}],"annotations":[{"showarrow":false,"text":"Taxa historica (12.3%)","x":1,"xanchor":"left","xref":"x domain","y":12.299465240641712,"yanchor":"middle","yref":"y"}],"title":{"text":"Trade-off entre aprovação automática e inadimplência dos aprovados\u003cbr\u003e\u003csup\u003eTamanho do ponto proporcional à exposição aprovada (R$ MM) | Linha = taxa histórica\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Taxa de aprovação automática (%)"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Inadimplência dos aprovados (%)"}}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('cbdd2284-14a8-4958-9e87-766f121f8a00');
+var gd = document.getElementById('08a124b1-0b82-4646-88b6-af543de40664');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -10892,7 +10894,7 @@ if (outputEl) {{
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\figures\06_tradeoff_cenarios_politica.html
+<pre>Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert.
 </pre>
 </div>
 </div>
@@ -10935,9 +10937,9 @@ if (outputEl) {{
 <span class="n">fig2</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Cenário"</span><span class="p">)</span>
 <span class="n">fig2</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Participação (%)"</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">])</span>
 
-<span class="n">salvar_figura</span><span class="p">(</span><span class="n">fig2</span><span class="p">,</span> <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"06_taxas_decisao_por_cenario.html"</span><span class="p">)</span>
+<span class="c1"># O HTML consolidado do notebook deve ser gerado depois com jupyter nbconvert.</span>
 <span class="n">fig2</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Salvo -&gt; </span><span class="si">{</span><span class="n">FIGURES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'06_taxas_decisao_por_cenario.html'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -10951,9 +10953,9 @@ if (outputEl) {{
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="b6cbac88-160e-42a6-9d01-ce6c714fdcc4" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("b6cbac88-160e-42a6-9d01-ce6c714fdcc4")) {                    Plotly.newPlot(                        "b6cbac88-160e-42a6-9d01-ce6c714fdcc4",                        [{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","text":["20.4%","25.4%","30.7%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"cKtccKtcNEDYf76RaGE5QMAckWKovz5A"},"type":"bar"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","text":["54.5%","49.6%","55.9%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"fi9Dfi9DS0Bp5PnFWMtIQLnYCueS80tA"},"type":"bar"},{"marker":{"color":"#F2C400"},"name":"Análise manual","text":["15.0%","15.0%","3.3%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"EB0UP9f8LUAQHRQ\u002f1\u002fwtQIDESsbbpwpA"},"type":"bar"},{"marker":{"color":"#6B421F"},"name":"Recusar","text":["10.1%","10.0%","10.0%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"Fs4l5xM9JECdUYeF9BIkQH6yH61sCCRA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"title":{"text":"Distribuição das decisões por cenário\u003cbr\u003e\u003csup\u003eParticipação percentual por tipo de decisão — base de validação\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Participação (%)"},"range":[0,80]},"barmode":"group"},                        {"responsive": true}                    ).then(function(){
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="2776724d-6e27-44dd-a17e-a1c094f3aefa" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("2776724d-6e27-44dd-a17e-a1c094f3aefa")) {                    Plotly.newPlot(                        "2776724d-6e27-44dd-a17e-a1c094f3aefa",                        [{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","text":["20.4%","25.4%","30.7%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"cKtccKtcNEDYf76RaGE5QMAckWKovz5A"},"type":"bar"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","text":["54.5%","49.6%","55.9%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"fi9Dfi9DS0Bp5PnFWMtIQLnYCueS80tA"},"type":"bar"},{"marker":{"color":"#F2C400"},"name":"Análise manual","text":["15.0%","15.0%","3.3%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"EB0UP9f8LUAQHRQ\u002f1\u002fwtQIDESsbbpwpA"},"type":"bar"},{"marker":{"color":"#6B421F"},"name":"Recusar","text":["10.1%","10.0%","10.0%"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"Fs4l5xM9JECdUYeF9BIkQH6yH61sCCRA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"title":{"text":"Distribuição das decisões por cenário\u003cbr\u003e\u003csup\u003eParticipação percentual por tipo de decisão — base de validação\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Participação (%)"},"range":[0,80]},"barmode":"group"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('b6cbac88-160e-42a6-9d01-ce6c714fdcc4');
+var gd = document.getElementById('2776724d-6e27-44dd-a17e-a1c094f3aefa');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -10981,7 +10983,7 @@ if (outputEl) {{
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\figures\06_taxas_decisao_por_cenario.html
+<pre>Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert.
 </pre>
 </div>
 </div>
@@ -11026,9 +11028,9 @@ if (outputEl) {{
 <span class="n">fig3</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Cenário"</span><span class="p">)</span>
 <span class="n">fig3</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Inadimplência dos aprovados (%)"</span><span class="p">)</span>
 
-<span class="n">salvar_figura</span><span class="p">(</span><span class="n">fig3</span><span class="p">,</span> <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"06_inadimplencia_aprovados_por_cenario.html"</span><span class="p">)</span>
+<span class="c1"># O HTML consolidado do notebook deve ser gerado depois com jupyter nbconvert.</span>
 <span class="n">fig3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Salvo -&gt; </span><span class="si">{</span><span class="n">FIGURES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'06_inadimplencia_aprovados_por_cenario.html'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -11042,9 +11044,9 @@ if (outputEl) {{
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <div style="height:480px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="1bbf0b05-287c-47bd-8733-c9f13e363f5d" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("1bbf0b05-287c-47bd-8733-c9f13e363f5d")) {                    Plotly.newPlot(                        "1bbf0b05-287c-47bd-8733-c9f13e363f5d",                        [{"marker":{"color":["#1B5C0B","#64BE28","#F2C400"]},"name":"Inadimplência aprovados","text":["3.90%","3.90%","6.74%"],"textfont":{"size":13},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"Bs18mUEzD0At6ai3fSoPQPDRXRjT9hpA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"shapes":[{"line":{"color":"#6B756B","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":12.299465240641712,"y1":12.299465240641712,"yref":"y"}],"annotations":[{"showarrow":false,"text":"Taxa histórica (12.3%)","x":1,"xanchor":"left","xref":"x domain","y":12.299465240641712,"yanchor":"middle","yref":"y"}],"title":{"text":"Inadimplência dos aprovados por cenário\u003cbr\u003e\u003csup\u003eBacktest histórico | Linha = taxa histórica total da base\u003c\u002fsup\u003e"},"height":480,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Inadimplência dos aprovados (%)"}}},                        {"responsive": true}                    ).then(function(){
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="47c59e2e-d0de-4c7d-b47c-78db59030ef9" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("47c59e2e-d0de-4c7d-b47c-78db59030ef9")) {                    Plotly.newPlot(                        "47c59e2e-d0de-4c7d-b47c-78db59030ef9",                        [{"marker":{"color":["#1B5C0B","#64BE28","#F2C400"]},"name":"Inadimplência aprovados","text":["3.90%","3.90%","6.74%"],"textfont":{"size":13},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"Bs18mUEzD0At6ai3fSoPQPDRXRjT9hpA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"shapes":[{"line":{"color":"#6B756B","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":12.299465240641712,"y1":12.299465240641712,"yref":"y"}],"annotations":[{"showarrow":false,"text":"Taxa histórica (12.3%)","x":1,"xanchor":"left","xref":"x domain","y":12.299465240641712,"yanchor":"middle","yref":"y"}],"title":{"text":"Inadimplência dos aprovados por cenário\u003cbr\u003e\u003csup\u003eBacktest histórico | Linha = taxa histórica total da base\u003c\u002fsup\u003e"},"height":480,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Inadimplência dos aprovados (%)"}}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('1bbf0b05-287c-47bd-8733-c9f13e363f5d');
+var gd = document.getElementById('47c59e2e-d0de-4c7d-b47c-78db59030ef9');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -11072,7 +11074,7 @@ if (outputEl) {{
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\figures\06_inadimplencia_aprovados_por_cenario.html
+<pre>Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert.
 </pre>
 </div>
 </div>
@@ -11120,9 +11122,9 @@ if (outputEl) {{
 <span class="n">fig4</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Cenário"</span><span class="p">)</span>
 <span class="n">fig4</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Exposição aprovada (R$ MM)"</span><span class="p">)</span>
 
-<span class="n">salvar_figura</span><span class="p">(</span><span class="n">fig4</span><span class="p">,</span> <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"06_exposicao_aprovada_por_cenario.html"</span><span class="p">)</span>
+<span class="c1"># O HTML consolidado do notebook deve ser gerado depois com jupyter nbconvert.</span>
 <span class="n">fig4</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Salvo -&gt; </span><span class="si">{</span><span class="n">FIGURES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'06_exposicao_aprovada_por_cenario.html'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -11136,9 +11138,9 @@ if (outputEl) {{
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <div style="height:480px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="c8d54456-1aae-4152-9f63-27c5851a6032" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("c8d54456-1aae-4152-9f63-27c5851a6032")) {                    Plotly.newPlot(                        "c8d54456-1aae-4152-9f63-27c5851a6032",                        [{"marker":{"color":["#1B5C0B","#64BE28","#F2C400"]},"name":"Exposição aprovada","text":["R$ 23.5 MM (36.4%)","R$ 27.2 MM (42.2%)","R$ 34.2 MM (52.9%)"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"7F2RcJl+N0AkIGsmVz07QDNKPQiUGEFA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"shapes":[{"line":{"color":"#6B756B","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":64.60436722,"y1":64.60436722,"yref":"y"}],"annotations":[{"showarrow":false,"text":"Exposição original total (R$ 64.6 MM)","x":1,"xanchor":"left","xref":"x domain","y":64.60436722,"yanchor":"middle","yref":"y"}],"title":{"text":"Exposição financeira aprovada por cenário\u003cbr\u003e\u003csup\u003eValor automaticamente aprovado em R$ MM | Percentual sobre exposição original\u003c\u002fsup\u003e"},"height":480,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Exposição aprovada (R$ MM)"}}},                        {"responsive": true}                    ).then(function(){
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="2b8c8329-965b-425b-adb7-cb9a1e7f8bb9" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("2b8c8329-965b-425b-adb7-cb9a1e7f8bb9")) {                    Plotly.newPlot(                        "2b8c8329-965b-425b-adb7-cb9a1e7f8bb9",                        [{"marker":{"color":["#1B5C0B","#64BE28","#F2C400"]},"name":"Exposição aprovada","text":["R$ 23.5 MM (36.4%)","R$ 27.2 MM (42.2%)","R$ 34.2 MM (52.9%)"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"7F2RcJl+N0AkIGsmVz07QDNKPQiUGEFA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"shapes":[{"line":{"color":"#6B756B","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":64.60436722,"y1":64.60436722,"yref":"y"}],"annotations":[{"showarrow":false,"text":"Exposição original total (R$ 64.6 MM)","x":1,"xanchor":"left","xref":"x domain","y":64.60436722,"yanchor":"middle","yref":"y"}],"title":{"text":"Exposição financeira aprovada por cenário\u003cbr\u003e\u003csup\u003eValor automaticamente aprovado em R$ MM | Percentual sobre exposição original\u003c\u002fsup\u003e"},"height":480,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Exposição aprovada (R$ MM)"}}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('c8d54456-1aae-4152-9f63-27c5851a6032');
+var gd = document.getElementById('2b8c8329-965b-425b-adb7-cb9a1e7f8bb9');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -11166,7 +11168,7 @@ if (outputEl) {{
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\figures\06_exposicao_aprovada_por_cenario.html
+<pre>Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert.
 </pre>
 </div>
 </div>
@@ -11237,9 +11239,9 @@ if (outputEl) {{
 <span class="n">fig5</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Participação (%)"</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">105</span><span class="p">])</span>
 <span class="n">fig5</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Faixa de risco"</span><span class="p">)</span>
 
-<span class="n">salvar_figura</span><span class="p">(</span><span class="n">fig5</span><span class="p">,</span> <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"06_decisoes_por_faixa_risco.html"</span><span class="p">)</span>
+<span class="c1"># O HTML consolidado do notebook deve ser gerado depois com jupyter nbconvert.</span>
 <span class="n">fig5</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Salvo -&gt; </span><span class="si">{</span><span class="n">FIGURES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'06_decisoes_por_faixa_risco.html'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -11253,9 +11255,9 @@ if (outputEl) {{
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="c7a825db-8d0c-491f-9567-8aae5a37ea54" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("c7a825db-8d0c-491f-9567-8aae5a37ea54")) {                    Plotly.newPlot(                        "c7a825db-8d0c-491f-9567-8aae5a37ea54",                        [{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","showlegend":true,"text":["46%","8%","","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[46.32390745501285,8.436213991769549,0.9602194787379973,0.0,0.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","showlegend":true,"text":["54%","92%","98%","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[53.62467866323908,91.56378600823045,98.49108367626886,0.0,0.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#F2C400"},"name":"Análise manual","showlegend":true,"text":["","","","100%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,100.0,0.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#6B421F"},"name":"Recusar","showlegend":true,"text":["","","","","100%"],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.051413881748071974,0.0,0.5486968449931412,0.0,100.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","showlegend":false,"text":["55%","15%","","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[54.91002570694088,15.020576131687244,2.7434842249657065,0.0,0.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","showlegend":false,"text":["45%","85%","97%","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[45.08997429305913,84.97942386831275,97.11934156378601,0.0,0.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#F2C400"},"name":"Análise manual","showlegend":false,"text":["","","","100%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,100.0,0.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#6B421F"},"name":"Recusar","showlegend":false,"text":["","","","","100%"],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.1371742112482853,0.0,100.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","showlegend":false,"text":["62%","24%","8%","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[61.799485861182525,24.382716049382715,7.681755829903978,0.0,0.0],"type":"bar","xaxis":"x3","yaxis":"y3"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","showlegend":false,"text":["38%","76%","92%","78%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[38.20051413881748,75.61728395061729,92.31824417009602,77.77777777777779,0.0],"type":"bar","xaxis":"x3","yaxis":"y3"},{"marker":{"color":"#F2C400"},"name":"Análise manual","showlegend":false,"text":["","","","22%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,22.22222222222222,0.0],"type":"bar","xaxis":"x3","yaxis":"y3"},{"marker":{"color":"#6B421F"},"name":"Recusar","showlegend":false,"text":["","","","","100%"],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,0.0,100.0],"type":"bar","xaxis":"x3","yaxis":"y3"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,0.2888888888888889],"title":{"text":"Faixa de risco"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Participação (%)"},"range":[0,105]},"xaxis2":{"anchor":"y2","domain":[0.35555555555555557,0.6444444444444445],"title":{"text":"Faixa de risco"}},"yaxis2":{"anchor":"x2","domain":[0.0,1.0],"matches":"y","showticklabels":false},"xaxis3":{"anchor":"y3","domain":[0.7111111111111111,1.0],"title":{"text":"Faixa de risco"}},"yaxis3":{"anchor":"x3","domain":[0.0,1.0],"matches":"y","showticklabels":false},"annotations":[{"font":{"size":16},"showarrow":false,"text":"Conservador","x":0.14444444444444446,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"},{"font":{"size":16},"showarrow":false,"text":"Equilibrado","x":0.5,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"},{"font":{"size":16},"showarrow":false,"text":"Expansivo","x":0.8555555555555556,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"}],"title":{"font":{"size":18,"color":"#2F3D32"},"text":"Distribuição das decisões por faixa de risco\u003cbr\u003e\u003csup\u003eCada barra = 100% das operações naquela faixa e cenário\u003c\u002fsup\u003e","x":0.02,"xanchor":"left"},"font":{"family":"Arial","color":"#2F3D32","size":12},"legend":{"orientation":"h","y":-0.18,"x":0.5,"xanchor":"center"},"margin":{"l":60,"r":40,"t":100,"b":110},"barmode":"stack","height":520,"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF"},                        {"responsive": true}                    ).then(function(){
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="b8f6f4ed-613c-4349-9e5b-e021b6ebb486" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("b8f6f4ed-613c-4349-9e5b-e021b6ebb486")) {                    Plotly.newPlot(                        "b8f6f4ed-613c-4349-9e5b-e021b6ebb486",                        [{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","showlegend":true,"text":["46%","8%","","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[46.32390745501285,8.436213991769549,0.9602194787379973,0.0,0.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","showlegend":true,"text":["54%","92%","98%","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[53.62467866323908,91.56378600823045,98.49108367626886,0.0,0.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#F2C400"},"name":"Análise manual","showlegend":true,"text":["","","","100%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,100.0,0.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#6B421F"},"name":"Recusar","showlegend":true,"text":["","","","","100%"],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.051413881748071974,0.0,0.5486968449931412,0.0,100.0],"type":"bar","xaxis":"x","yaxis":"y"},{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","showlegend":false,"text":["55%","15%","","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[54.91002570694088,15.020576131687244,2.7434842249657065,0.0,0.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","showlegend":false,"text":["45%","85%","97%","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[45.08997429305913,84.97942386831275,97.11934156378601,0.0,0.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#F2C400"},"name":"Análise manual","showlegend":false,"text":["","","","100%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,100.0,0.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#6B421F"},"name":"Recusar","showlegend":false,"text":["","","","","100%"],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.1371742112482853,0.0,100.0],"type":"bar","xaxis":"x2","yaxis":"y2"},{"marker":{"color":"#2E7D18"},"name":"Aprovar valor solicitado","showlegend":false,"text":["62%","24%","8%","",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[61.799485861182525,24.382716049382715,7.681755829903978,0.0,0.0],"type":"bar","xaxis":"x3","yaxis":"y3"},{"marker":{"color":"#64BE28"},"name":"Aprovar valor reduzido","showlegend":false,"text":["38%","76%","92%","78%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[38.20051413881748,75.61728395061729,92.31824417009602,77.77777777777779,0.0],"type":"bar","xaxis":"x3","yaxis":"y3"},{"marker":{"color":"#F2C400"},"name":"Análise manual","showlegend":false,"text":["","","","22%",""],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,22.22222222222222,0.0],"type":"bar","xaxis":"x3","yaxis":"y3"},{"marker":{"color":"#6B421F"},"name":"Recusar","showlegend":false,"text":["","","","","100%"],"textfont":{"color":"white","size":9},"textposition":"inside","x":["A","B","C","D","E"],"y":[0.0,0.0,0.0,0.0,100.0],"type":"bar","xaxis":"x3","yaxis":"y3"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,0.2888888888888889],"title":{"text":"Faixa de risco"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Participação (%)"},"range":[0,105]},"xaxis2":{"anchor":"y2","domain":[0.35555555555555557,0.6444444444444445],"title":{"text":"Faixa de risco"}},"yaxis2":{"anchor":"x2","domain":[0.0,1.0],"matches":"y","showticklabels":false},"xaxis3":{"anchor":"y3","domain":[0.7111111111111111,1.0],"title":{"text":"Faixa de risco"}},"yaxis3":{"anchor":"x3","domain":[0.0,1.0],"matches":"y","showticklabels":false},"annotations":[{"font":{"size":16},"showarrow":false,"text":"Conservador","x":0.14444444444444446,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"},{"font":{"size":16},"showarrow":false,"text":"Equilibrado","x":0.5,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"},{"font":{"size":16},"showarrow":false,"text":"Expansivo","x":0.8555555555555556,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"}],"title":{"font":{"size":18,"color":"#2F3D32"},"text":"Distribuição das decisões por faixa de risco\u003cbr\u003e\u003csup\u003eCada barra = 100% das operações naquela faixa e cenário\u003c\u002fsup\u003e","x":0.02,"xanchor":"left"},"font":{"family":"Arial","color":"#2F3D32","size":12},"legend":{"orientation":"h","y":-0.18,"x":0.5,"xanchor":"center"},"margin":{"l":60,"r":40,"t":100,"b":110},"barmode":"stack","height":520,"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('c7a825db-8d0c-491f-9567-8aae5a37ea54');
+var gd = document.getElementById('b8f6f4ed-613c-4349-9e5b-e021b6ebb486');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -11283,7 +11285,7 @@ if (outputEl) {{
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\figures\06_decisoes_por_faixa_risco.html
+<pre>Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert.
 </pre>
 </div>
 </div>
@@ -11338,9 +11340,9 @@ if (outputEl) {{
 <span class="n">fig6</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Cenário"</span><span class="p">)</span>
 <span class="n">fig6</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">"Valor (R$ MM)"</span><span class="p">)</span>
 
-<span class="n">salvar_figura</span><span class="p">(</span><span class="n">fig6</span><span class="p">,</span> <span class="n">caminho_html</span><span class="o">=</span><span class="n">FIGURES_DIR</span> <span class="o">/</span> <span class="s2">"06_valor_original_vs_aprovado.html"</span><span class="p">)</span>
+<span class="c1"># O HTML consolidado do notebook deve ser gerado depois com jupyter nbconvert.</span>
 <span class="n">fig6</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Salvo -&gt; </span><span class="si">{</span><span class="n">FIGURES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'06_valor_original_vs_aprovado.html'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -11354,9 +11356,9 @@ if (outputEl) {{
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <div style="height:500px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="0c322cfd-e2f5-46a9-8600-cfeec80ba6af" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("0c322cfd-e2f5-46a9-8600-cfeec80ba6af")) {                    Plotly.newPlot(                        "0c322cfd-e2f5-46a9-8600-cfeec80ba6af",                        [{"marker":{"color":"#6B756B"},"name":"Valor original solicitado","opacity":0.5,"text":["R$ 64.6 MM","R$ 64.6 MM","R$ 64.6 MM"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"KivZ860mUEAqK9nzrSZQQCor2fOtJlBA"},"type":"bar"},{"marker":{"color":"#2E7D18"},"name":"Valor aprovado automaticamente","text":["R$ 23.5 MM (36.4%)","R$ 27.2 MM (42.2%)","R$ 34.2 MM (52.9%)"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"7F2RcJl+N0AkIGsmVz07QDNKPQiUGEFA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"title":{"text":"Valor original solicitado versus valor aprovado automaticamente\u003cbr\u003e\u003csup\u003eR$ milhões | Percentual = proporção aprovada sobre o total solicitado\u003c\u002fsup\u003e"},"height":500,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Valor (R$ MM)"}},"barmode":"group"},                        {"responsive": true}                    ).then(function(){
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="dd305392-9cc4-4d7e-88d6-492808b30421" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("dd305392-9cc4-4d7e-88d6-492808b30421")) {                    Plotly.newPlot(                        "dd305392-9cc4-4d7e-88d6-492808b30421",                        [{"marker":{"color":"#6B756B"},"name":"Valor original solicitado","opacity":0.5,"text":["R$ 64.6 MM","R$ 64.6 MM","R$ 64.6 MM"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"KivZ860mUEAqK9nzrSZQQCor2fOtJlBA"},"type":"bar"},{"marker":{"color":"#2E7D18"},"name":"Valor aprovado automaticamente","text":["R$ 23.5 MM (36.4%)","R$ 27.2 MM (42.2%)","R$ 34.2 MM (52.9%)"],"textfont":{"size":11},"textposition":"outside","x":["Conservador","Equilibrado","Expansivo"],"y":{"dtype":"f8","bdata":"7F2RcJl+N0AkIGsmVz07QDNKPQiUGEFA"},"type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"title":{"text":"Valor original solicitado versus valor aprovado automaticamente\u003cbr\u003e\u003csup\u003eR$ milhões | Percentual = proporção aprovada sobre o total solicitado\u003c\u002fsup\u003e"},"height":500,"showlegend":true,"hovermode":"x unified","xaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","title":{"text":"Cenário"}},"yaxis":{"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","title":{"text":"Valor (R$ MM)"}},"barmode":"group"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('0c322cfd-e2f5-46a9-8600-cfeec80ba6af');
+var gd = document.getElementById('dd305392-9cc4-4d7e-88d6-492808b30421');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -11384,7 +11386,7 @@ if (outputEl) {{
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\figures\06_valor_original_vs_aprovado.html
+<pre>Figura exibida no notebook; o HTML consolidado ser? gerado via nbconvert.
 </pre>
 </div>
 </div>
@@ -11464,9 +11466,9 @@ if (outputEl) {{
 
 <span class="n">df_score</span> <span class="o">=</span> <span class="n">df_resumo</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">df_score</span><span class="p">[</span><span class="s2">"score_inadimplencia"</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm_menor_melhor</span><span class="p">(</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"inadimplencia_aprovados"</span><span class="p">])</span>
-<span class="n">df_score</span><span class="p">[</span><span class="s2">"score_aprovacao"</span><span class="p">]</span>     <span class="o">=</span> <span class="n">norm_maior_melhor</span><span class="p">(</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"taxa_aprovacao_automatica"</span><span class="p">])</span>
-<span class="n">df_score</span><span class="p">[</span><span class="s2">"score_exposicao"</span><span class="p">]</span>     <span class="o">=</span> <span class="n">norm_maior_melhor</span><span class="p">(</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"pct_exposicao_aprovada"</span><span class="p">])</span>
-<span class="n">df_score</span><span class="p">[</span><span class="s2">"score_eficiencia"</span><span class="p">]</span>    <span class="o">=</span> <span class="n">norm_menor_melhor</span><span class="p">(</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"taxa_analise_manual"</span><span class="p">])</span>
+<span class="n">df_score</span><span class="p">[</span><span class="s2">"score_aprovacao"</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm_maior_melhor</span><span class="p">(</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"taxa_aprovacao_automatica"</span><span class="p">])</span>
+<span class="n">df_score</span><span class="p">[</span><span class="s2">"score_exposicao"</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm_maior_melhor</span><span class="p">(</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"pct_exposicao_aprovada"</span><span class="p">])</span>
+<span class="n">df_score</span><span class="p">[</span><span class="s2">"score_eficiencia"</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm_menor_melhor</span><span class="p">(</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"taxa_analise_manual"</span><span class="p">])</span>
 
 <span class="n">df_score</span><span class="p">[</span><span class="s2">"score_gerencial"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
     <span class="mf">0.40</span> <span class="o">*</span> <span class="n">df_score</span><span class="p">[</span><span class="s2">"score_inadimplencia"</span><span class="p">]</span>
@@ -11480,9 +11482,9 @@ if (outputEl) {{
 <span class="n">cols_exib</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">"cenario"</span><span class="p">,</span>
     <span class="s2">"taxa_aprovacao_automatica"</span><span class="p">,</span> <span class="s2">"inadimplencia_aprovados"</span><span class="p">,</span>
-    <span class="s2">"pct_exposicao_aprovada"</span><span class="p">,</span>   <span class="s2">"taxa_analise_manual"</span><span class="p">,</span>
-    <span class="s2">"score_inadimplencia"</span><span class="p">,</span>      <span class="s2">"score_aprovacao"</span><span class="p">,</span>
-    <span class="s2">"score_exposicao"</span><span class="p">,</span>          <span class="s2">"score_eficiencia"</span><span class="p">,</span>
+    <span class="s2">"pct_exposicao_aprovada"</span><span class="p">,</span> <span class="s2">"taxa_analise_manual"</span><span class="p">,</span>
+    <span class="s2">"score_inadimplencia"</span><span class="p">,</span> <span class="s2">"score_aprovacao"</span><span class="p">,</span>
+    <span class="s2">"score_exposicao"</span><span class="p">,</span> <span class="s2">"score_eficiencia"</span><span class="p">,</span>
     <span class="s2">"score_gerencial"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">df_exib</span> <span class="o">=</span> <span class="n">df_score</span><span class="p">[</span><span class="n">cols_exib</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -11491,8 +11493,11 @@ if (outputEl) {{
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"score_inadimplencia"</span><span class="p">,</span> <span class="s2">"score_aprovacao"</span><span class="p">,</span> <span class="s2">"score_exposicao"</span><span class="p">,</span> <span class="s2">"score_eficiencia"</span><span class="p">,</span> <span class="s2">"score_gerencial"</span><span class="p">]:</span>
     <span class="n">df_exib</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_exib</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-<span class="n">df_exib</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_score_decisao_cenarios.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Score gerencial salvo -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_score_decisao_cenarios.csv'</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">df_exib</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_score_gerencial_cenarios.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Score gerencial salvo -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_score_gerencial_cenarios.csv'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">df_exib</span>
 </pre></div>
 </div>
@@ -11506,8 +11511,7 @@ if (outputEl) {{
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Score gerencial salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\tables\politica_score_decisao_cenarios.csv
-
+<pre>Score gerencial salvo -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\tables\politica_score_gerencial_cenarios.csv
 </pre>
 </div>
 </div>
@@ -11609,14 +11613,15 @@ if (outputEl) {{
 <span class="n">row_rec</span> <span class="o">=</span> <span class="n">df_score</span><span class="p">[</span><span class="n">df_score</span><span class="p">[</span><span class="s2">"cenario"</span><span class="p">]</span> <span class="o">==</span> <span class="n">CENARIO_RECOMENDADO</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">df_tabela_executiva</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span>
-    <span class="s2">"cenário"</span><span class="p">:</span> <span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="p">,</span>
-    <span class="s2">"aprovação automática"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"taxa_aprovacao_automatica"</span><span class="p">],</span>
-    <span class="s2">"inadimplência dos aprovados"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"inadimplencia_aprovados"</span><span class="p">],</span>
-    <span class="s2">"exposição aprovada"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"pct_exposicao_aprovada"</span><span class="p">],</span>
-    <span class="s2">"análise manual"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"taxa_analise_manual"</span><span class="p">],</span>
-    <span class="s2">"recusa"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"taxa_recusa"</span><span class="p">],</span>
-    <span class="s2">"score gerencial"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"score_gerencial"</span><span class="p">],</span>
-    <span class="s2">"recomendação"</span><span class="p">:</span> <span class="p">(</span>
+    <span class="s2">"cenario"</span><span class="p">:</span> <span class="n">CENARIO_RECOMENDADO</span><span class="p">,</span>
+    <span class="s2">"nome_gerencial"</span><span class="p">:</span> <span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="p">,</span>
+    <span class="s2">"taxa_aprovacao_automatica"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"taxa_aprovacao_automatica"</span><span class="p">],</span>
+    <span class="s2">"inadimplencia_aprovados"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"inadimplencia_aprovados"</span><span class="p">],</span>
+    <span class="s2">"pct_exposicao_aprovada"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"pct_exposicao_aprovada"</span><span class="p">],</span>
+    <span class="s2">"taxa_analise_manual"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"taxa_analise_manual"</span><span class="p">],</span>
+    <span class="s2">"taxa_recusa"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"taxa_recusa"</span><span class="p">],</span>
+    <span class="s2">"score_gerencial"</span><span class="p">:</span> <span class="n">row_rec</span><span class="p">[</span><span class="s2">"score_gerencial"</span><span class="p">],</span>
+    <span class="s2">"recomendacao"</span><span class="p">:</span> <span class="p">(</span>
         <span class="sa">f</span><span class="s2">"Recomendar o cenário técnico </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="si">}</span><span class="s2"> como "</span>
         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="si">}</span><span class="s2">: preserva aprovação e exposição, "</span>
         <span class="sa">f</span><span class="s2">"mantendo a inadimplência dos aprovados abaixo da taxa histórica."</span>
@@ -11624,18 +11629,19 @@ if (outputEl) {{
 <span class="p">}])</span>
 
 <span class="n">df_tabela_executiva</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_tabela_executiva_recomendacao.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_tabela_executiva_recomendacao.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'='</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  CENARIO RECOMENDADO: </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  CENÁRIO RECOMENDADO: </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  NOME GERENCIAL: </span><span class="si">{</span><span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'='</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Score gerencial ponderado : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'score_gerencial'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Aprovacao automatica      : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'taxa_aprovacao_automatica'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Inadimplencia aprovados   : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'inadimplencia_aprovados'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Exposicao aprovada        : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'pct_exposicao_aprovada'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Analise manual            : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'taxa_analise_manual'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Aprovação automática      : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'taxa_aprovacao_automatica'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Inadimplência aprovados   : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'inadimplencia_aprovados'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Exposição aprovada        : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'pct_exposicao_aprovada'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Análise manual            : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'taxa_analise_manual'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Recusa                    : </span><span class="si">{</span><span class="n">row_rec</span><span class="p">[</span><span class="s1">'taxa_recusa'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'='</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tabela executiva salva -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_tabela_executiva_recomendacao.csv'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -11654,14 +11660,14 @@ if (outputEl) {{
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>============================================================
-  CENARIO RECOMENDADO: EXPANSIVO
+  CENÁRIO RECOMENDADO: EXPANSIVO
   NOME GERENCIAL: Expansivo com controle de risco
 ============================================================
   Score gerencial ponderado : 0.600
-  Aprovacao automatica      : 86.65%
-  Inadimplencia aprovados   : 6.74%
-  Exposicao aprovada        : 52.93%
-  Analise manual            : 3.33%
+  Aprovação automática      : 86.65%
+  Inadimplência aprovados   : 6.74%
+  Exposição aprovada        : 52.93%
+  Análise manual            : 3.33%
   Recusa                    : 10.02%
 ============================================================
 Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\tables\politica_tabela_executiva_recomendacao.csv
@@ -11689,19 +11695,21 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <thead>
 <tr style="text-align: right;">
 <th></th>
-<th>cenário</th>
-<th>aprovação automática</th>
-<th>inadimplência dos aprovados</th>
-<th>exposição aprovada</th>
-<th>análise manual</th>
-<th>recusa</th>
-<th>score gerencial</th>
-<th>recomendação</th>
+<th>cenario</th>
+<th>nome_gerencial</th>
+<th>taxa_aprovacao_automatica</th>
+<th>inadimplencia_aprovados</th>
+<th>pct_exposicao_aprovada</th>
+<th>taxa_analise_manual</th>
+<th>taxa_recusa</th>
+<th>score_gerencial</th>
+<th>recomendacao</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <th>0</th>
+<td>Expansivo</td>
 <td>Expansivo com controle de risco</td>
 <td>0.8665</td>
 <td>0.0674</td>
@@ -11742,52 +11750,18 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">df_estrutura_decisao</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
-    <span class="p">{</span>
-        <span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Rating interno"</span><span class="p">,</span>
-        <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Transformar o pd_score em faixa de risco A-E."</span><span class="p">,</span>
-        <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Usa pd_score e faixa_risco; target_inadimplente_12m fica apenas para backtest."</span><span class="p">,</span>
-        <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Faixa de risco da proposta."</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Capacidade de pagamento"</span><span class="p">,</span>
-        <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Definir parcela maxima compativel com renda e risco."</span><span class="p">,</span>
-        <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Percentual maximo de parcela/renda por faixa no cenario recomendado."</span><span class="p">,</span>
-        <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Parcela maxima antes de redutores."</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Restritivos"</span><span class="p">,</span>
-        <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Reduzir limite quando ha pressao financeira relevante."</span><span class="p">,</span>
-        <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Redutores por restritivos_sobre_renda: sem, ate_2pct, ate_5pct, ate_10pct e acima_10pct."</span><span class="p">,</span>
-        <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Parcela maxima ajustada por restritivos."</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Relacionamento"</span><span class="p">,</span>
-        <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Aplicar governanca para cliente inativo e relacionamento curto."</span><span class="p">,</span>
-        <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Redutores por flag_cliente_ativo e tempo_conta_anos."</span><span class="p">,</span>
-        <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Parcela maxima ajustada por relacionamento."</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Valor maximo sugerido"</span><span class="p">,</span>
-        <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Converter parcela maxima em limite pela taxa e prazo da operacao."</span><span class="p">,</span>
-        <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Valor presente das parcelas, truncado a zero e limitado ao valor solicitado."</span><span class="p">,</span>
-        <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"valor_maximo_c e valor_aprovado_c."</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Decisao final"</span><span class="p">,</span>
-        <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Classificar a proposta em aprovacao, analise manual ou recusa."</span><span class="p">,</span>
-        <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Faixa E recusada; faixa D somente reduzida condicional ou analise manual; A-C conforme capacidade."</span><span class="p">,</span>
-        <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"decisao_cenario."</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Cenario recomendado"</span><span class="p">,</span>
-        <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Comunicar o apetite de risco escolhido para gestao."</span><span class="p">,</span>
-        <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Identificador tecnico: </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="si">}</span><span class="s2">; nome gerencial: </span><span class="si">{</span><span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="si">}</span><span class="s2">."</span><span class="p">,</span>
-        <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Politica final recomendada para validacao da area de credito."</span><span class="p">,</span>
-    <span class="p">},</span>
+    <span class="p">{</span><span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Rating interno"</span><span class="p">,</span> <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Transformar o pd_score em faixa de risco A-E."</span><span class="p">,</span> <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Usa pd_score e faixa_risco; target_inadimplente_12m fica apenas para backtest."</span><span class="p">,</span> <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Faixa de risco da proposta."</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Capacidade de pagamento"</span><span class="p">,</span> <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Definir parcela máxima compatível com renda e risco."</span><span class="p">,</span> <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Percentual máximo de parcela/renda por faixa no cenário recomendado."</span><span class="p">,</span> <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Parcela máxima antes de redutores."</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Restritivos financeiros"</span><span class="p">,</span> <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Reduzir limite quando há pressão financeira relevante."</span><span class="p">,</span> <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Redutores por restritivos_sobre_renda: sem, ate_2pct, ate_5pct, ate_10pct e acima_10pct."</span><span class="p">,</span> <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Parcela máxima ajustada por restritivos."</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Relacionamento"</span><span class="p">,</span> <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Aplicar governança para cliente inativo e relacionamento curto."</span><span class="p">,</span> <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Redutores por flag_cliente_ativo e tempo_conta_anos."</span><span class="p">,</span> <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Parcela máxima ajustada por relacionamento."</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Valor máximo sugerido"</span><span class="p">,</span> <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Converter parcela máxima em limite pela taxa e prazo da operação."</span><span class="p">,</span> <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Valor presente das parcelas, truncado a zero e limitado ao valor solicitado."</span><span class="p">,</span> <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"valor_maximo_c e valor_aprovado_c."</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Decisão final"</span><span class="p">,</span> <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Classificar a proposta em aprovação, análise manual ou recusa."</span><span class="p">,</span> <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="s2">"Faixa E recusada; faixa D somente reduzida condicional ou análise manual; A-C conforme capacidade."</span><span class="p">,</span> <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"decisao_cenario."</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"camada"</span><span class="p">:</span> <span class="s2">"Cenário recomendado"</span><span class="p">,</span> <span class="s2">"papel"</span><span class="p">:</span> <span class="s2">"Comunicar o apetite de risco escolhido para gestão."</span><span class="p">,</span> <span class="s2">"criterio_politica"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Identificador técnico: </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="si">}</span><span class="s2">; nome gerencial: </span><span class="si">{</span><span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="si">}</span><span class="s2">."</span><span class="p">,</span> <span class="s2">"saida"</span><span class="p">:</span> <span class="s2">"Política final recomendada para validação da área de crédito."</span><span class="p">},</span>
 <span class="p">])</span>
 
 <span class="n">df_estrutura_decisao</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_estrutura_consolidada_decisao.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+    <span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_estrutura_consolidada_decisao.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Estrutura consolidada salva -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_estrutura_consolidada_decisao.csv'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">df_estrutura_decisao</span>
@@ -11845,44 +11819,44 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <tr>
 <th>1</th>
 <td>Capacidade de pagamento</td>
-<td>Definir parcela maxima compativel com renda e ...</td>
-<td>Percentual maximo de parcela/renda por faixa n...</td>
-<td>Parcela maxima antes de redutores.</td>
+<td>Definir parcela máxima compatível com renda e ...</td>
+<td>Percentual máximo de parcela/renda por faixa n...</td>
+<td>Parcela máxima antes de redutores.</td>
 </tr>
 <tr>
 <th>2</th>
-<td>Restritivos</td>
-<td>Reduzir limite quando ha pressao financeira re...</td>
+<td>Restritivos financeiros</td>
+<td>Reduzir limite quando há pressão financeira re...</td>
 <td>Redutores por restritivos_sobre_renda: sem, at...</td>
-<td>Parcela maxima ajustada por restritivos.</td>
+<td>Parcela máxima ajustada por restritivos.</td>
 </tr>
 <tr>
 <th>3</th>
 <td>Relacionamento</td>
-<td>Aplicar governanca para cliente inativo e rela...</td>
+<td>Aplicar governança para cliente inativo e rela...</td>
 <td>Redutores por flag_cliente_ativo e tempo_conta...</td>
-<td>Parcela maxima ajustada por relacionamento.</td>
+<td>Parcela máxima ajustada por relacionamento.</td>
 </tr>
 <tr>
 <th>4</th>
-<td>Valor maximo sugerido</td>
-<td>Converter parcela maxima em limite pela taxa e...</td>
+<td>Valor máximo sugerido</td>
+<td>Converter parcela máxima em limite pela taxa e...</td>
 <td>Valor presente das parcelas, truncado a zero e...</td>
 <td>valor_maximo_c e valor_aprovado_c.</td>
 </tr>
 <tr>
 <th>5</th>
-<td>Decisao final</td>
-<td>Classificar a proposta em aprovacao, analise m...</td>
+<td>Decisão final</td>
+<td>Classificar a proposta em aprovação, análise m...</td>
 <td>Faixa E recusada; faixa D somente reduzida con...</td>
 <td>decisao_cenario.</td>
 </tr>
 <tr>
 <th>6</th>
-<td>Cenario recomendado</td>
+<td>Cenário recomendado</td>
 <td>Comunicar o apetite de risco escolhido para ge...</td>
-<td>Identificador tecnico: Expansivo; nome gerenci...</td>
-<td>Politica final recomendada para validacao da a...</td>
+<td>Identificador técnico: Expansivo; nome gerenci...</td>
+<td>Política final recomendada para validação da á...</td>
 </tr>
 </tbody>
 </table>
@@ -11901,37 +11875,41 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">params_rec</span> <span class="o">=</span> <span class="n">CENARIOS</span><span class="p">[</span><span class="n">CENARIO_RECOMENDADO</span><span class="p">]</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">formatar_intervalo_pd</span><span class="p">(</span><span class="n">pd_min</span><span class="p">,</span> <span class="n">pd_max</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Formata intervalo observado de PD por faixa de risco."""</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pd_min</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2"> a </span><span class="si">{</span><span class="n">pd_max</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span>
-
-
-<span class="n">intervalos_pd_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"faixa_risco"</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="s2">"pd_score"</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pd_min</span><span class="o">=</span><span class="s2">"min"</span><span class="p">,</span> <span class="n">pd_max</span><span class="o">=</span><span class="s2">"max"</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">ORDEM_FAIXAS</span><span class="p">)</span>
+<span class="n">intervalos_pd</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"faixa_risco"</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">pd_min</span><span class="o">=</span><span class="p">(</span><span class="s2">"pd_score"</span><span class="p">,</span> <span class="s2">"min"</span><span class="p">),</span>
+        <span class="n">pd_max</span><span class="o">=</span><span class="p">(</span><span class="s2">"pd_score"</span><span class="p">,</span> <span class="s2">"max"</span><span class="p">),</span>
+    <span class="p">)</span>
     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="p">)</span>
-<span class="n">intervalos_pd_df</span><span class="p">[</span><span class="s2">"intervalo_pd"</span><span class="p">]</span> <span class="o">=</span> <span class="n">intervalos_pd_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">formatar_intervalo_pd</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"pd_min"</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s2">"pd_max"</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="n">intervalos_pd</span><span class="p">[</span><span class="s2">"intervalo_pd"</span><span class="p">]</span> <span class="o">=</span> <span class="n">intervalos_pd</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">'pd_min'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2"> a </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">'pd_max'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">INTERVALOS_PD</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">intervalos_pd_df</span><span class="p">[</span><span class="s2">"faixa_risco"</span><span class="p">],</span> <span class="n">intervalos_pd_df</span><span class="p">[</span><span class="s2">"intervalo_pd"</span><span class="p">]))</span>
+
+<span class="n">dict_intervalos_pd</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="nb">zip</span><span class="p">(</span><span class="n">intervalos_pd</span><span class="p">[</span><span class="s2">"faixa_risco"</span><span class="p">],</span> <span class="n">intervalos_pd</span><span class="p">[</span><span class="s2">"intervalo_pd"</span><span class="p">])</span>
+<span class="p">)</span>
+<span class="n">dict_pd_min</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">intervalos_pd</span><span class="p">[</span><span class="s2">"faixa_risco"</span><span class="p">],</span> <span class="n">intervalos_pd</span><span class="p">[</span><span class="s2">"pd_min"</span><span class="p">]))</span>
+<span class="n">dict_pd_max</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">intervalos_pd</span><span class="p">[</span><span class="s2">"faixa_risco"</span><span class="p">],</span> <span class="n">intervalos_pd</span><span class="p">[</span><span class="s2">"pd_max"</span><span class="p">]))</span>
 
 <span class="n">ACAO_PRINCIPAL</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"A - Baixo risco"</span><span class="p">:</span>       <span class="s2">"Aprovação automática"</span><span class="p">,</span>
+    <span class="s2">"A - Baixo risco"</span><span class="p">:</span> <span class="s2">"Aprovação automática"</span><span class="p">,</span>
     <span class="s2">"B - Médio-baixo risco"</span><span class="p">:</span> <span class="s2">"Aprovação automática"</span><span class="p">,</span>
-    <span class="s2">"C - Médio risco"</span><span class="p">:</span>       <span class="s2">"Aprovação automática"</span><span class="p">,</span>
-    <span class="s2">"D - Alto risco"</span><span class="p">:</span>        <span class="s2">"Análise manual"</span> <span class="k">if</span> <span class="n">params_rec</span><span class="p">[</span><span class="s2">"acao_faixa_d"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"condicional"</span>
-                             <span class="k">else</span> <span class="s2">"Aprovação reduzida condicional / Análise manual"</span><span class="p">,</span>
-    <span class="s2">"E - Muito alto risco"</span><span class="p">:</span>  <span class="s2">"Recusar"</span><span class="p">,</span>
+    <span class="s2">"C - Médio risco"</span><span class="p">:</span> <span class="s2">"Aprovação automática"</span><span class="p">,</span>
+    <span class="s2">"D - Alto risco"</span><span class="p">:</span> <span class="s2">"Análise manual"</span> <span class="k">if</span> <span class="n">params_rec</span><span class="p">[</span><span class="s2">"acao_faixa_d"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"condicional"</span> <span class="k">else</span> <span class="s2">"Aprovação reduzida condicional / Análise manual"</span><span class="p">,</span>
+    <span class="s2">"E - Muito alto risco"</span><span class="p">:</span> <span class="s2">"Recusar"</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">OBSERVACAO_NEGOCIO</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"A - Baixo risco"</span><span class="p">:</span> <span class="s2">"Perfil de menor risco. Aprovar valor solicitado ou reduzido conforme capacidade."</span><span class="p">,</span>
-    <span class="s2">"B - Médio-baixo risco"</span><span class="p">:</span> <span class="s2">"Risco controlado. Redutores aplicados com moderação."</span><span class="p">,</span>
-    <span class="s2">"C - Médio risco"</span><span class="p">:</span> <span class="s2">"Risco intermediário. Limite mais restrito; monitorar por safra."</span><span class="p">,</span>
-    <span class="s2">"D - Alto risco"</span><span class="p">:</span> <span class="s2">"Risco elevado. No cenário recomendado, aprovar apenas valor reduzido condicional ou enviar para análise manual."</span><span class="p">,</span>
-    <span class="s2">"E - Muito alto risco"</span><span class="p">:</span> <span class="s2">"Risco muito alto. Recusa automática; exceções exigem governança fora da regra automática."</span><span class="p">,</span>
+    <span class="s2">"B - Médio-baixo risco"</span><span class="p">:</span> <span class="s2">"Risco controlado. Aplicar redutores com moderação."</span><span class="p">,</span>
+    <span class="s2">"C - Médio risco"</span><span class="p">:</span> <span class="s2">"Risco intermediário. Limite mais restrito e monitoramento por safra."</span><span class="p">,</span>
+    <span class="s2">"D - Alto risco"</span><span class="p">:</span> <span class="s2">"Risco elevado. Aprovação apenas reduzida e condicional, ou encaminhamento para análise manual."</span><span class="p">,</span>
+    <span class="s2">"E - Muito alto risco"</span><span class="p">:</span> <span class="s2">"Risco muito alto. Recusa automática na política recomendada."</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">red_rest</span> <span class="o">=</span> <span class="n">params_rec</span><span class="p">[</span><span class="s2">"redutor_restritivo"</span><span class="p">]</span>
@@ -11952,30 +11930,29 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <span class="n">registros_pol</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">faixa</span> <span class="ow">in</span> <span class="n">ORDEM_FAIXAS</span><span class="p">:</span>
     <span class="n">pct</span> <span class="o">=</span> <span class="n">params_rec</span><span class="p">[</span><span class="s2">"pct_max_parcela_renda"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">faixa</span><span class="p">)</span>
-    <span class="n">linha_pd</span> <span class="o">=</span> <span class="n">intervalos_pd_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">intervalos_pd_df</span><span class="p">[</span><span class="s2">"faixa_risco"</span><span class="p">]</span> <span class="o">==</span> <span class="n">faixa</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">registros_pol</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s2">"cenario_recomendado"</span><span class="p">:</span>     <span class="n">CENARIO_RECOMENDADO</span><span class="p">,</span>
-        <span class="s2">"nome_gerencial_cenario"</span><span class="p">:</span>  <span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="p">,</span>
-        <span class="s2">"faixa_risco"</span><span class="p">:</span>            <span class="n">faixa</span><span class="p">,</span>
-        <span class="s2">"pd_min"</span><span class="p">:</span>                 <span class="n">linha_pd</span><span class="p">[</span><span class="s2">"pd_min"</span><span class="p">],</span>
-        <span class="s2">"pd_max"</span><span class="p">:</span>                 <span class="n">linha_pd</span><span class="p">[</span><span class="s2">"pd_max"</span><span class="p">],</span>
-        <span class="s2">"intervalo_pd"</span><span class="p">:</span>           <span class="n">INTERVALOS_PD</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
-        <span class="s2">"acao_principal"</span><span class="p">:</span>         <span class="n">ACAO_PRINCIPAL</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
-        <span class="s2">"pct_max_parcela_renda"</span><span class="p">:</span>  <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pct</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">pct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"N/A"</span><span class="p">,</span>
+        <span class="s2">"cenario_recomendado"</span><span class="p">:</span> <span class="n">CENARIO_RECOMENDADO</span><span class="p">,</span>
+        <span class="s2">"nome_gerencial_cenario"</span><span class="p">:</span> <span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="p">,</span>
+        <span class="s2">"faixa_risco"</span><span class="p">:</span> <span class="n">faixa</span><span class="p">,</span>
+        <span class="s2">"pd_min"</span><span class="p">:</span> <span class="n">dict_pd_min</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
+        <span class="s2">"pd_max"</span><span class="p">:</span> <span class="n">dict_pd_max</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
+        <span class="s2">"intervalo_pd"</span><span class="p">:</span> <span class="n">dict_intervalos_pd</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
+        <span class="s2">"acao_principal"</span><span class="p">:</span> <span class="n">ACAO_PRINCIPAL</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
+        <span class="s2">"pct_max_parcela_renda"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pct</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">pct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"N/A"</span><span class="p">,</span>
         <span class="s2">"tratamento_restritivos"</span><span class="p">:</span> <span class="n">trat_rest</span><span class="p">,</span>
-        <span class="s2">"tratamento_inativo"</span><span class="p">:</span>     <span class="sa">f</span><span class="s2">"redutor=</span><span class="si">{</span><span class="n">params_rec</span><span class="p">[</span><span class="s1">'redutor_inativo'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="s2">"tratamento_inativo"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"redutor=</span><span class="si">{</span><span class="n">params_rec</span><span class="p">[</span><span class="s1">'redutor_inativo'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="s2">"tratamento_tempo_conta"</span><span class="p">:</span> <span class="n">trat_tempo</span><span class="p">,</span>
-        <span class="s2">"regra_limite"</span><span class="p">:</span>           <span class="p">(</span>
+        <span class="s2">"regra_limite"</span><span class="p">:</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">"parcela_max = renda x </span><span class="si">{</span><span class="n">pct</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> x redutores; "</span>
             <span class="sa">f</span><span class="s2">"limite = parcela_max x VP(taxa,prazo)"</span> <span class="k">if</span> <span class="n">pct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="k">else</span> <span class="n">ACAO_PRINCIPAL</span><span class="p">[</span><span class="n">faixa</span><span class="p">]</span>
         <span class="p">),</span>
-        <span class="s2">"observacao_negocio"</span><span class="p">:</span>     <span class="n">OBSERVACAO_NEGOCIO</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
+        <span class="s2">"observacao_negocio"</span><span class="p">:</span> <span class="n">OBSERVACAO_NEGOCIO</span><span class="p">[</span><span class="n">faixa</span><span class="p">],</span>
     <span class="p">})</span>
 
 <span class="n">df_politica_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">registros_pol</span><span class="p">)</span>
 <span class="n">df_politica_final</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">TABLES_DIR</span> <span class="o">/</span> <span class="s2">"politica_final_recomendada.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Politica final salva -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_final_recomendada.csv'</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Política final salva -&gt; </span><span class="si">{</span><span class="n">TABLES_DIR</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'politica_final_recomendada.csv'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">df_politica_final</span>
 </pre></div>
 </div>
@@ -11989,8 +11966,7 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Politica final salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\tables\politica_final_recomendada.csv
-
+<pre>Política final salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\outputs\tables\politica_final_recomendada.csv
 </pre>
 </div>
 </div>
@@ -12061,7 +12037,7 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <td>redutor=90%</td>
 <td>curto(&lt;1a)=92% | medio(1-3a)=98% | longo(&gt;=3a)...</td>
 <td>parcela_max = renda x 40% x redutores; limite ...</td>
-<td>Risco controlado. Redutores aplicados com mode...</td>
+<td>Risco controlado. Aplicar redutores com modera...</td>
 </tr>
 <tr>
 <th>2</th>
@@ -12077,7 +12053,7 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <td>redutor=90%</td>
 <td>curto(&lt;1a)=92% | medio(1-3a)=98% | longo(&gt;=3a)...</td>
 <td>parcela_max = renda x 35% x redutores; limite ...</td>
-<td>Risco intermediário. Limite mais restrito; mon...</td>
+<td>Risco intermediário. Limite mais restrito e mo...</td>
 </tr>
 <tr>
 <th>3</th>
@@ -12093,7 +12069,7 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <td>redutor=90%</td>
 <td>curto(&lt;1a)=92% | medio(1-3a)=98% | longo(&gt;=3a)...</td>
 <td>parcela_max = renda x 25% x redutores; limite ...</td>
-<td>Risco elevado. No cenário recomendado, aprovar...</td>
+<td>Risco elevado. Aprovação apenas reduzida e con...</td>
 </tr>
 <tr>
 <th>4</th>
@@ -12109,7 +12085,7 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <td>redutor=90%</td>
 <td>curto(&lt;1a)=92% | medio(1-3a)=98% | longo(&gt;=3a)...</td>
 <td>Recusar</td>
-<td>Risco muito alto. Recusa automática; exceções ...</td>
+<td>Risco muito alto. Recusa automática na polític...</td>
 </tr>
 </tbody>
 </table>
@@ -12360,41 +12336,37 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checklist de saidas geradas</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Checklist de saídas geradas</span>
 <span class="n">saidas</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">"data/processed"</span><span class="p">,</span>  <span class="s2">"base_simulacao_cenarios_politica.parquet"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_contrato_dados_cenarios.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_variaveis_disponiveis_limitacoes.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_parametros_cenarios.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_resumo_cenarios.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_resumo_decisoes_cenarios.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_resumo_faixas_cenarios.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_score_decisao_cenarios.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_tabela_executiva_recomendacao.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_estrutura_consolidada_decisao.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span>  <span class="s2">"politica_final_recomendada.csv"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/figures"</span><span class="p">,</span> <span class="s2">"06_tradeoff_cenarios_politica.html"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/figures"</span><span class="p">,</span> <span class="s2">"06_taxas_decisao_por_cenario.html"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/figures"</span><span class="p">,</span> <span class="s2">"06_inadimplencia_aprovados_por_cenario.html"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/figures"</span><span class="p">,</span> <span class="s2">"06_exposicao_aprovada_por_cenario.html"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/figures"</span><span class="p">,</span> <span class="s2">"06_decisoes_por_faixa_risco.html"</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">"outputs/figures"</span><span class="p">,</span> <span class="s2">"06_valor_original_vs_aprovado.html"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"data/processed"</span><span class="p">,</span> <span class="s2">"base_simulacao_cenarios_politica.parquet"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_contrato_dados_cenarios.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_variaveis_disponiveis_limitacoes.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_parametros_cenarios.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_resumo_cenarios.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_resumo_decisoes_cenarios.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_resumo_faixas_cenarios.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_score_por_decisao_cenarios.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_score_gerencial_cenarios.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_tabela_executiva_recomendacao.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_estrutura_consolidada_decisao.csv"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"outputs/tables"</span><span class="p">,</span> <span class="s2">"politica_final_recomendada.csv"</span><span class="p">),</span>
 <span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Checklist de saidas do notebook 06:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Checklist de saídas do notebook 06:"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'-'</span><span class="o">*</span><span class="mi">58</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">todos_ok</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">for</span> <span class="n">diretorio</span><span class="p">,</span> <span class="n">arquivo</span> <span class="ow">in</span> <span class="n">saidas</span><span class="p">:</span>
     <span class="n">caminho</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="n">diretorio</span> <span class="o">/</span> <span class="n">arquivo</span>
-    <span class="n">existe</span>  <span class="o">=</span> <span class="n">caminho</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="n">existe</span> <span class="o">=</span> <span class="n">caminho</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">existe</span><span class="p">:</span>
         <span class="n">todos_ok</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="s1">'OK'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">existe</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'XX'</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">diretorio</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">arquivo</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'-'</span><span class="o">*</span><span class="mi">58</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">status_final</span> <span class="o">=</span> <span class="s2">"Todas as saidas foram geradas."</span> <span class="k">if</span> <span class="n">todos_ok</span> <span class="k">else</span> <span class="s2">"ATENCAO: algumas saidas estao ausentes."</span>
+<span class="n">status_final</span> <span class="o">=</span> <span class="s2">"Todas as saídas foram geradas."</span> <span class="k">if</span> <span class="n">todos_ok</span> <span class="k">else</span> <span class="s2">"ATENÇÃO: algumas saídas estão ausentes."</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">status_final</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Cenario recomendado: </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cenário recomendado: </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Nome gerencial: </span><span class="si">{</span><span class="n">NOME_GERENCIAL_RECOMENDADO</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -12408,7 +12380,7 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Checklist de saidas do notebook 06:
+<pre>Checklist de saídas do notebook 06:
 ----------------------------------------------------------
   OK  data/processed/base_simulacao_cenarios_politica.parquet
   OK  outputs/tables/politica_contrato_dados_cenarios.csv
@@ -12417,20 +12389,15 @@ Tabela executiva salva -&gt; C:\GitHub\datascience\projetos\concessao_credito\ou
   OK  outputs/tables/politica_resumo_cenarios.csv
   OK  outputs/tables/politica_resumo_decisoes_cenarios.csv
   OK  outputs/tables/politica_resumo_faixas_cenarios.csv
-  OK  outputs/tables/politica_score_decisao_cenarios.csv
+  OK  outputs/tables/politica_score_por_decisao_cenarios.csv
+  OK  outputs/tables/politica_score_gerencial_cenarios.csv
   OK  outputs/tables/politica_tabela_executiva_recomendacao.csv
   OK  outputs/tables/politica_estrutura_consolidada_decisao.csv
   OK  outputs/tables/politica_final_recomendada.csv
-  OK  outputs/figures/06_tradeoff_cenarios_politica.html
-  OK  outputs/figures/06_taxas_decisao_por_cenario.html
-  OK  outputs/figures/06_inadimplencia_aprovados_por_cenario.html
-  OK  outputs/figures/06_exposicao_aprovada_por_cenario.html
-  OK  outputs/figures/06_decisoes_por_faixa_risco.html
-  OK  outputs/figures/06_valor_original_vs_aprovado.html
 ----------------------------------------------------------
-Todas as saidas foram geradas.
+Todas as saídas foram geradas.
 
-Cenario recomendado: Expansivo
+Cenário recomendado: Expansivo
 Nome gerencial: Expansivo com controle de risco
 </pre>
 </div>
