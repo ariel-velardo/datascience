@@ -1,10 +1,32 @@
-# Playbook — Contrato de dados do notebook 06
+# Playbook — Contrato de dados v2 do notebook 06
 
 ## 1. Objetivo
 
-Este playbook define o contrato de dados mínimo para o notebook `06_cenarios_politica_recomendacao.ipynb`.
+Este playbook define o contrato de dados mínimo para o notebook:
 
-Ele deve evitar que a IA ou o analista use variáveis erradas, assuma colunas inexistentes ou reconstrua etapas anteriores sem necessidade.
+```text
+notebooks/06_cenarios_politica_recomendacao.ipynb
+```
+
+A nova versão do notebook 06 deve simular uma política de concessão baseada em:
+
+```text
+rating interno
++ renda
++ multiplicador de renda
++ teto por rating
++ capacidade de pagamento
++ fatores de ajuste de limite
++ impacto financeiro
+```
+
+O objetivo deste contrato é evitar:
+
+* uso de variáveis erradas;
+* uso de target como regra de decisão;
+* reconstrução desnecessária de etapas anteriores;
+* criação de variáveis inexistentes;
+* uso de premissas não suportadas pela base.
 
 ---
 
@@ -16,13 +38,31 @@ O notebook 06 deve ler preferencialmente:
 data/processed/base_politica_validacao_com_score.parquet
 ```
 
-Essa base é a saída do notebook 05 e deve conter a safra de validação enriquecida com score de PD, faixas de risco e política inicial.
+Essa base é a saída do notebook 05 e contém a safra de validação enriquecida com:
+
+* score de PD;
+* rating/faixa de risco;
+* variáveis financeiras;
+* variáveis de operação;
+* variáveis de relacionamento;
+* variáveis de restritivos;
+* target de inadimplência apenas para backtest.
+
+Se essa base não existir, o notebook pode procurar base equivalente em:
+
+```text
+data/processed/
+```
+
+Mas deve interromper se não encontrar uma base com score de PD já calculado.
+
+O notebook 06 não deve retreinar modelo nem recriar target.
 
 ---
 
 ## 3. Colunas obrigatórias
 
-A base de entrada deve conter estas colunas:
+A base de entrada deve conter:
 
 ```text
 id_cliente
@@ -41,17 +81,18 @@ flag_cliente_ativo
 target_inadimplente_12m
 ```
 
-Se existir `id_operacao`, usar como identificador da operação.
+Se `id_operacao` existir, usar como identificador da operação.
 
-Se não existir `id_operacao`, criar a partir do índice ou de `id_cliente`, documentando que no case cada cliente aparece uma vez na base de concessão.
+Se `id_operacao` não existir, criar a partir do índice ou de `id_cliente`, documentando que no case cada cliente aparece uma única vez na base de concessão.
 
 ---
 
 ## 4. Colunas opcionais úteis
 
-Estas colunas são úteis, mas não obrigatórias:
+Estas colunas podem ser usadas para diagnóstico, se existirem:
 
 ```text
+id_operacao
 data_concessao
 safra_concessao
 idade_concessao
@@ -66,37 +107,43 @@ redutor_relacionamento
 parcela_maxima
 ```
 
-Se existirem, podem ser usadas para diagnóstico, comparação com política inicial e tabelas explicativas.
+Observações:
+
+* `idade_concessao` e `cat_escolaridade` podem aparecer em diagnóstico e interpretação, mas exigem cautela de governança.
+* `cod_agencia` não deve ser usado como regra de concessão; pode ser usado apenas para monitoramento.
+* `valor_maximo_sugerido`, `valor_aprovado` e `decisao_politica`, se existirem, pertencem à política anterior e podem ser usadas apenas como referência histórica, não como insumo da nova decisão.
 
 ---
 
 ## 5. Papéis das variáveis
 
-| Variável                  | Papel               | Pode entrar na regra? | Observação                              |
-| ------------------------- | ------------------- | --------------------- | --------------------------------------- |
-| `pd_score`                | risco               | sim                   | rating interno criado pelo modelo       |
-| `faixa_risco`             | risco               | sim                   | discretização da PD                     |
-| `valor_renda`             | capacidade          | sim                   | base do limite de parcela               |
-| `valor_parcela`           | operação/capacidade | sim                   | comparação com renda                    |
-| `valor_emprestado`        | operação/exposição  | sim                   | valor solicitado/concedido histórico    |
-| `valor_taxa`              | operação            | sim                   | usada no cálculo de valor presente      |
-| `valor_prazo`             | operação            | sim                   | usada no cálculo de valor presente      |
-| `valor_restritivos`       | restritivo          | sim                   | proxy de pressão financeira             |
-| `restritivos_sobre_renda` | restritivo          | sim                   | redutor de limite                       |
-| `comprometimento_renda`   | capacidade          | sim                   | diagnóstico e regra                     |
-| `tempo_conta_anos`        | relacionamento      | sim                   | redutor/bônus controlado                |
-| `flag_cliente_ativo`      | relacionamento      | sim                   | cliente ativo/inativo                   |
-| `idade_concessao`         | perfil              | usar com cautela      | mais adequado para modelo/interpretação |
-| `cat_escolaridade`        | perfil              | usar com cautela      | atenção a governança/fairness           |
-| `cod_agencia`             | monitoramento       | não recomendado       | risco de regra operacional enviesada    |
-| `target_inadimplente_12m` | avaliação           | não                   | usar apenas para backtest               |
-| `flag_inadimplente`       | avaliação futura    | não                   | potencial leakage                       |
+| Variável                  | Papel               | Pode entrar na regra? | Observação                           |
+| ------------------------- | ------------------- | --------------------- | ------------------------------------ |
+| `id_cliente`              | identificador       | não                   | Chave do cliente                     |
+| `id_operacao`             | identificador       | não                   | Criar se não existir                 |
+| `pd_score`                | risco               | sim                   | Score interno de PD                  |
+| `faixa_risco`             | rating              | sim                   | Rating interno derivado do score     |
+| `valor_renda`             | capacidade/limite   | sim                   | Base para multiplicador e capacidade |
+| `valor_emprestado`        | valor solicitado    | sim                   | Proxy do valor solicitado histórico  |
+| `valor_parcela`           | operação/capacidade | sim                   | Diagnóstico e comparação             |
+| `valor_taxa`              | operação            | sim                   | Usada no valor presente              |
+| `valor_prazo`             | operação            | sim                   | Usada no valor presente              |
+| `valor_restritivos`       | restritivo          | sim                   | Proxy de pressão financeira          |
+| `restritivos_sobre_renda` | restritivo          | sim                   | Fator de ajuste de limite            |
+| `comprometimento_renda`   | capacidade          | sim                   | Diagnóstico e regra auxiliar         |
+| `tempo_conta_anos`        | relacionamento      | sim                   | Fator de ajuste de limite            |
+| `flag_cliente_ativo`      | relacionamento      | sim                   | Cliente ativo/inativo                |
+| `idade_concessao`         | perfil/governança   | evitar regra direta   | Usar com cautela                     |
+| `cat_escolaridade`        | perfil/governança   | evitar regra direta   | Usar com cautela                     |
+| `cod_agencia`             | monitoramento       | não recomendado       | Não usar como política de concessão  |
+| `target_inadimplente_12m` | avaliação/backtest  | não                   | Nunca usar na decisão                |
+| `flag_inadimplente`       | avaliação futura    | não                   | Potencial leakage                    |
 
 ---
 
-## 6. Validações obrigatórias no notebook
+## 6. Validações obrigatórias
 
-Antes de simular cenários, executar validações:
+Antes de simular cenários, validar:
 
 ### 6.1 Presença de colunas
 
@@ -108,9 +155,9 @@ Se faltarem colunas, interromper com erro claro:
 Colunas obrigatórias ausentes: [...]
 ```
 
-### 6.2 Tipos
+### 6.2 Tipos numéricos
 
-Verificar se variáveis numéricas estão como numéricas:
+Validar ou converter para numérico:
 
 ```text
 pd_score
@@ -128,17 +175,20 @@ target_inadimplente_12m
 
 ### 6.3 Nulos
 
-Calcular nulos por coluna obrigatória.
+Calcular percentual de nulos nas colunas obrigatórias.
 
-Regra recomendada:
+Regras:
 
-* `pd_score` nulo: não pode simular;
-* `valor_renda` nulo ou zero: limite deve ser zero;
-* `valor_taxa` nula: tratar com taxa técnica mínima;
-* `valor_prazo` nulo ou zero: tratar com prazo mínimo 1;
-* `target_inadimplente_12m` nulo: não usar na avaliação.
+```text
+pd_score nulo → não pode simular
+faixa_risco nulo → não pode simular
+valor_renda nulo ou <= 0 → limite deve ser zero
+valor_taxa nula ou <= 0 → usar taxa técnica mínima
+valor_prazo nulo ou <= 0 → usar prazo mínimo 1
+target_inadimplente_12m nulo → não usar na avaliação
+```
 
-### 6.4 Faixa de score
+### 6.4 Faixa do score
 
 Validar:
 
@@ -146,11 +196,11 @@ Validar:
 0 <= pd_score <= 1
 ```
 
-Se houver valores fora, interromper ou corrigir com alerta explícito.
+Se houver valores fora do intervalo, interromper ou corrigir com alerta explícito.
 
-### 6.5 Faixas de risco
+### 6.5 Faixas de risco esperadas
 
-Validar se `faixa_risco` contém apenas:
+Validar se `faixa_risco` contém apenas categorias compatíveis com:
 
 ```text
 A - Baixo risco
@@ -160,33 +210,75 @@ D - Alto risco
 E - Muito alto risco
 ```
 
-Se houver faixas diferentes, listar categorias encontradas.
+Se houver categorias diferentes, listar as categorias encontradas e padronizar se possível.
 
 ---
 
-## 7. Derivações auxiliares permitidas
+## 7. Variáveis derivadas permitidas
 
 O notebook 06 pode criar:
 
 ```text
+id_operacao
+faixa_renda
 classe_restritivo_cenario
-classe_tempo_conta_cenario
-pct_max_parcela_renda_cenario
-redutor_restritivo_cenario
-redutor_relacionamento_cenario
-redutor_tempo_conta_cenario
+classe_tempo_relacionamento
+multiplicador_renda_cenario
+teto_rating_cenario
+pct_max_comprometimento_cenario
+fator_restritivo_cenario
+fator_cliente_ativo_cenario
+fator_tempo_relacionamento_cenario
 parcela_maxima_cenario
-valor_maximo_sugerido_cenario
+limite_multiplicador_cenario
+limite_capacidade_cenario
+limite_bruto_cenario
+limite_final_cenario
 valor_aprovado_cenario
 decisao_cenario
 cenario
 ```
 
-Essas variáveis devem ser específicas do cenário e não devem sobrescrever variáveis originais sem necessidade.
+Essas variáveis devem ser específicas do cenário e não devem sobrescrever variáveis originais.
 
 ---
 
-## 8. Regras para restritivos
+## 8. Variáveis que não podem ser usadas na decisão
+
+Não usar como entrada de decisão:
+
+```text
+target_inadimplente_12m
+flag_inadimplente
+inadimplência posterior
+decisões simuladas anteriores
+bad rate observado
+qualquer variável criada após a concessão
+```
+
+Essas variáveis podem ser usadas somente para avaliação histórica/backtest.
+
+---
+
+## 9. Faixa de renda
+
+Criar `faixa_renda` para caracterização do público.
+
+Sugestão inicial:
+
+```text
+Até R$ 2 mil
+R$ 2 mil a R$ 5 mil
+R$ 5 mil a R$ 10 mil
+R$ 10 mil a R$ 20 mil
+Acima de R$ 20 mil
+```
+
+Se a distribuição da base exigir outro corte, documentar.
+
+---
+
+## 10. Classe de restritivo
 
 Criar classificação padronizada:
 
@@ -198,11 +290,11 @@ ate_10pct:      acima de 5% até 10% da renda
 acima_10pct:    acima de 10% da renda
 ```
 
-Essa classificação deve alimentar redutores de limite.
+Essa classe deve alimentar fatores de ajuste de limite.
 
 ---
 
-## 9. Regras para tempo de relacionamento
+## 11. Classe de relacionamento
 
 Criar classificação padronizada:
 
@@ -212,80 +304,129 @@ medio: 1 <= tempo_conta_anos < 3
 longo: tempo_conta_anos >= 3
 ```
 
-Uso recomendado:
+Essa classe deve alimentar fatores de ajuste de limite.
 
-* relacionamento curto: redutor leve ou moderado;
-* relacionamento médio: neutro;
-* relacionamento longo: neutro ou redutor menos severo.
-
-Evitar aumentar agressivamente limite apenas por tempo de conta.
+Evitar bônus agressivo por tempo de conta. Relacionamento deve ser usado como fator de prudência, não como substituto do risco.
 
 ---
 
-## 10. Tratamento de cliente ativo
+## 12. Parâmetros obrigatórios por cenário
 
-`flag_cliente_ativo` deve ser interpretada como:
+Cada cenário deve conter:
 
 ```text
-1 = cliente ativo
-0 = cliente inativo
+cenario
+faixa_risco
+multiplicador_renda
+teto_rating
+pct_max_comprometimento
+elegivel_aprovacao_automatica
+elegivel_aprovacao_reduzida
+tratamento_rating
+valor_minimo_operacional
 ```
 
-Regra recomendada:
+Além disso, cada cenário deve ter tabelas de fatores:
 
-* cliente ativo: redutor 1.00;
-* cliente inativo: redutor menor que 1.00.
-
-O valor exato depende do cenário.
+```text
+fatores por classe_restritivo
+fatores por flag_cliente_ativo
+fatores por classe_tempo_relacionamento
+```
 
 ---
 
-## 11. Fórmula padrão de limite
+## 13. Cálculo do limite
 
-A política deve calcular:
+### 13.1 Limite por multiplicador
+
+```text
+limite_multiplicador =
+    valor_renda × multiplicador_renda
+```
+
+### 13.2 Limite por capacidade
 
 ```text
 parcela_maxima =
-    valor_renda
-    × pct_max_parcela_renda_cenario
-    × redutor_restritivo_cenario
-    × redutor_relacionamento_cenario
-    × redutor_tempo_conta_cenario
+    valor_renda × pct_max_comprometimento
 ```
 
-Depois:
-
 ```text
-valor_maximo_sugerido =
-    parcela_maxima × fator_valor_presente
+limite_capacidade =
+    parcela_maxima × ((1 - (1 + valor_taxa)^(-valor_prazo)) / valor_taxa)
 ```
 
-Onde:
+Tratamentos:
 
 ```text
-fator_valor_presente =
-    (1 - (1 + valor_taxa)^(-valor_prazo)) / valor_taxa
-```
-
----
-
-## 12. Tratamentos técnicos da fórmula
-
-Aplicar tratamentos robustos:
-
-```text
-valor_renda <= 0 → parcela máxima = 0
 valor_taxa <= 0 → substituir por 0.0001
 valor_prazo <= 0 → substituir por 1
-valor_maximo_sugerido < 0 → truncar em 0
-valor_aprovado não pode ser maior que valor_emprestado
+valor_renda <= 0 → limite zero
+```
+
+### 13.3 Limite bruto
+
+```text
+limite_bruto =
+    min(limite_multiplicador, limite_capacidade, teto_rating)
+```
+
+### 13.4 Limite final
+
+```text
+limite_final =
+    limite_bruto
+    × fator_restritivo
+    × fator_cliente_ativo
+    × fator_tempo_relacionamento
+```
+
+Tratamentos:
+
+```text
+limite_final < 0 → truncar em zero
+limite_final nulo → zero
 ```
 
 ---
 
-## 13. Decisões padronizadas
+## 14. Valor aprovado
 
-Usar exatamente estas categorias:
+O valor aprovado automático não pode ser maior que o valor solicitado histórico.
+
+Usar:
+
+```text
+valor_aprovado =
+    min(valor_emprestado, limite_final)
+```
+
+Mas somente para decisões:
+
+```text
+Aprovar valor solicitado
+Aprovar valor reduzido
+```
+
+Para:
+
+```text
+Análise manual
+Recusar
+```
+
+usar:
+
+```text
+valor_aprovado = 0
+```
+
+---
+
+## 15. Categorias de decisão
+
+Usar exatamente:
 
 ```text
 Aprovar valor solicitado
@@ -296,102 +437,174 @@ Recusar
 
 Não criar nomes alternativos.
 
-Isso evita problemas na comparação dos cenários.
-
 ---
 
-## 14. Indicadores obrigatórios de cenário
+## 16. Indicadores obrigatórios de cenário
 
 Para cada cenário, calcular:
 
 ```text
-qtd_operacoes
+qtd_clientes
 taxa_historica_inadimplencia
-taxa_aprovacao_automatica
+taxa_aprovacao_valor_solicitado
+taxa_aprovacao_reduzida
+taxa_aprovacao_automatica_total
 taxa_analise_manual
 taxa_recusa
-inadimplencia_aprovados
 pd_media_aprovados
-valor_original_total
+bad_rate_observado_aprovados
+valor_solicitado_total
 valor_aprovado_total
 pct_exposicao_aprovada
 reducao_exposicao
-valor_medio_aprovado
+limite_medio
+valor_aprovado_medio
 ```
 
 ---
 
-## 15. Indicadores por decisão
+## 17. Indicadores por rating
+
+Para cada cenário e rating, calcular:
+
+```text
+cenario
+faixa_risco
+qtd_clientes
+pd_media
+bad_rate_observado
+renda_media
+valor_solicitado_total
+valor_aprovado_total
+pct_exposicao_aprovada
+limite_medio
+valor_aprovado_medio
+taxa_aprovacao_automatica
+taxa_analise_manual
+taxa_recusa
+```
+
+---
+
+## 18. Indicadores por decisão
 
 Para cada cenário e decisão, calcular:
 
 ```text
-qtd_operacoes
-participacao_operacoes
-bad_rate_observado
+cenario
+decisao
+qtd_clientes
+participacao_clientes
 pd_media
-valor_original_total
+bad_rate_observado
+valor_solicitado_total
 valor_aprovado_total
-ticket_medio_original
-ticket_medio_aprovado
+valor_solicitado_medio
+valor_aprovado_medio
 ```
 
 ---
 
-## 16. Indicadores por faixa de risco
+## 19. Tabelas de público obrigatórias
 
-Para cada cenário e faixa de risco, calcular:
+Salvar:
 
 ```text
-qtd_operacoes
-bad_rate_observado
-pd_media
-taxa_aprovacao
-taxa_analise_manual
-taxa_recusa
-valor_original_total
-valor_aprovado_total
-pct_exposicao_aprovada
+outputs/tables/politica_publico_faixa_renda_rating.csv
+outputs/tables/politica_publico_rating_tempo_relacionamento.csv
+outputs/tables/politica_publico_rating_pd_bad_rate.csv
+outputs/tables/politica_publico_rating_exposicao.csv
+outputs/tables/politica_publico_rating_restritivos.csv
 ```
 
 ---
 
-## 17. Critérios de consistência esperados
+## 20. Tabelas de política obrigatórias
+
+Salvar:
+
+```text
+outputs/tables/politica_parametros_limite_cenarios.csv
+outputs/tables/politica_impacto_financeiro_cenarios.csv
+outputs/tables/politica_impacto_por_rating.csv
+outputs/tables/politica_impacto_por_decisao.csv
+outputs/tables/politica_score_gerencial_cenarios.csv
+outputs/tables/politica_final_recomendada_limites.csv
+```
+
+---
+
+## 21. Base final simulada
+
+Salvar:
+
+```text
+data/processed/base_simulacao_cenarios_politica.parquet
+```
+
+Essa base deve conter, para cada cliente e cenário:
+
+```text
+cenario
+id_cliente
+id_operacao
+pd_score
+faixa_risco
+valor_renda
+valor_emprestado
+valor_taxa
+valor_prazo
+classe_restritivo_cenario
+classe_tempo_relacionamento
+multiplicador_renda_cenario
+teto_rating_cenario
+pct_max_comprometimento_cenario
+limite_multiplicador_cenario
+limite_capacidade_cenario
+limite_bruto_cenario
+limite_final_cenario
+decisao_cenario
+valor_aprovado_cenario
+target_inadimplente_12m
+```
+
+---
+
+## 22. Consistência esperada
 
 A simulação deve produzir resultados intuitivos:
 
-1. a faixa E deve ter maior restrição que a faixa A;
-2. o cenário expansivo deve aprovar mais que o conservador;
-3. o cenário conservador deve ter menor inadimplência dos aprovados;
-4. a exposição aprovada deve crescer do conservador para o expansivo;
-5. a inadimplência dos aprovados não deve superar a taxa histórica sem justificativa;
-6. análise manual deve concentrar risco intermediário;
-7. recusa deve concentrar risco alto ou muito alto.
+1. rating A deve ter maior multiplicador/teto que B, C e D;
+2. rating E deve ser o mais restrito;
+3. valor aprovado nunca deve superar valor solicitado;
+4. análise manual e recusa devem ter valor aprovado automático zero;
+5. cenário expansivo deve aprovar mais exposição que o conservador;
+6. cenário conservador deve ter menor risco médio dos aprovados;
+7. rating D não deve receber aprovação automática irrestrita;
+8. rating E não deve receber limite automático;
+9. não deve existir teto infinito;
+10. target não deve entrar na decisão.
 
-Se esses pontos não ocorrerem, investigar regra ou dados.
+Se essas regras não forem atendidas, investigar antes de recomendar a política.
 
 ---
 
-## 18. Saídas de auditoria
+## 23. Resumo executivo do contrato
 
-Salvar tabelas que permitam auditar a política:
+O notebook 06 deve usar a base já preparada com `pd_score`.
+
+Ele não deve retreinar modelo, recriar target ou usar inadimplência posterior como decisão.
+
+A política deve ser simulada como uma política de limite, combinando:
 
 ```text
-politica_contrato_dados_cenarios.csv
-politica_parametros_cenarios.csv
-politica_resumo_cenarios.csv
-politica_resumo_decisoes_cenarios.csv
-politica_resumo_faixas_cenarios.csv
-politica_score_decisao_cenarios.csv
-politica_final_recomendada.csv
+rating
++ renda
++ multiplicador
++ teto
++ capacidade
++ restritivos
++ relacionamento
 ```
 
----
-
-## 19. Resumo executivo do contrato
-
-O notebook 06 deve usar a base já preparada com `pd_score`, não deve retreinar modelo e não deve reconstruir target.
-
-Seu papel é simular políticas alternativas com base em risco, capacidade de pagamento, restritivos e relacionamento.
-
-O target de inadimplência 12m deve ser usado apenas para avaliar o desempenho histórico das decisões simuladas.
+A avaliação histórica deve usar o target apenas para backtest.

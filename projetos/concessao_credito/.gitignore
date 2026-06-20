@@ -24,3 +24,6 @@ reports/perguntas_banca_politica_credito.md
 _entrega_privada_apresentacao/
 *.pptx
 *.key
+
+# Backups locais do case de concessão
+_backup_politica_antiga_*/

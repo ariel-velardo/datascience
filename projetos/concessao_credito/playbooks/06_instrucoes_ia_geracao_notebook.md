@@ -1,57 +1,87 @@
-# Instruções para IA — Geração do notebook 06
+# Instruções para IA — Geração v2 do notebook 06
 
 ## 1. Papel da IA
 
 Atue como cientista de dados sênior especializado em:
 
 * risco de crédito;
-* concessão de crédito;
-* política de crédito;
+* política de concessão;
 * modelagem de PD;
 * score/rating;
-* simulação de cenários;
-* explicabilidade;
-* governança de modelos.
+* definição de limite;
+* simulação de impacto financeiro;
+* governança de modelos;
+* explicabilidade aplicada a crédito.
 
-Você deve implementar a próxima etapa do projeto de forma segura, sem alterar o que já foi feito.
+A tarefa é refazer o notebook 06 para corrigir a camada de política.
+
+A versão anterior se apoiava demais em score, percentual de parcela/renda e redutores. A nova versão deve implementar uma política de concessão baseada em **limite por rating, renda, teto e impacto financeiro**.
 
 ---
 
 ## 2. Escopo da tarefa
 
-Criar o notebook:
+Refazer:
 
 ```text
 notebooks/06_cenarios_politica_recomendacao.ipynb
 ```
 
-Também respeitar os documentos:
+O notebook deve comparar cenários de apetite de risco e recomendar uma política inicial de concessão baseada em:
 
 ```text
-docs/06_contexto_politica_credito.md
-playbooks/06_metodologia_cenarios_politica.md
+rating interno
++ multiplicador de renda
++ teto por rating
++ capacidade de pagamento
++ fatores de ajuste de limite
++ decisão
++ impacto financeiro
 ```
-
-O notebook deve comparar cenários de política de crédito e recomendar uma política final com base no trade-off entre inadimplência, aprovação e exposição financeira.
 
 ---
 
-## 3. Arquivos que podem ser criados
+## 3. Arquivos que podem ser criados ou alterados
 
-Você pode criar:
+Pode alterar:
 
 ```text
 notebooks/06_cenarios_politica_recomendacao.ipynb
-outputs/tables/*.csv
-outputs/figures/*.html
-data/processed/base_simulacao_cenarios_politica.parquet
 ```
 
-Você pode criar ou atualizar somente se necessário:
+Pode criar ou sobrescrever saídas do notebook 06:
+
+```text
+data/processed/base_simulacao_cenarios_politica.parquet
+
+outputs/tables/politica_publico_faixa_renda_rating.csv
+outputs/tables/politica_publico_rating_tempo_relacionamento.csv
+outputs/tables/politica_publico_rating_pd_bad_rate.csv
+outputs/tables/politica_publico_rating_exposicao.csv
+outputs/tables/politica_publico_rating_restritivos.csv
+outputs/tables/politica_parametros_limite_cenarios.csv
+outputs/tables/politica_impacto_financeiro_cenarios.csv
+outputs/tables/politica_impacto_por_rating.csv
+outputs/tables/politica_impacto_por_decisao.csv
+outputs/tables/politica_score_gerencial_cenarios.csv
+outputs/tables/politica_final_recomendada_limites.csv
+
+outputs/figures/06_publico_distribuicao_rating.html
+outputs/figures/06_publico_bad_rate_rating.html
+outputs/figures/06_publico_renda_rating.html
+outputs/figures/06_impacto_exposicao_cenarios.html
+outputs/figures/06_impacto_por_rating.html
+outputs/figures/06_tradeoff_aprovacao_inadimplencia.html
+outputs/figures/06_valor_solicitado_vs_aprovado.html
+```
+
+Pode atualizar, se necessário:
 
 ```text
 docs/06_contexto_politica_credito.md
 playbooks/06_metodologia_cenarios_politica.md
+playbooks/06_contrato_dados_notebook_cenarios.md
+playbooks/06_instrucoes_ia_geracao_notebook.md
 ```
 
 ---
@@ -68,9 +98,10 @@ notebooks/02_target_inadimplencia_12m.ipynb
 notebooks/03_eda_credito.ipynb
 notebooks/04_modelagem_pd.ipynb
 notebooks/05_politica_concessao_credito.ipynb
+outputs/models/*
 ```
 
-Se precisar reaproveitar código desses notebooks, leia e copie a lógica para o notebook 06, sem modificar os arquivos anteriores.
+Se precisar reaproveitar lógica, ler os notebooks anteriores e copiar apenas o necessário para o notebook 06.
 
 ---
 
@@ -78,60 +109,71 @@ Se precisar reaproveitar código desses notebooks, leia e copie a lógica para o
 
 A política é para concessão de empréstimo bancário parcelado.
 
-A base sugere cliente pessoa física/correntista ou com relacionamento bancário.
+A base sugere pessoa física com relacionamento bancário.
 
-Não tratar como política PJ.
+Não tratar como:
 
-Não criar variáveis de PJ, como:
+* política PJ;
+* abertura de conta;
+* financiamento com garantia conhecida;
+* política de cartão;
+* política completa de perda esperada;
+* política com bureau externo completo.
+
+Não criar variáveis inexistentes, como:
 
 * faturamento;
 * CNAE;
 * ramo de atividade;
-* porte;
-* setor econômico;
-* balanço;
-* fluxo de caixa empresarial.
+* porte PJ;
+* garantia;
+* colateral;
+* LGD;
+* EAD formal;
+* score externo completo.
 
-Não tratar como abertura de conta.
-
-Não assumir existência de garantia.
-
-A base não possui score externo. O score interno foi criado por modelagem e aparece como `pd_score`.
+A base não possui propostas recusadas. Reconhecer essa limitação.
 
 ---
 
 ## 6. Fluxo já realizado no projeto
 
-O projeto seguiu esta sequência:
+O projeto já executou:
 
 ```text
 00 — validação de ambiente
 01 — diagnóstico das bases
-02 — criação do target de inadimplência 12m
+02 — construção do target de inadimplência 12m
 03 — análise exploratória
 04 — modelagem de PD
 05 — política inicial e interpretação do modelo
-06 — cenários de política e recomendação final
 ```
 
-O notebook 06 deve começar de onde o notebook 05 parou.
+O notebook 06 deve começar da base com score exportada pelo notebook 05.
+
+Não recomeçar o case.
 
 ---
 
 ## 7. Entrada principal
 
-Ler a base:
+Ler:
 
 ```text
 data/processed/base_politica_validacao_com_score.parquet
 ```
 
-Se não existir, procurar base equivalente em `data/processed`.
-
-Validar as colunas obrigatórias:
+Se não existir, procurar base equivalente em:
 
 ```text
-id_operacao
+data/processed/
+```
+
+Mas interromper se não houver `pd_score`.
+
+Colunas obrigatórias:
+
+```text
 id_cliente
 pd_score
 faixa_risco
@@ -148,137 +190,352 @@ flag_cliente_ativo
 target_inadimplente_12m
 ```
 
-Se alguma coluna obrigatória estiver ausente, interromper com erro claro listando as colunas faltantes.
+Se `id_operacao` não existir, criar.
 
 ---
 
-## 8. Padrão visual
+## 8. Regras de segurança
 
-Reutilizar o padrão visual dos notebooks anteriores.
+A IA deve garantir:
 
-Se existirem funções como:
-
-```python
-aplicar_layout
-salvar_figura
-```
-
-reutilizar.
-
-Se não existirem no notebook 06, criar versões compatíveis.
-
-Usar Plotly.
-
-Não usar Seaborn.
-
-Usar verde como cor principal do projeto quando houver necessidade de especificar cor.
-
-Os gráficos devem ter:
-
-* título executivo;
-* subtítulo;
-* eixo nomeado;
-* margem suficiente para não cortar rótulos;
-* salvamento em HTML.
+* não retreinar modelo;
+* não recriar target;
+* não usar `target_inadimplente_12m` como variável de decisão;
+* usar target apenas para avaliação/backtest;
+* não alterar notebooks 00 a 05;
+* não alterar dados brutos;
+* não usar `cod_agencia` como regra de concessão;
+* não usar decisões da política antiga como insumo da nova decisão;
+* não criar teto infinito;
+* não deixar valor aprovado maior que valor solicitado.
 
 ---
 
 ## 9. Estrutura obrigatória do notebook
 
-Criar o notebook com esta estrutura:
+Criar o notebook com a estrutura:
 
 ```markdown
-# 06 — Cenários de política e recomendação final
+# 06 — Política de concessão baseada em limite e impacto financeiro
 
-## 1. Contexto de negócio e premissas da política
+## 1. Contexto e correção metodológica
 ## 2. Setup e leitura da base com score
 ## 3. Contrato de dados e validações iniciais
-## 4. Diagnóstico da política inicial
-## 5. Variáveis disponíveis e limitações da política
-## 6. Definição dos cenários de política
-## 7. Funções de simulação da política
+## 4. Caracterização do público da política
+## 5. Validação do rating interno
+## 6. Definição dos parâmetros de limite
+## 7. Funções da política de limite
 ## 8. Simulação dos cenários
-## 9. Comparação executiva dos cenários
-## 10. Escolha do cenário recomendado
-## 11. Política final proposta
-## 12. Limitações, riscos e próximos passos
-## 13. Conclusão do notebook
+## 9. Impacto financeiro da política
+## 10. Comparação dos cenários e recomendação
+## 11. Política final recomendada
+## 12. Limitações, governança e próximos passos
+## 13. Checklist de saídas
 ```
 
 ---
 
-## 10. Cenários obrigatórios
+## 10. Contexto e correção metodológica
 
-Criar pelo menos três cenários:
+Na primeira seção, explicar:
 
-1. Conservador;
-2. Equilibrado;
-3. Expansivo.
+* o modelo de PD não é a política;
+* o score é usado como rating interno;
+* a política deve definir limite;
+* clientes de melhor rating podem ter maior alavancagem;
+* clientes de pior rating devem ter teto menor, mesa ou recusa;
+* a decisão deve depender de valor solicitado versus limite calculado;
+* o impacto financeiro deve ser explicitado.
 
-Cada cenário deve parametrizar:
-
-* percentual máximo de parcela/renda por faixa de risco;
-* redutores por restritivos;
-* redutor por cliente inativo;
-* redutor por tempo de relacionamento;
-* tratamento da faixa D;
-* tratamento da faixa E;
-* valor mínimo operacional para aprovação reduzida.
+Evitar defender a política antiga como final.
 
 ---
 
-## 11. Funções obrigatórias
+## 11. Caracterização obrigatória do público
+
+Criar e salvar tabelas:
+
+### 11.1 Faixa de renda vs rating
+
+```text
+outputs/tables/politica_publico_faixa_renda_rating.csv
+```
+
+Tabela:
+
+```text
+faixa_renda
+faixa_risco
+qtd_clientes
+```
+
+### 11.2 Rating vs tempo de relacionamento
+
+```text
+outputs/tables/politica_publico_rating_tempo_relacionamento.csv
+```
+
+Tabela:
+
+```text
+faixa_risco
+classe_tempo_relacionamento
+qtd_clientes
+```
+
+### 11.3 Rating vs PD e bad rate
+
+```text
+outputs/tables/politica_publico_rating_pd_bad_rate.csv
+```
+
+Tabela:
+
+```text
+faixa_risco
+qtd_clientes
+pd_min
+pd_media
+pd_max
+bad_rate_observado
+```
+
+### 11.4 Rating vs exposição
+
+```text
+outputs/tables/politica_publico_rating_exposicao.csv
+```
+
+Tabela:
+
+```text
+faixa_risco
+qtd_clientes
+renda_media
+valor_solicitado_medio
+valor_solicitado_total
+parcela_media
+comprometimento_medio
+restritivos_media
+restritivos_sobre_renda_media
+```
+
+### 11.5 Rating vs restritivos
+
+```text
+outputs/tables/politica_publico_rating_restritivos.csv
+```
+
+Tabela:
+
+```text
+faixa_risco
+classe_restritivo
+qtd_clientes
+```
+
+---
+
+## 12. Faixas auxiliares
+
+Implementar:
+
+```python
+classificar_faixa_renda
+classificar_tempo_relacionamento
+classificar_restritivo_sobre_renda
+```
+
+Faixas sugeridas de renda:
+
+```text
+Até R$ 2 mil
+R$ 2 mil a R$ 5 mil
+R$ 5 mil a R$ 10 mil
+R$ 10 mil a R$ 20 mil
+Acima de R$ 20 mil
+```
+
+Tempo de relacionamento:
+
+```text
+curto: tempo_conta_anos < 1
+medio: 1 <= tempo_conta_anos < 3
+longo: tempo_conta_anos >= 3
+```
+
+Restritivos:
+
+```text
+sem_restritivo
+ate_2pct
+ate_5pct
+ate_10pct
+acima_10pct
+```
+
+---
+
+## 13. Validação do rating interno
+
+Mostrar por rating:
+
+```text
+qtd_clientes
+pd_min
+pd_media
+pd_max
+bad_rate_observado
+valor_solicitado_total
+```
+
+A narrativa deve explicar que:
+
+* os intervalos de PD vêm da construção anterior do rating;
+* a validade do rating é observada pela monotonicidade de PD e bad rate;
+* rating melhor deve ter menor bad rate;
+* rating pior deve concentrar maior inadimplência.
+
+---
+
+## 14. Parâmetros dos cenários
+
+Criar três cenários:
+
+```text
+Conservador
+Base/Equilibrado
+Expansivo controlado
+```
+
+Cada cenário deve parametrizar por rating:
+
+```text
+multiplicador_renda
+teto_rating
+pct_max_comprometimento
+elegivel_aprovacao_automatica
+elegivel_aprovacao_reduzida
+tratamento_rating
+valor_minimo_operacional
+```
+
+Também deve parametrizar:
+
+```text
+fator_restritivo
+fator_cliente_ativo
+fator_tempo_relacionamento
+```
+
+Salvar:
+
+```text
+outputs/tables/politica_parametros_limite_cenarios.csv
+```
+
+---
+
+## 15. Calibração de tetos
+
+Os tetos devem ser defensáveis.
+
+Usar preferencialmente percentis históricos de `valor_emprestado` por rating.
+
+Exemplo de regra aceitável:
+
+```text
+Conservador:
+teto por rating baseado em percentis menores da distribuição histórica.
+
+Base/Equilibrado:
+teto por rating baseado em percentis intermediários.
+
+Expansivo controlado:
+teto por rating baseado em percentis mais altos, mas ainda finitos.
+```
+
+Documentar a regra no notebook.
+
+Nunca usar teto infinito.
+
+---
+
+## 16. Funções obrigatórias
 
 Implementar funções reutilizáveis:
 
 ```python
-classificar_restritivo_sobre_renda
+classificar_faixa_renda
 classificar_tempo_relacionamento
+classificar_restritivo_sobre_renda
 calcular_valor_presente_parcelas
-simular_cenario_politica
-calcular_resumo_cenario
-resumir_decisoes_por_cenario
-resumir_faixas_por_cenario
+calcular_limite_cliente
+simular_politica_limite
+resumir_impacto_cenario
+resumir_impacto_por_rating
+resumir_impacto_por_decisao
+validar_consistencia_politica
 ```
 
 As funções devem receber parâmetros explícitos e evitar dependência desnecessária de variáveis globais.
 
 ---
 
-## 12. Fórmula da política
+## 17. Fórmula da política
 
-Usar a fórmula:
+Para cada cliente e cenário:
+
+### 17.1 Limite por multiplicador
+
+```text
+limite_multiplicador =
+    valor_renda × multiplicador_renda
+```
+
+### 17.2 Limite por capacidade
 
 ```text
 parcela_maxima =
-    valor_renda
-    × pct_max_parcela_renda
-    × redutor_restritivo
-    × redutor_cliente_ativo
-    × redutor_tempo_conta
+    valor_renda × pct_max_comprometimento
 ```
-
-Converter em valor máximo sugerido:
 
 ```text
-valor_maximo_sugerido =
-    parcela_maxima × ((1 - (1 + taxa)^(-prazo)) / taxa)
+limite_capacidade =
+    parcela_maxima × ((1 - (1 + valor_taxa)^(-valor_prazo)) / valor_taxa)
 ```
 
-Depois definir:
+### 17.3 Limite bruto
 
 ```text
-valor_aprovado =
-    min(valor_emprestado, valor_maximo_sugerido)
+limite_bruto =
+    min(limite_multiplicador, limite_capacidade, teto_rating)
 ```
 
-Se a decisão for recusa ou análise manual, o valor aprovado automático deve ser zero.
+### 17.4 Limite final
+
+```text
+limite_final =
+    limite_bruto
+    × fator_restritivo
+    × fator_cliente_ativo
+    × fator_tempo_relacionamento
+```
+
+Tratamentos:
+
+```text
+valor_renda <= 0 → limite zero
+valor_taxa <= 0 → usar 0.0001
+valor_prazo <= 0 → usar 1
+limite_final < 0 → truncar em zero
+```
 
 ---
 
-## 13. Decisões obrigatórias
+## 18. Decisões obrigatórias
 
-Usar exatamente estas decisões:
+Usar exatamente:
 
 ```text
 Aprovar valor solicitado
@@ -287,149 +544,277 @@ Análise manual
 Recusar
 ```
 
-Evitar criar nomes alternativos para não bagunçar o resumo.
+### 18.1 Aprovar valor solicitado
+
+Condição:
+
+```text
+rating elegível para automático
+valor_emprestado <= limite_final
+renda válida
+sem restritivo impeditivo
+sem regra de mesa
+```
+
+Valor aprovado:
+
+```text
+valor_aprovado = valor_emprestado
+```
+
+### 18.2 Aprovar valor reduzido
+
+Condição:
+
+```text
+rating elegível
+valor_emprestado > limite_final
+limite_final >= valor_minimo_operacional
+sem regra de recusa
+sem obrigatoriedade de mesa
+```
+
+Valor aprovado:
+
+```text
+valor_aprovado = limite_final
+```
+
+### 18.3 Análise manual
+
+Aplicar para:
+
+```text
+rating D, conforme cenário
+restritivo relevante
+cliente inativo com risco intermediário
+proposta muito acima do limite
+caso próximo ao teto
+```
+
+Valor aprovado automático:
+
+```text
+valor_aprovado = 0
+```
+
+### 18.4 Recusar
+
+Aplicar para:
+
+```text
+rating E
+renda inválida
+limite final abaixo do mínimo operacional
+restritivo severo conforme cenário
+```
+
+Valor aprovado automático:
+
+```text
+valor_aprovado = 0
+```
 
 ---
 
-## 14. Métricas obrigatórias
+## 19. Simulação dos cenários
 
-Para cada cenário, calcular:
+Simular todos os cenários.
 
-* quantidade de operações;
-* taxa histórica de inadimplência;
-* taxa aprovação automática;
-* taxa análise manual;
-* taxa recusa;
-* inadimplência dos aprovados;
-* PD média dos aprovados;
-* valor original total;
-* valor aprovado total;
-* percentual de exposição aprovada;
-* redução de exposição;
-* valor médio aprovado.
+Salvar base consolidada:
+
+```text
+data/processed/base_simulacao_cenarios_politica.parquet
+```
+
+A base final deve conter:
+
+```text
+cenario
+id_cliente
+id_operacao
+pd_score
+faixa_risco
+valor_renda
+valor_emprestado
+valor_taxa
+valor_prazo
+classe_restritivo_cenario
+classe_tempo_relacionamento
+multiplicador_renda_cenario
+teto_rating_cenario
+pct_max_comprometimento_cenario
+limite_multiplicador_cenario
+limite_capacidade_cenario
+limite_bruto_cenario
+limite_final_cenario
+decisao_cenario
+valor_aprovado_cenario
+target_inadimplente_12m
+```
 
 ---
 
-## 15. Gráficos obrigatórios
+## 20. Impacto financeiro
+
+Gerar:
+
+```text
+outputs/tables/politica_impacto_financeiro_cenarios.csv
+outputs/tables/politica_impacto_por_rating.csv
+outputs/tables/politica_impacto_por_decisao.csv
+```
+
+Métricas mínimas:
+
+```text
+qtd_clientes
+valor_solicitado_total
+valor_aprovado_total
+pct_exposicao_aprovada
+limite_medio
+valor_aprovado_medio
+pd_media_aprovados
+bad_rate_observado_aprovados
+taxa_aprovacao_valor_solicitado
+taxa_aprovacao_reduzida
+taxa_aprovacao_automatica_total
+taxa_analise_manual
+taxa_recusa
+exposicao_por_rating
+```
+
+---
+
+## 21. Gráficos obrigatórios
 
 Gerar e salvar:
 
-1. trade-off aprovação versus inadimplência dos aprovados;
-2. taxa de aprovação, análise manual e recusa por cenário;
-3. inadimplência dos aprovados por cenário;
-4. exposição aprovada por cenário;
-5. decisões por faixa de risco;
-6. valor original versus valor aprovado.
+```text
+outputs/figures/06_publico_distribuicao_rating.html
+outputs/figures/06_publico_bad_rate_rating.html
+outputs/figures/06_publico_renda_rating.html
+outputs/figures/06_impacto_exposicao_cenarios.html
+outputs/figures/06_impacto_por_rating.html
+outputs/figures/06_tradeoff_aprovacao_inadimplencia.html
+outputs/figures/06_valor_solicitado_vs_aprovado.html
+```
+
+Usar Plotly.
+
+Não usar Seaborn.
+
+Seguir o padrão visual do projeto.
 
 ---
 
-## 16. Escolha da política recomendada
+## 22. Escolha da recomendação
 
-Criar uma tabela de score gerencial.
+Não assumir previamente que o cenário expansivo é melhor.
+
+Criar score gerencial como apoio, considerando:
+
+```text
+controle de inadimplência
+aprovação automática
+exposição aprovada
+eficiência operacional
+concentração de risco
+```
 
 Sugestão de pesos:
 
 ```text
-40% controle de inadimplência
-30% preservação da aprovação
-20% preservação da exposição
-10% eficiência operacional
+controle de inadimplência: 40%
+aprovação automática: 25%
+exposição aprovada: 25%
+eficiência operacional: 10%
 ```
 
-A escolha deve ser baseada nos resultados.
+Explicar que o score gerencial é apoio de decisão, não verdade absoluta.
 
-Não assumir previamente que o cenário equilibrado é o melhor.
-
-Se o cenário recomendado não for o equilibrado, explicar por quê.
+A recomendação final deve ser justificada em texto.
 
 ---
 
-## 17. Política final
+## 23. Política final recomendada
 
-Gerar uma tabela final com:
+Gerar:
 
-* cenário recomendado;
-* faixa de risco;
-* intervalo de PD;
-* ação principal;
-* percentual máximo de parcela/renda;
-* tratamento de restritivos;
-* tratamento de cliente inativo;
-* tratamento de tempo de conta;
-* regra de limite;
-* observação de negócio.
+```text
+outputs/tables/politica_final_recomendada_limites.csv
+```
+
+A tabela deve conter:
+
+```text
+cenario_recomendado
+faixa_risco
+intervalo_pd
+bad_rate_observado
+multiplicador_renda
+teto_rating
+pct_max_comprometimento
+tratamento_restritivos
+tratamento_cliente_inativo
+tratamento_tempo_relacionamento
+acao_principal
+regra_limite
+observacao_negocio
+```
+
+Essa é a principal tabela gerencial da nova política.
 
 ---
 
-## 18. Limitações obrigatórias
+## 24. Checklist de qualidade
 
-Registrar:
+Antes de finalizar, verificar:
 
-* base apenas com operações concedidas;
+```text
+[ ] notebooks 00 a 05 não foram alterados
+[ ] data/raw não foi alterado
+[ ] modelo não foi retreinado
+[ ] target não foi recriado
+[ ] target não entra na decisão
+[ ] rating A tem maior multiplicador/teto que B/C/D
+[ ] rating E é recusado
+[ ] rating D não recebe aprovação automática irrestrita
+[ ] valor aprovado nunca supera valor solicitado
+[ ] análise manual tem valor aprovado automático zero
+[ ] recusa tem valor aprovado automático zero
+[ ] não há teto infinito
+[ ] tabelas de público foram geradas
+[ ] tabelas de impacto financeiro foram geradas
+[ ] política final por limite foi gerada
+```
+
+---
+
+## 25. Limitações obrigatórias
+
+Registrar no notebook:
+
+* base contém apenas operações concedidas;
 * ausência de propostas recusadas;
 * ausência de garantia;
 * ausência de LGD;
 * ausência de EAD formal;
-* ausência de score externo;
+* ausência de score externo completo;
 * ausência de histórico anterior detalhado de atraso;
-* necessidade de validação com política de crédito;
-* necessidade de monitoramento de safra;
-* necessidade de governança para variáveis como idade e escolaridade.
+* simulação histórica não é política definitiva de produção;
+* parâmetros precisam de validação com política de crédito;
+* variáveis como idade e escolaridade exigem governança;
+* monitoramento por safra é obrigatório.
 
 ---
 
-## 19. Saídas esperadas
+## 26. Fechamento esperado
 
-Salvar:
+A conclusão deve dizer, em essência:
 
 ```text
-data/processed/base_simulacao_cenarios_politica.parquet
-
-outputs/tables/politica_contrato_dados_cenarios.csv
-outputs/tables/politica_variaveis_disponiveis_limitacoes.csv
-outputs/tables/politica_resumo_cenarios.csv
-outputs/tables/politica_resumo_decisoes_cenarios.csv
-outputs/tables/politica_resumo_faixas_cenarios.csv
-outputs/tables/politica_score_decisao_cenarios.csv
-outputs/tables/politica_final_recomendada.csv
-
-outputs/figures/06_tradeoff_cenarios_politica.html
-outputs/figures/06_taxas_decisao_por_cenario.html
-outputs/figures/06_inadimplencia_aprovados_por_cenario.html
-outputs/figures/06_exposicao_aprovada_por_cenario.html
-outputs/figures/06_decisoes_por_faixa_risco.html
-outputs/figures/06_valor_original_vs_aprovado.html
+A política recomendada é uma política inicial de limite baseada em evidência histórica.
+O score de PD foi usado como rating interno, mas a decisão de concessão combina rating, renda, teto de limite, capacidade de pagamento, restritivos e relacionamento.
+A recomendação deve ser validada com a área de política de crédito antes de uso produtivo.
 ```
-
----
-
-## 20. Qualidade esperada
-
-O notebook deve ser explicável para três públicos:
-
-1. cientista de dados;
-2. pessoa de política de crédito;
-3. avaliador executivo do case.
-
-A narrativa deve deixar claro:
-
-* o score foi criado por modelagem;
-* a política usa o score como rating interno;
-* a decisão não é binária;
-* o valor máximo é definido por capacidade de pagamento;
-* restritivos e relacionamento ajustam o limite;
-* o cenário recomendado depende do apetite de risco;
-* as limitações são reconhecidas.
-
----
-
-## 21. Antes de implementar
-
-Antes de criar o notebook, faça um breve diagnóstico textual:
-
-* quais arquivos serão lidos;
-* quais funções serão reaproveitadas;
-* quais outputs serão criados;
-* quais cuidados serão tomados para não alterar notebooks anteriores.
-
-Depois implemente.
