@@ -15,4 +15,12 @@ outputs/models/*
 *.pkl
 *.joblib
 
-*.log
+*.log# Arquivos locais de preparação da apresentação
+apresentacao_contexto/
+reports/roteiro_fala_politica_credito.md
+reports/perguntas_banca_politica_credito.md
+
+# Entrega privada da apresentação
+_entrega_privada_apresentacao/
+*.pptx
+*.key
