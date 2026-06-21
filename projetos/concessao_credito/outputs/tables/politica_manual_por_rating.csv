@@ -1,0 +1,6 @@
+faixa_risco,rating,qtd_total,qtd_analise_manual,perc_analise_manual,valor_solicitado_manual,valor_aprovado_automatico_manual,leitura_politica
+B - Médio-baixo risco,B,972,0,0.0,0.0,0.0,"Rating B: risco médio-baixo — aprovação automática, limite até 4× renda"
+A - Baixo risco,A,1945,0,0.0,0.0,0.0,"Rating A: risco baixo — aprovação automática, limite até 5× renda"
+D - Alto risco,D,729,729,1.0,10765895.77,0.0,"Rating D: risco alto — análise manual obrigatória, sem limite automático"
+E - Muito alto risco,E,487,0,0.0,0.0,0.0,Rating E: risco muito alto — recusa automática
+C - Médio risco,C,729,686,0.9410150891632373,10580960.32,0.0,Rating C: risco médio — aprovação condicional; análise manual nos casos de controle adicional

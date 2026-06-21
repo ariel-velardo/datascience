@@ -1,0 +1,6 @@
+rating,faixa_risco,valor_aprovado_base_equilibrado,valor_aprovado_expansivo_controlado,incremento_valor_aprovado,participacao_incremento,leitura_politica
+A,A - Baixo risco,11930756.386532549,13860421.666579016,1929665.2800464667,0.5216528654014626,"Rating A: risco baixo — aprovação automática, limite até 5× renda"
+B,B - Médio-baixo risco,5192649.915761124,6737472.223998744,1544822.3082376197,0.4176169784268754,"Rating B: risco médio-baixo — aprovação automática, limite até 4× renda"
+C,C - Médio risco,19309.164859343284,243958.316793106,224649.1519337627,0.06073015617166201,Rating C: risco médio — aprovação condicional; análise manual nos casos de controle adicional
+D,D - Alto risco,0.0,0.0,0.0,0.0,"Rating D: risco alto — análise manual obrigatória, sem limite automático"
+E,E - Muito alto risco,0.0,0.0,0.0,0.0,Rating E: risco muito alto — recusa automática

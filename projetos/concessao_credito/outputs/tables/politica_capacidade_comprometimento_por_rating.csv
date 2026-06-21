@@ -1,0 +1,6 @@
+faixa_risco,rating,renda_media,valor_parcela_medio_historico,comprometimento_medio_historico,comprometimento_mediano_historico,comprometimento_maximo_politica,leitura_politica
+B - Médio-baixo risco,B,3759.242757201646,1997.9803789626417,0.5244958183554064,0.5311888565917374,0.3,"Rating B: risco médio-baixo — aprovação automática, limite até 4× renda"
+A - Baixo risco,A,3761.7589562982007,1508.150802653115,0.3945472788207155,0.29422109426262544,0.35,"Rating A: risco baixo — aprovação automática, limite até 5× renda"
+D - Alto risco,D,3494.346598079561,2106.454411492093,0.6018740526423104,0.6119778287005693,0.2,"Rating D: risco alto — análise manual obrigatória, sem limite automático"
+E - Muito alto risco,E,3413.799281314168,2090.68078788402,0.6001980536944083,0.5998359642071939,0.0,Rating E: risco muito alto — recusa automática
+C - Médio risco,C,3605.2722085048003,2024.9551589364407,0.5646669699494136,0.5778003186027871,0.25,Rating C: risco médio — aprovação condicional; análise manual nos casos de controle adicional
