@@ -7866,7 +7866,7 @@ limite_final         = limite_bruto × fator_restritivo × fator_ativo × fator_
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [54]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -7875,11 +7875,13 @@ limite_final         = limite_bruto × fator_restritivo × fator_ativo × fator_
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
+<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">"notebook_connected+png"</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
 
 <span class="n">PROJ_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'..'</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
@@ -7925,7 +7927,7 @@ FIGURES_DIR : C:\GitHub\datascience\projetos\concessao_credito\outputs\figures
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [55]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">ARQUIVO_BASE</span> <span class="o">=</span> <span class="n">PROCESSED_DIR</span> <span class="o">/</span> <span class="s1">'base_politica_validacao_com_score.parquet'</span>
@@ -7997,7 +7999,7 @@ Name: count, dtype: int64
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [56]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">COLUNAS_OBRIGATORIAS</span> <span class="o">=</span> <span class="p">[</span>
@@ -8080,7 +8082,7 @@ Base validada: 4,862 registros prontos para simulacao
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [57]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># --- Variáveis auxiliares ---</span>
@@ -8212,7 +8214,7 @@ Name: count, dtype: int64
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [58]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 4.1 Faixa de renda × Rating</span>
@@ -8273,7 +8275,7 @@ Salva em: politica_publico_faixa_renda_rating.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [59]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 4.2 Rating × Tempo de relacionamento</span>
@@ -8326,7 +8328,7 @@ Salva em: politica_publico_rating_tempo_relacionamento.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [60]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 4.3 Rating × PD e bad rate</span>
@@ -8380,7 +8382,7 @@ Salva em: politica_publico_rating_pd_bad_rate.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [61]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 4.4 Rating × Exposição e capacidade</span>
@@ -8420,11 +8422,11 @@ Salva em: politica_publico_rating_pd_bad_rate.csv
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Tabela 4.4 — Rating x Exposicao e capacidade:
           faixa_risco  qtd_clientes  renda_media  valor_solicitado_medio  valor_solicitado_total  parcela_media  comprometimento_medio  restritivos_media  restritivos_sobre_renda_media
-      A - Baixo risco          1945      3761.76                10940.39             21279049.32        1508.15                   0.39              25.71                           0.01
-B - Médio-baixo risco           972      3759.24                14628.84             14219232.37        1997.98                   0.52              59.49                           0.02
-      C - Médio risco           729      3605.27                14963.62             10908478.17        2024.96                   0.56              76.38                           0.03
-       D - Alto risco           729      3494.35                14768.03             10765895.77        2106.45                   0.60              85.37                           0.03
- E - Muito alto risco           487      3413.80                15260.19              7431711.59        2090.68                   0.60             126.06                           0.05
+      A - Baixo risco          1945   3,761.7600             10,940.3900         21,279,049.3200     1,508.1500                 0.3900            25.7100                         0.0100
+B - Médio-baixo risco           972   3,759.2400             14,628.8400         14,219,232.3700     1,997.9800                 0.5200            59.4900                         0.0200
+      C - Médio risco           729   3,605.2700             14,963.6200         10,908,478.1700     2,024.9600                 0.5600            76.3800                         0.0300
+       D - Alto risco           729   3,494.3500             14,768.0300         10,765,895.7700     2,106.4500                 0.6000            85.3700                         0.0300
+ E - Muito alto risco           487   3,413.8000             15,260.1900          7,431,711.5900     2,090.6800                 0.6000           126.0600                         0.0500
 
 Salva em: politica_publico_rating_exposicao.csv
 </pre>
@@ -8437,7 +8439,7 @@ Salva em: politica_publico_rating_exposicao.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [62]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 4.5 Rating × Restritivos</span>
@@ -8509,7 +8511,7 @@ Salva em: politica_publico_rating_restritivos.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [63]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">df_val_rating</span> <span class="o">=</span> <span class="p">(</span>
@@ -8553,11 +8555,11 @@ Salva em: politica_publico_rating_restritivos.csv
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Rating interno — estatisticas de validacao:
           faixa_risco  qtd_clientes  pd_min  pd_media  pd_max  bad_rate_observado  valor_solicitado_total  pct_clientes
-      A - Baixo risco          1945  0.0047    0.0225  0.0425              0.0108             21279049.32        0.4000
-B - Médio-baixo risco           972  0.0426    0.0607  0.0823              0.0453             14219232.37        0.1999
-      C - Médio risco           729  0.0823    0.1098  0.1465              0.1056             10908478.17        0.1499
-       D - Alto risco           729  0.1467    0.2253  0.3504              0.2510             10765895.77        0.1499
- E - Muito alto risco           487  0.3505    0.5224  0.9214              0.5606              7431711.59        0.1002
+      A - Baixo risco          1945  0.0047    0.0225  0.0425              0.0108         21,279,049.3200        0.4000
+B - Médio-baixo risco           972  0.0426    0.0607  0.0823              0.0453         14,219,232.3700        0.1999
+      C - Médio risco           729  0.0823    0.1098  0.1465              0.1056         10,908,478.1700        0.1499
+       D - Alto risco           729  0.1467    0.2253  0.3504              0.2510         10,765,895.7700        0.1499
+ E - Muito alto risco           487  0.3505    0.5224  0.9214              0.5606          7,431,711.5900        0.1002
 
 Monotonicidade pd_media  A-&gt;E : OK
 Monotonicidade bad_rate  A-&gt;E : OK
@@ -8637,7 +8639,7 @@ Monotonicidade bad_rate  A-&gt;E : OK
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [64]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Calibracao dos tetos por percentis historicos do valor_emprestado por rating.</span>
@@ -8700,13 +8702,7 @@ Monotonicidade bad_rate  A-&gt;E : OK
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Tetos calibrados por cenario (R$):</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>
+<pre>Tetos calibrados por cenario (R$):
 
 Conservador (p60 + monotonicidade A&gt;B&gt;C):
   A - Baixo risco: R$ 17,987
@@ -8739,7 +8735,7 @@ Expansivo controlado (p90 + monotonicidade A&gt;B&gt;C):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [65]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">CENARIOS</span> <span class="o">=</span> <span class="p">{</span>
@@ -8871,7 +8867,7 @@ Expansivo controlado (p90 + monotonicidade A&gt;B&gt;C):
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [66]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Salvar tabela de parâmetros</span>
@@ -8911,21 +8907,21 @@ Expansivo controlado (p90 + monotonicidade A&gt;B&gt;C):
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Parametros de limite por cenario e rating:
              cenario           faixa_risco  multiplicador_renda  teto_rating  pct_max_comprometimento  elegivel_aprovacao_automatica  elegivel_aprovacao_reduzida tratamento_rating  valor_minimo_operacional
-         Conservador       A - Baixo risco                  3.0     17986.62                     0.25                           True                         True        automatico                     500.0
-         Conservador B - Médio-baixo risco                  2.0     14389.29                     0.20                           True                         True        automatico                     500.0
-         Conservador       C - Médio risco                  1.5     10791.97                     0.15                           True                         True        automatico                     500.0
-         Conservador        D - Alto risco                  0.0         0.00                     0.10                          False                        False    analise_manual                     500.0
-         Conservador  E - Muito alto risco                  0.0         0.00                     0.00                          False                        False            recusa                     500.0
-    Base/Equilibrado       A - Baixo risco                  4.0     25365.36                     0.30                           True                         True        automatico                     500.0
-    Base/Equilibrado B - Médio-baixo risco                  3.0     20292.29                     0.25                           True                         True        automatico                     500.0
-    Base/Equilibrado       C - Médio risco                  2.0     15219.22                     0.20                           True                         True        automatico                     500.0
-    Base/Equilibrado        D - Alto risco                  0.0         0.00                     0.15                          False                        False    analise_manual                     500.0
-    Base/Equilibrado  E - Muito alto risco                  0.0         0.00                     0.00                          False                        False            recusa                     500.0
-Expansivo controlado       A - Baixo risco                  5.0     39222.68                     0.35                           True                         True        automatico                     500.0
-Expansivo controlado B - Médio-baixo risco                  4.0     31378.15                     0.30                           True                         True        automatico                     500.0
-Expansivo controlado       C - Médio risco                  2.5     23533.61                     0.25                           True                         True        automatico                     500.0
-Expansivo controlado        D - Alto risco                  0.0         0.00                     0.20                          False                        False    analise_manual                     500.0
-Expansivo controlado  E - Muito alto risco                  0.0         0.00                     0.00                          False                        False            recusa                     500.0
+         Conservador       A - Baixo risco               3.0000  17,986.6200                   0.2500                           True                         True        automatico                  500.0000
+         Conservador B - Médio-baixo risco               2.0000  14,389.2900                   0.2000                           True                         True        automatico                  500.0000
+         Conservador       C - Médio risco               1.5000  10,791.9700                   0.1500                           True                         True        automatico                  500.0000
+         Conservador        D - Alto risco               0.0000       0.0000                   0.1000                          False                        False    analise_manual                  500.0000
+         Conservador  E - Muito alto risco               0.0000       0.0000                   0.0000                          False                        False            recusa                  500.0000
+    Base/Equilibrado       A - Baixo risco               4.0000  25,365.3600                   0.3000                           True                         True        automatico                  500.0000
+    Base/Equilibrado B - Médio-baixo risco               3.0000  20,292.2900                   0.2500                           True                         True        automatico                  500.0000
+    Base/Equilibrado       C - Médio risco               2.0000  15,219.2200                   0.2000                           True                         True        automatico                  500.0000
+    Base/Equilibrado        D - Alto risco               0.0000       0.0000                   0.1500                          False                        False    analise_manual                  500.0000
+    Base/Equilibrado  E - Muito alto risco               0.0000       0.0000                   0.0000                          False                        False            recusa                  500.0000
+Expansivo controlado       A - Baixo risco               5.0000  39,222.6800                   0.3500                           True                         True        automatico                  500.0000
+Expansivo controlado B - Médio-baixo risco               4.0000  31,378.1500                   0.3000                           True                         True        automatico                  500.0000
+Expansivo controlado       C - Médio risco               2.5000  23,533.6100                   0.2500                           True                         True        automatico                  500.0000
+Expansivo controlado        D - Alto risco               0.0000       0.0000                   0.2000                          False                        False    analise_manual                  500.0000
+Expansivo controlado  E - Muito alto risco               0.0000       0.0000                   0.0000                          False                        False            recusa                  500.0000
 
 Salvo em: politica_parametros_limite_cenarios.csv
 </pre>
@@ -8949,7 +8945,7 @@ Salvo em: politica_parametros_limite_cenarios.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [67]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calcular_valor_presente_parcelas</span><span class="p">(</span><span class="n">parcela_maxima</span><span class="p">,</span> <span class="n">taxa</span><span class="p">,</span> <span class="n">prazo</span><span class="p">):</span>
@@ -9137,7 +9133,7 @@ Salvo em: politica_parametros_limite_cenarios.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [68]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">COLS_SAIDA</span> <span class="o">=</span> <span class="p">[</span>
@@ -9188,39 +9184,15 @@ Salvo em: politica_parametros_limite_cenarios.csv
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Simulando cenarios...</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>
+<pre>Simulando cenarios...
 
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[Conservador] Aprov auto: 58.5% | Manual: 28.7% | Recusa: 12.9% | Bad rate aprov: 2.11%
+[Conservador] Aprov auto: 58.5% | Manual: 28.7% | Recusa: 12.9% | Bad rate aprov: 2.11%
   [Conservador] OK — consistencia validada
 
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[Base/Equilibrado] Aprov auto: 60.1% | Manual: 29.7% | Recusa: 10.2% | Bad rate aprov: 2.23%
+[Base/Equilibrado] Aprov auto: 60.1% | Manual: 29.7% | Recusa: 10.2% | Bad rate aprov: 2.23%
   [Base/Equilibrado] OK — consistencia validada
 
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[Expansivo controlado] Aprov auto: 60.9% | Manual: 29.1% | Recusa: 10.0% | Bad rate aprov: 2.23%
+[Expansivo controlado] Aprov auto: 60.9% | Manual: 29.1% | Recusa: 10.0% | Bad rate aprov: 2.23%
   [Expansivo controlado] OK — consistencia validada
 
 Base consolidada: 14,586 linhas x 21 colunas
@@ -9234,7 +9206,7 @@ Base consolidada: 14,586 linhas x 21 colunas
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [69]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">ARQUIVO_SAIDA</span> <span class="o">=</span> <span class="n">PROCESSED_DIR</span> <span class="o">/</span> <span class="s1">'base_simulacao_cenarios_politica.parquet'</span>
@@ -9274,7 +9246,7 @@ Base consolidada: 14,586 linhas x 21 colunas
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [70]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">resumir_impacto_cenario</span><span class="p">(</span><span class="n">df_cenario</span><span class="p">):</span>
@@ -9381,7 +9353,7 @@ Base consolidada: 14,586 linhas x 21 colunas
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [71]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">df_impacto</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
@@ -9411,9 +9383,9 @@ Base consolidada: 14,586 linhas x 21 colunas
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Impacto financeiro por cenario:
              cenario  taxa_aprovacao_automatica_total  taxa_analise_manual  taxa_recusa  bad_rate_observado_aprovados  pct_exposicao_aprovada  valor_aprovado_total
-         Conservador                           0.5845               0.2865       0.1290                        0.0211                  0.1982          1.280772e+07
-    Base/Equilibrado                           0.6006               0.2972       0.1022                        0.0223                  0.2653          1.714272e+07
-Expansivo controlado                           0.6086               0.2910       0.1004                        0.0223                  0.3226          2.084185e+07
+         Conservador                           0.5845               0.2865       0.1290                        0.0211                  0.1982       12,807,715.9776
+    Base/Equilibrado                           0.6006               0.2972       0.1022                        0.0223                  0.2653       17,142,715.4672
+Expansivo controlado                           0.6086               0.2910       0.1004                        0.0223                  0.3226       20,841,852.2074
 
 Salvo em: politica_impacto_financeiro_cenarios.csv
 </pre>
@@ -9426,7 +9398,7 @@ Salvo em: politica_impacto_financeiro_cenarios.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [72]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">df_impacto_rating</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
@@ -9459,11 +9431,11 @@ Salvo em: politica_impacto_financeiro_cenarios.csv
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Impacto por rating — Base/Equilibrado:
           faixa_risco  qtd_clientes  pd_media  bad_rate_observado  taxa_aprovacao_automatica  taxa_analise_manual  taxa_recusa  pct_exposicao_aprovada  valor_aprovado_total
-      A - Baixo risco          1945    0.0225              0.0108                     0.9995               0.0000       0.0005                  0.5607          1.193076e+07
-B - Médio-baixo risco           972    0.0607              0.0453                     1.0000               0.0000       0.0000                  0.3652          5.192650e+06
-      C - Médio risco           729    0.1098              0.1056                     0.0055               0.9822       0.0123                  0.0018          1.930916e+04
-       D - Alto risco           729    0.2253              0.2510                     0.0000               1.0000       0.0000                  0.0000          0.000000e+00
- E - Muito alto risco           487    0.5224              0.5606                     0.0000               0.0000       1.0000                  0.0000          0.000000e+00
+      A - Baixo risco          1945    0.0225              0.0108                     0.9995               0.0000       0.0005                  0.5607       11,930,756.3865
+B - Médio-baixo risco           972    0.0607              0.0453                     1.0000               0.0000       0.0000                  0.3652        5,192,649.9158
+      C - Médio risco           729    0.1098              0.1056                     0.0055               0.9822       0.0123                  0.0018           19,309.1649
+       D - Alto risco           729    0.2253              0.2510                     0.0000               1.0000       0.0000                  0.0000                0.0000
+ E - Muito alto risco           487    0.5224              0.5606                     0.0000               0.0000       1.0000                  0.0000                0.0000
 
 Salvo em: politica_impacto_por_rating.csv
 </pre>
@@ -9476,7 +9448,7 @@ Salvo em: politica_impacto_por_rating.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [73]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">df_impacto_decisao</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
@@ -9503,18 +9475,18 @@ Salvo em: politica_impacto_por_rating.csv
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Impacto por decisao — todos os cenarios:
              cenario                  decisao  qtd_clientes  participacao_clientes  pd_media  bad_rate_observado  valor_solicitado_total  valor_aprovado_total  valor_solicitado_medio  valor_aprovado_medio
-         Conservador           Análise manual          1393                 0.2865    0.1702              0.1845             21257341.34          0.000000e+00              15260.1158                0.0000
-         Conservador   Aprovar valor reduzido          2443                 0.5025    0.0378              0.0229             33702870.34          1.129770e+07              13795.6899             4624.5209
-         Conservador Aprovar valor solicitado           399                 0.0821    0.0165              0.0100              1510011.37          1.510011e+06               3784.4896             3784.4896
-         Conservador                  Recusar           627                 0.1290    0.4233              0.4482              8134144.17          0.000000e+00              12973.1167                0.0000
-    Base/Equilibrado           Análise manual          1445                 0.2972    0.1681              0.1792             21631480.92          0.000000e+00              14969.8830                0.0000
-    Base/Equilibrado   Aprovar valor reduzido          2099                 0.4317    0.0415              0.0281             31697204.82          1.331551e+07              15101.0981             6343.7381
-    Base/Equilibrado Aprovar valor solicitado           821                 0.1689    0.0195              0.0073              3827209.16          3.827209e+06               4661.6433             4661.6433
-    Base/Equilibrado                  Recusar           497                 0.1022    0.5140              0.5513              7448472.32          0.000000e+00              14986.8658                0.0000
-Expansivo controlado           Análise manual          1415                 0.2910    0.1694              0.1830             21346856.09          0.000000e+00              15086.1174                0.0000
-Expansivo controlado   Aprovar valor reduzido          1815                 0.3733    0.0449              0.0298             29762361.45          1.477932e+07              16397.9953             8142.8746
-Expansivo controlado Aprovar valor solicitado          1144                 0.2353    0.0224              0.0105              6062534.79          6.062535e+06               5299.4185             5299.4185
-Expansivo controlado                  Recusar           488                 0.1004    0.5216              0.5594              7432614.89          0.000000e+00              15230.7682                0.0000
+         Conservador           Análise manual          1393                 0.2865    0.1702              0.1845         21,257,341.3400                0.0000             15,260.1158                0.0000
+         Conservador   Aprovar valor reduzido          2443                 0.5025    0.0378              0.0229         33,702,870.3400       11,297,704.6076             13,795.6899            4,624.5209
+         Conservador Aprovar valor solicitado           399                 0.0821    0.0165              0.0100          1,510,011.3700        1,510,011.3700              3,784.4896            3,784.4896
+         Conservador                  Recusar           627                 0.1290    0.4233              0.4482          8,134,144.1700                0.0000             12,973.1167                0.0000
+    Base/Equilibrado           Análise manual          1445                 0.2972    0.1681              0.1792         21,631,480.9200                0.0000             14,969.8830                0.0000
+    Base/Equilibrado   Aprovar valor reduzido          2099                 0.4317    0.0415              0.0281         31,697,204.8200       13,315,506.3072             15,101.0981            6,343.7381
+    Base/Equilibrado Aprovar valor solicitado           821                 0.1689    0.0195              0.0073          3,827,209.1600        3,827,209.1600              4,661.6433            4,661.6433
+    Base/Equilibrado                  Recusar           497                 0.1022    0.5140              0.5513          7,448,472.3200                0.0000             14,986.8658                0.0000
+Expansivo controlado           Análise manual          1415                 0.2910    0.1694              0.1830         21,346,856.0900                0.0000             15,086.1174                0.0000
+Expansivo controlado   Aprovar valor reduzido          1815                 0.3733    0.0449              0.0298         29,762,361.4500       14,779,317.4174             16,397.9953            8,142.8746
+Expansivo controlado Aprovar valor solicitado          1144                 0.2353    0.0224              0.0105          6,062,534.7900        6,062,534.7900              5,299.4185            5,299.4185
+Expansivo controlado                  Recusar           488                 0.1004    0.5216              0.5594          7,432,614.8900                0.0000             15,230.7682                0.0000
 
 Salvo em: politica_impacto_por_decisao.csv
 </pre>
@@ -9538,7 +9510,7 @@ Salvo em: politica_impacto_por_decisao.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [74]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">PALETA</span> <span class="o">=</span> <span class="p">[</span><span class="n">CORES</span><span class="p">[</span><span class="s1">'verde_principal'</span><span class="p">],</span> <span class="n">CORES</span><span class="p">[</span><span class="s1">'verde_vivo'</span><span class="p">],</span> <span class="n">CORES</span><span class="p">[</span><span class="s1">'amarelo'</span><span class="p">],</span> <span class="n">CORES</span><span class="p">[</span><span class="s1">'marrom'</span><span class="p">],</span> <span class="n">CORES</span><span class="p">[</span><span class="s1">'cinza_medio'</span><span class="p">]]</span>
@@ -9586,12 +9558,106 @@ Salvo em: politica_impacto_por_decisao.csv
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<script>
+        window.PlotlyConfig = {MathJaxConfig: 'local'};
+        if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+        </script>
+<script type="module">import "https://cdn.plot.ly/plotly-3.6.0.min"</script>
+</div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="9ed38bfb-8d23-4cf0-bdd8-29cbabf5f859" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("9ed38bfb-8d23-4cf0-bdd8-29cbabf5f859")) {                    Plotly.newPlot(                        "9ed38bfb-8d23-4cf0-bdd8-29cbabf5f859",                        [{"hovertemplate":"Rating=%{x}\u003cbr\u003eQtd clientes=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"A - Baixo risco","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"A - Baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["A - Baixo risco"],"xaxis":"x","y":{"dtype":"i2","bdata":"mQc="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eQtd clientes=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"B - Médio-baixo risco","marker":{"color":"#64BE28","pattern":{"shape":""}},"name":"B - Médio-baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["B - Médio-baixo risco"],"xaxis":"x","y":{"dtype":"i2","bdata":"zAM="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eQtd clientes=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"C - Médio risco","marker":{"color":"#F2C400","pattern":{"shape":""}},"name":"C - Médio risco","orientation":"v","showlegend":true,"textposition":"auto","x":["C - Médio risco"],"xaxis":"x","y":{"dtype":"i2","bdata":"2QI="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eQtd clientes=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"D - Alto risco","marker":{"color":"#6B421F","pattern":{"shape":""}},"name":"D - Alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["D - Alto risco"],"xaxis":"x","y":{"dtype":"i2","bdata":"2QI="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eQtd clientes=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"E - Muito alto risco","marker":{"color":"#6B756B","pattern":{"shape":""}},"name":"E - Muito alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["E - Muito alto risco"],"xaxis":"x","y":{"dtype":"i2","bdata":"5wE="},"yaxis":"y","type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Rating"},"categoryorder":"array","categoryarray":["A - Baixo risco","B - Médio-baixo risco","C - Médio risco","D - Alto risco","E - Muito alto risco"],"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Qtd clientes"},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8"},"legend":{"title":{"text":"Rating"},"tracegroupgap":0},"barmode":"relative","title":{"text":"Distribuicao de clientes por rating\u003cbr\u003e\u003csup\u003eBase de validacao com score de PD\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('9ed38bfb-8d23-4cf0-bdd8-29cbabf5f859');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="d8280c7d-7102-452a-8e89-4f706e837393" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("d8280c7d-7102-452a-8e89-4f706e837393")) {                    Plotly.newPlot(                        "d8280c7d-7102-452a-8e89-4f706e837393",                        [{"hovertemplate":"Rating=%{x}\u003cbr\u003eBad rate observado=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"A - Baixo risco","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"A - Baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["A - Baixo risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"NqhSbLEchj8="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eBad rate observado=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"B - Médio-baixo risco","marker":{"color":"#64BE28","pattern":{"shape":""}},"name":"B - Médio-baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["B - Médio-baixo risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"DgHF50wtpz8="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eBad rate observado=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"C - Médio risco","marker":{"color":"#F2C400","pattern":{"shape":""}},"name":"C - Médio risco","orientation":"v","showlegend":true,"textposition":"auto","x":["C - Médio risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"kNZlDi8Kuz8="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eBad rate observado=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"D - Alto risco","marker":{"color":"#6B421F","pattern":{"shape":""}},"name":"D - Alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["D - Alto risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"R4+oINsQ0D8="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eBad rate observado=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"E - Muito alto risco","marker":{"color":"#6B756B","pattern":{"shape":""}},"name":"E - Muito alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["E - Muito alto risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"vC3v3zrw4T8="},"yaxis":"y","type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Rating"},"categoryorder":"array","categoryarray":["A - Baixo risco","B - Médio-baixo risco","C - Médio risco","D - Alto risco","E - Muito alto risco"],"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Bad rate observado"},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","tickformat":".1%"},"legend":{"title":{"text":"Rating"},"tracegroupgap":0},"barmode":"relative","title":{"text":"Bad rate observado por rating\u003cbr\u003e\u003csup\u003eTaxa historica de inadimplencia em 12 meses\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('d8280c7d-7102-452a-8e89-4f706e837393');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="edb09883-1aac-4999-a236-b5d6c3e448a9" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("edb09883-1aac-4999-a236-b5d6c3e448a9")) {                    Plotly.newPlot(                        "edb09883-1aac-4999-a236-b5d6c3e448a9",                        [{"hovertemplate":"Rating=%{x}\u003cbr\u003eRenda media (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"A - Baixo risco","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"A - Baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["A - Baixo risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"u3\u002frlYRjrUA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eRenda media (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"B - Médio-baixo risco","marker":{"color":"#64BE28","pattern":{"shape":""}},"name":"B - Médio-baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["B - Médio-baixo risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"4AOsSnxerUA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eRenda media (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"C - Médio risco","marker":{"color":"#F2C400","pattern":{"shape":""}},"name":"C - Médio risco","orientation":"v","showlegend":true,"textposition":"auto","x":["C - Médio risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"oMPpXosqrEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eRenda media (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"D - Alto risco","marker":{"color":"#6B421F","pattern":{"shape":""}},"name":"D - Alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["D - Alto risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"JLFNdbFMq0A="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eRenda media (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"E - Muito alto risco","marker":{"color":"#6B756B","pattern":{"shape":""}},"name":"E - Muito alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["E - Muito alto risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"UIFmO5mrqkA="},"yaxis":"y","type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Rating"},"categoryorder":"array","categoryarray":["A - Baixo risco","B - Médio-baixo risco","C - Médio risco","D - Alto risco","E - Muito alto risco"],"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Renda media (R$)"},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8"},"legend":{"title":{"text":"Rating"},"tracegroupgap":0},"barmode":"relative","title":{"text":"Renda media por rating\u003cbr\u003e\u003csup\u003eBase de validacao\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('edb09883-1aac-4999-a236-b5d6c3e448a9');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
 </div>
 </div>
 </div>
@@ -9600,7 +9666,7 @@ Salvo em: politica_impacto_por_decisao.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [75]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">PALETA_CEN</span> <span class="o">=</span> <span class="p">[</span><span class="n">CORES</span><span class="p">[</span><span class="s1">'verde_principal'</span><span class="p">],</span> <span class="n">CORES</span><span class="p">[</span><span class="s1">'amarelo'</span><span class="p">],</span> <span class="n">CORES</span><span class="p">[</span><span class="s1">'marrom'</span><span class="p">]]</span>
@@ -9672,15 +9738,127 @@ Salvo em: politica_impacto_por_decisao.csv
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="3af4a848-cff4-4159-bd5e-e08cbbbc9e1c" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("3af4a848-cff4-4159-bd5e-e08cbbbc9e1c")) {                    Plotly.newPlot(                        "3af4a848-cff4-4159-bd5e-e08cbbbc9e1c",                        [{"hovertemplate":"Cenario=%{x}\u003cbr\u003eValor aprovado total (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Conservador","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"Conservador","orientation":"v","showlegend":true,"textposition":"auto","x":["Conservador"],"xaxis":"x","y":{"dtype":"f8","bdata":"0slIf8RtaEE="},"yaxis":"y","type":"bar"},{"hovertemplate":"Cenario=%{x}\u003cbr\u003eValor aprovado total (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Base\u002fEquilibrado","marker":{"color":"#F2C400","pattern":{"shape":""}},"name":"Base\u002fEquilibrado","orientation":"v","showlegend":true,"textposition":"auto","x":["Base\u002fEquilibrado"],"xaxis":"x","y":{"dtype":"f8","bdata":"cXV5tztZcEE="},"yaxis":"y","type":"bar"},{"hovertemplate":"Cenario=%{x}\u003cbr\u003eValor aprovado total (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Expansivo controlado","marker":{"color":"#6B421F","pattern":{"shape":""}},"name":"Expansivo controlado","orientation":"v","showlegend":true,"textposition":"auto","x":["Expansivo controlado"],"xaxis":"x","y":{"dtype":"f8","bdata":"HmRRw1fgc0E="},"yaxis":"y","type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Cenario"},"categoryorder":"array","categoryarray":["Conservador","Base\u002fEquilibrado","Expansivo controlado"],"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Valor aprovado total (R$)"},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8"},"legend":{"title":{"text":"Cenario"},"tracegroupgap":0},"barmode":"relative","title":{"text":"Exposicao aprovada automaticamente por cenario\u003cbr\u003e\u003csup\u003eSoma do valor aprovado em cada cenario\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('3af4a848-cff4-4159-bd5e-e08cbbbc9e1c');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="40faa495-b452-47e2-a617-987696a05c23" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("40faa495-b452-47e2-a617-987696a05c23")) {                    Plotly.newPlot(                        "40faa495-b452-47e2-a617-987696a05c23",                        [{"hovertemplate":"Rating=%{x}\u003cbr\u003eValor aprovado (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"A - Baixo risco","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"A - Baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["A - Baixo risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"gnlejJDBZkE="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eValor aprovado (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"B - Médio-baixo risco","marker":{"color":"#64BE28","pattern":{"shape":""}},"name":"B - Médio-baixo risco","orientation":"v","showlegend":true,"textposition":"auto","x":["B - Médio-baixo risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"jNSbevLOU0E="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eValor aprovado (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"C - Médio risco","marker":{"color":"#F2C400","pattern":{"shape":""}},"name":"C - Médio risco","orientation":"v","showlegend":true,"textposition":"auto","x":["C - Médio risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"9jMOjUrb0kA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eValor aprovado (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"D - Alto risco","marker":{"color":"#6B421F","pattern":{"shape":""}},"name":"D - Alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["D - Alto risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"AAAAAAAAAAA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Rating=%{x}\u003cbr\u003eValor aprovado (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"E - Muito alto risco","marker":{"color":"#6B756B","pattern":{"shape":""}},"name":"E - Muito alto risco","orientation":"v","showlegend":true,"textposition":"auto","x":["E - Muito alto risco"],"xaxis":"x","y":{"dtype":"f8","bdata":"AAAAAAAAAAA="},"yaxis":"y","type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Rating"},"categoryorder":"array","categoryarray":["A - Baixo risco","B - Médio-baixo risco","C - Médio risco","D - Alto risco","E - Muito alto risco"],"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Valor aprovado (R$)"},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8"},"legend":{"title":{"text":"Rating"},"tracegroupgap":0},"barmode":"relative","title":{"text":"Valor aprovado total por rating — Base\u002fEquilibrado\u003cbr\u003e\u003csup\u003eExposicao gerada pela politica no cenario base\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('40faa495-b452-47e2-a617-987696a05c23');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="277bc3ce-b183-435a-b12c-71c14a78693d" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("277bc3ce-b183-435a-b12c-71c14a78693d")) {                    Plotly.newPlot(                        "277bc3ce-b183-435a-b12c-71c14a78693d",                        [{"hovertemplate":"cenario=%{text}\u003cbr\u003eTaxa de aprovacao automatica=%{x}\u003cbr\u003eBad rate dos aprovados=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Conservador","marker":{"color":"#2E7D18","symbol":"circle","size":14},"mode":"markers+text","name":"Conservador","orientation":"v","showlegend":true,"text":["Conservador"],"x":{"dtype":"f8","bdata":"PlD6yX604j8="},"xaxis":"x","y":{"dtype":"f8","bdata":"7OqIKFuelT8="},"yaxis":"y","type":"scatter","textposition":"top center"},{"hovertemplate":"cenario=%{text}\u003cbr\u003eTaxa de aprovacao automatica=%{x}\u003cbr\u003eBad rate dos aprovados=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Base\u002fEquilibrado","marker":{"color":"#F2C400","symbol":"circle","size":14},"mode":"markers+text","name":"Base\u002fEquilibrado","orientation":"v","showlegend":true,"text":["Base\u002fEquilibrado"],"x":{"dtype":"f8","bdata":"wjBP8Oo34z8="},"xaxis":"x","y":{"dtype":"f8","bdata":"tmzZsmXLlj8="},"yaxis":"y","type":"scatter","textposition":"top center"},{"hovertemplate":"cenario=%{text}\u003cbr\u003eTaxa de aprovacao automatica=%{x}\u003cbr\u003eBad rate dos aprovados=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Expansivo controlado","marker":{"color":"#6B421F","symbol":"circle","size":14},"mode":"markers+text","name":"Expansivo controlado","orientation":"v","showlegend":true,"text":["Expansivo controlado"],"x":{"dtype":"f8","bdata":"A6F5A6F54z8="},"xaxis":"x","y":{"dtype":"f8","bdata":"q3wx\u002fBPXlj8="},"yaxis":"y","type":"scatter","textposition":"top center"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Taxa de aprovacao automatica"},"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8","tickformat":".1%"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Bad rate dos aprovados"},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8","tickformat":".1%"},"legend":{"title":{"text":"cenario"},"tracegroupgap":0},"title":{"text":"Trade-off: Aprovacao automatica x Bad rate dos aprovados\u003cbr\u003e\u003csup\u003eCada ponto representa um cenario de apetite de risco\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('277bc3ce-b183-435a-b12c-71c14a78693d');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div style="height:520px; width:100%;"> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" crossorigin="anonymous" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" src="https://cdn.plot.ly/plotly-3.6.0.min.js"></script> <div class="plotly-graph-div" id="499079fa-89d4-4eef-8aa8-b6061fc764b7" style="height:100%; width:100%;"></div> <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("499079fa-89d4-4eef-8aa8-b6061fc764b7")) {                    Plotly.newPlot(                        "499079fa-89d4-4eef-8aa8-b6061fc764b7",                        [{"alignmentgroup":"True","hovertemplate":"=Solicitado\u003cbr\u003eCenario=%{x}\u003cbr\u003eValor (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Solicitado","marker":{"color":"#2E7D18","pattern":{"shape":""}},"name":"Solicitado","offsetgroup":"Solicitado","orientation":"v","showlegend":true,"textposition":"auto","x":["Conservador","Base\u002fEquilibrado","Expansivo controlado"],"xaxis":"x","y":{"dtype":"f8","bdata":"XI\u002fCeUbOjkFcj8J5Rs6OQVyPwnlGzo5B"},"yaxis":"y","type":"bar"},{"alignmentgroup":"True","hovertemplate":"=Aprovado\u003cbr\u003eCenario=%{x}\u003cbr\u003eValor (R$)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Aprovado","marker":{"color":"#64BE28","pattern":{"shape":""}},"name":"Aprovado","offsetgroup":"Aprovado","orientation":"v","showlegend":true,"textposition":"auto","x":["Conservador","Base\u002fEquilibrado","Expansivo controlado"],"xaxis":"x","y":{"dtype":"f8","bdata":"0slIf8RtaEFxdXm3O1lwQR5kUcNX4HNB"},"yaxis":"y","type":"bar"}],                        {"template":{"layout":{"colorway":["#2E7D18","#64BE28","#0B7D35","#F2C400","#6B421F","#6B756B"],"font":{"color":"#2F3D32","family":"Arial","size":14},"legend":{"bgcolor":"rgba(255,255,255,0)","font":{"color":"#2F3D32"}},"margin":{"b":60,"l":70,"r":40,"t":80},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","title":{"font":{"color":"#2F3D32","size":22},"x":0.02,"xanchor":"left"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Cenario"},"tickfont":{"color":"#2F3D32"},"showgrid":false,"zeroline":false,"linecolor":"#D9DED8"},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Valor (R$)"},"tickfont":{"color":"#2F3D32"},"showgrid":true,"gridcolor":"#E6EAE5","zeroline":false,"linecolor":"#D9DED8"},"legend":{"title":{"text":""},"tracegroupgap":0},"barmode":"group","title":{"text":"Valor solicitado vs aprovado por cenario\u003cbr\u003e\u003csup\u003eImpacto da politica sobre a exposicao total\u003c\u002fsup\u003e"},"height":520,"showlegend":true,"hovermode":"x unified"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('499079fa-89d4-4eef-8aa8-b6061fc764b7');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script> </div>
+</div>
 </div>
 </div>
 </div>
@@ -9689,7 +9867,7 @@ Salvo em: politica_impacto_por_decisao.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [76]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Score gerencial de apoio a recomendacao</span>
@@ -9824,7 +10002,7 @@ Salvo em: politica_score_gerencial_cenarios.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [77]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Politica final recomendada: </span><span class="si">{</span><span class="n">CENARIO_RECOMENDADO</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
@@ -9905,11 +10083,11 @@ Salvo em: politica_score_gerencial_cenarios.csv
 <pre>Politica final recomendada: Expansivo controlado
 
           faixa_risco  bad_rate_observado  multiplicador_renda  teto_rating  pct_max_comprometimento                                                                                   acao_principal
-      A - Baixo risco              0.0108                  5.0     39222.68                     0.35                                                Aprovar valor solicitado / Aprovar valor reduzido
-B - Médio-baixo risco              0.0453                  4.0     31378.15                     0.30                                                Aprovar valor solicitado / Aprovar valor reduzido
-      C - Médio risco              0.1056                  2.5     23533.61                     0.25 Aprovar valor solicitado / Aprovar valor reduzido; Análise manual em casos de controle adicional
-       D - Alto risco              0.2510                  0.0         0.00                     0.20                                                                                   Análise manual
- E - Muito alto risco              0.5606                  0.0         0.00                     0.00                                                                                          Recusar
+      A - Baixo risco              0.0108               5.0000  39,222.6800                   0.3500                                                Aprovar valor solicitado / Aprovar valor reduzido
+B - Médio-baixo risco              0.0453               4.0000  31,378.1500                   0.3000                                                Aprovar valor solicitado / Aprovar valor reduzido
+      C - Médio risco              0.1056               2.5000  23,533.6100                   0.2500 Aprovar valor solicitado / Aprovar valor reduzido; Análise manual em casos de controle adicional
+       D - Alto risco              0.2510               0.0000       0.0000                   0.2000                                                                                   Análise manual
+ E - Muito alto risco              0.5606               0.0000       0.0000                   0.0000                                                                                          Recusar
 
 Salvo em: politica_final_recomendada_limites.csv
 </pre>
@@ -9975,7 +10153,7 @@ Salvo em: politica_final_recomendada_limites.csv
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [78]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'=== Checklist de saidas do notebook 06 ==='</span><span class="p">)</span>
