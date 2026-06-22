@@ -1,6 +1,6 @@
 faixa_risco,rating,qtd_total,qtd_aprovar_valor_solicitado,qtd_aprovar_valor_reduzido,qtd_analise_manual,qtd_recusa,perc_aprovar_valor_solicitado,perc_aprovar_valor_reduzido,perc_analise_manual,perc_recusa,valor_aprovado_total,bad_rate_aprovados,leitura_politica
-B - Médio-baixo risco,B,972,126,846,0,0,0.12962962962962962,0.8703703703703703,0.0,0.0,6737472.223998744,0.04526748971193416,"Rating B: risco médio-baixo — aprovação automática, limite até 4× renda"
-A - Baixo risco,A,1945,1016,929,0,0,0.5223650385604113,0.47763496143958867,0.0,0.0,13860421.666579016,0.010796915167095116,"Rating A: risco baixo — aprovação automática, limite até 5× renda"
+B - Médio-baixo risco,B,972,119,813,40,0,0.12242798353909465,0.8364197530864198,0.0411522633744856,0.0,6654837.127053871,0.04291845493562232,"Rating B: risco médio-baixo — aprovação automática, limite até 4× renda"
+A - Baixo risco,A,1945,1002,919,24,0,0.5151670951156813,0.4724935732647815,0.012339331619537276,0.0,13810637.289013954,0.010411244143675169,"Rating A: risco baixo — aprovação automática, limite até 5× renda"
 D - Alto risco,D,729,0,0,729,0,0.0,0.0,1.0,0.0,0.0,,"Rating D: risco alto — análise manual obrigatória, sem limite automático"
 E - Muito alto risco,E,487,0,0,0,487,0.0,0.0,0.0,1.0,0.0,,Rating E: risco muito alto — recusa automática
 C - Médio risco,C,729,2,40,686,1,0.0027434842249657062,0.05486968449931413,0.9410150891632373,0.0013717421124828531,243958.31679310597,0.023809523809523808,Rating C: risco médio — aprovação condicional; análise manual nos casos de controle adicional
