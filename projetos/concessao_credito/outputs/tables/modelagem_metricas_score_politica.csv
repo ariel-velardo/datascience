@@ -1,0 +1,2 @@
+﻿fonte,modelo,base,n,bad_rate,auc_test,ks_test,average_precision_test,brier_score_test,logloss_test,pd_min,pd_media,pd_max,observacao
+data/processed/base_politica_validacao_com_score.parquet,gradient_boosting,validação usada na política,4862,0.12299465240641712,0.8738579818908556,0.5899747124561547,0.5493841755565886,0.07735824557516072,0.2590525977209024,0.004730574590464128,0.12369032516732932,0.9214078322610628,Métricas recalculadas diretamente sobre o pd_score usado no rating e na política final.
