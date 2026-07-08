@@ -47,14 +47,13 @@ A planilha deve conter, no mínimo, as colunas abaixo:
 | `KM` | Sim | Distância em quilômetros |
 | `VISITAMOS` | Não | Indica se a cidade já foi visitada |
 
-A coluna `VISITAMOS` aceita valores como:
 
-```text
-S
-N
-Sim
-Não
-1
-0
-True
-False
+Por este aqui:
+
+```markdown
+A coluna `VISITAMOS` aceita os seguintes formatos:
+
+| Tipo de marcação | Valores aceitos |
+| --- | --- |
+| Visitado | `S`, `Sim`, `1`, `True`, `x`, `Yes` |
+| Não visitado | `N`, `Não`, `0`, `False`, vazio |
