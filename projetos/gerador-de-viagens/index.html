@@ -120,6 +120,15 @@
   .list-toggle.open .arrow{transform:rotate(180deg);}
   .list{max-height:0;overflow:hidden;transition:max-height .5s ease;}
   .list.open{max-height:none;}
+  .list-tools{display:grid;gap:10px;padding:14px 2px;border-bottom:1px solid var(--line);}
+  .list-search{width:100%;background:var(--night-2);border:1px solid var(--line);color:var(--cream);
+    border-radius:11px;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
+  .list-search:focus{border-color:var(--amber);}
+  .list-search::placeholder{color:var(--muted);}
+  .list-check{display:flex;align-items:center;gap:8px;width:max-content;max-width:100%;color:var(--muted);
+    font-size:13.5px;cursor:pointer;user-select:none;}
+  .list-check input{width:17px;height:17px;accent-color:var(--coat);cursor:pointer;}
+  .list-empty{color:var(--muted);font-size:14px;text-align:center;padding:18px 10px;border-bottom:1px solid var(--line);}
 
   .add-form{display:flex;gap:8px;padding:14px 2px;border-bottom:1px solid var(--line);align-items:center;}
   .add-form input{background:var(--night-2);border:1px solid var(--line);color:var(--cream);
@@ -233,6 +242,13 @@
         <input class="km" id="add-km" type="number" inputmode="decimal" placeholder="km">
         <button id="add-btn" aria-label="adicionar cidade">+</button>
       </div>
+      <div class="list-tools">
+        <input class="list-search" id="city-search" type="search" placeholder="Buscar cidade" autocomplete="off" aria-label="Buscar cidade">
+        <label class="list-check" for="only-unvisited">
+          <input id="only-unvisited" type="checkbox">
+          <span>Só não visitadas</span>
+        </label>
+      </div>
       <div id="rows"></div>
     </div>
   </section>
@@ -269,6 +285,7 @@
 
   const KEY="nossos_passeios_cities_v2";
   const OLD_KEY="nossos_passeios_v1";
+  const RANGE_KEY="nossos_passeios_range_v1";
   const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let cities=loadCities();
@@ -283,12 +300,23 @@
     return SEED.map(c=>({...c}));
   }
   function persist(){ try{ localStorage.setItem(KEY,JSON.stringify(cities)); }catch(e){} }
+  function loadRange(){
+    try{
+      const raw=localStorage.getItem(RANGE_KEY);
+      if(raw!==null){
+        const saved=Number(raw);
+        if(Number.isFinite(saved)) rangeEl.value=String(saved);
+      }
+    }catch(e){}
+  }
+  function persistRange(){ try{ localStorage.setItem(RANGE_KEY,rangeEl.value); }catch(e){} }
 
   const $=id=>document.getElementById(id);
   const flapsEl=$("flaps"),metaEl=$("meta"),emptyEl=$("empty");
   const rangeEl=$("range"),rangeVal=$("range-val"),eligibleEl=$("eligible");
   const drawBtn=$("draw"),actionsEl=$("actions"),routeEl=$("route"),visitBtn=$("visit");
   const rowsEl=$("rows"),listEl=$("list"),listToggle=$("list-toggle"),listCount=$("list-count");
+  const searchEl=$("city-search"),onlyUnvisitedEl=$("only-unvisited");
   let current=null,spinning=false;
 
   function toast(msg){
@@ -304,6 +332,7 @@
     $("range-min").textContent=lo+" km"; $("range-max").textContent=hi+" km";
     if(+rangeEl.value<lo) rangeEl.value=lo;
     if(+rangeEl.value>hi) rangeEl.value=hi;
+    persistRange();
   }
   function updateProgress(){
     const done=cities.filter(c=>c.visitado).length, total=cities.length;
@@ -317,7 +346,7 @@
     const n=eligible().length;
     eligibleEl.innerHTML=n>0
       ? `<b>${n}</b> ${n===1?"cidade nova":"cidades novas"} até ${rangeEl.value} km`
-      : `Nenhuma cidade nova até ${rangeEl.value} km — aumente a distância`;
+      : `Nenhuma cidade nova até ${rangeEl.value} km — aumente a distância ou revise as visitadas`;
     drawBtn.disabled=n===0||spinning;
   }
 
@@ -423,9 +452,28 @@
     persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
   }
 
+  function normalizeSearch(value){
+    return value.toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  }
+  function filteredRows(){
+    const term=normalizeSearch(searchEl.value.trim());
+    const onlyUnvisited=onlyUnvisitedEl.checked;
+    return [...cities].sort((a,b)=>a.km-b.km).filter(city=>{
+      if(onlyUnvisited&&city.visitado) return false;
+      return !term||normalizeSearch(city.cidade).includes(term);
+    });
+  }
   function renderRows(){
     rowsEl.innerHTML="";
-    const sorted=[...cities].sort((a,b)=>a.km-b.km);
+    const sorted=filteredRows();
+    if(!sorted.length){
+      const empty=document.createElement("p");
+      empty.className="list-empty";
+      empty.textContent=cities.length
+        ? "Nenhuma cidade encontrada com esse filtro."
+        : "Nenhuma cidade cadastrada ainda.";
+      rowsEl.appendChild(empty);
+    }
     sorted.forEach(city=>{
       const row=document.createElement("div");
       row.className="row"+(city.visitado?" done":"");
@@ -440,7 +488,8 @@
       rowsEl.appendChild(row);
     });
     const done=cities.filter(c=>c.visitado).length;
-    listCount.textContent=`${done}/${cities.length}`;
+    const filterActive=!!searchEl.value.trim()||onlyUnvisitedEl.checked;
+    listCount.textContent=filterActive?`${sorted.length}/${cities.length}`:`${done}/${cities.length}`;
   }
 
   function exportBackup(){
@@ -470,7 +519,9 @@
     reader.readAsText(file);
   }
 
-  rangeEl.addEventListener("input",updateEligible);
+  rangeEl.addEventListener("input",()=>{ persistRange(); updateEligible(); });
+  searchEl.addEventListener("input",renderRows);
+  onlyUnvisitedEl.addEventListener("change",renderRows);
   drawBtn.addEventListener("click",sortear);
   visitBtn.addEventListener("click",()=>{ if(current) toggleVisit(current); });
   $("add-btn").addEventListener("click",addCity);
@@ -491,7 +542,7 @@
     current=null;actionsEl.classList.remove("show");flapsEl.innerHTML="";metaEl.innerHTML="";emptyEl.style.display="none";
   });
 
-  refreshRangeBounds();updateProgress();renderRows();updateEligible();
+  loadRange();refreshRangeBounds();updateProgress();renderRows();updateEligible();
 })();
 </script>
 </body>
