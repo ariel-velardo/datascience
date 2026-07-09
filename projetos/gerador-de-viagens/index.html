@@ -366,9 +366,11 @@
   const KEY="nossos_passeios_cities_v2";
   const OLD_KEY="nossos_passeios_v1";
   const RANGE_KEY="nossos_passeios_range_v1";
+  const LAST_DRAW_KEY="nossos_passeios_last_draw_v1";
   const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let cities=loadCities();
+  let lastDrawnCityKey=loadLastDraw();
 
   function loadCities(){
     try{
@@ -380,6 +382,22 @@
     return SEED.map(c=>({...c}));
   }
   function persist(){ try{ localStorage.setItem(KEY,JSON.stringify(cities)); }catch(e){} }
+  function getCityKey(city){ return normalizeSearch(city.cidade); }
+  function loadLastDraw(){
+    try{ return localStorage.getItem(LAST_DRAW_KEY)||""; }catch(e){ return ""; }
+  }
+  function persistLastDraw(city){
+    lastDrawnCityKey=city?getCityKey(city):"";
+    try{
+      if(lastDrawnCityKey) localStorage.setItem(LAST_DRAW_KEY,lastDrawnCityKey);
+      else localStorage.removeItem(LAST_DRAW_KEY);
+    }catch(e){}
+  }
+  function drawPoolWithoutImmediateRepeat(pool){
+    if(pool.length<2||!lastDrawnCityKey) return pool;
+    const filtered=pool.filter(city=>getCityKey(city)!==lastDrawnCityKey);
+    return filtered.length?filtered:pool;
+  }
   function loadRange(){
     try{
       const raw=localStorage.getItem(RANGE_KEY);
@@ -537,7 +555,10 @@
       return;
     }
     spinning=true;drawBtn.disabled=true;actionsEl.classList.remove("show");
-    reveal(pool[Math.floor(Math.random()*pool.length)]);
+    const drawPool=drawPoolWithoutImmediateRepeat(pool);
+    const city=drawPool[Math.floor(Math.random()*drawPool.length)];
+    persistLastDraw(city);
+    reveal(city);
   }
 
   function rainHearts(){
@@ -572,8 +593,10 @@
   }
   function removeCity(city){
     if(!confirm(`Remover "${city.cidade}" da lista?`)) return;
+    const removedKey=getCityKey(city);
     cities=cities.filter(c=>c!==city);
     if(current===city) clearDestination();
+    if(removedKey===lastDrawnCityKey) persistLastDraw(null);
     persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
   }
 
@@ -651,6 +674,7 @@
           throw new Error("formato");
         cities=data.map(c=>({cidade:c.cidade,km:c.km,visitado:!!c.visitado}));
         clearListFilters();
+        persistLastDraw(null);
         persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
         clearDestination();
         toast(`Backup restaurado — ${cities.length} cidades`);
@@ -679,6 +703,7 @@
     if(!confirm("Voltar à lista original da planilha? Isso descarta as cidades e marcações atuais.")) return;
     cities=SEED.map(c=>({...c}));
     clearListFilters();
+    persistLastDraw(null);
     persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
     clearDestination();
   });
