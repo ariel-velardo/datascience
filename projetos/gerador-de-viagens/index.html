@@ -35,10 +35,9 @@
   }
   button,input{font:inherit;}
   button,a,input{touch-action:manipulation;}
-  .app-shell{width:min(1120px,100%);margin:0 auto;}
+  .app-shell{width:min(620px,100%);margin:0 auto;}
   .hero{
-    background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px;
-    box-shadow:var(--shadow);display:grid;gap:22px;margin-bottom:16px;
+    display:grid;gap:16px;margin-bottom:16px;
   }
   .eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;
     text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px;}
@@ -123,6 +122,13 @@
   .map-frame{width:100%;height:260px;border:0;display:block;background:var(--bg-soft);}
   .map-frame[hidden],.map-empty[hidden]{display:none;}
   .map-empty{min-height:230px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:24px;}
+  .restaurant-empty{color:var(--muted);font-size:14px;text-align:center;background:var(--bg-soft);
+    border:1px dashed var(--line);border-radius:8px;padding:18px 12px;}
+  .restaurant-links{display:grid;gap:10px;}
+  .restaurant-links[hidden],.restaurant-empty[hidden]{display:none;}
+  .restaurant-links a{border:1px solid var(--line);background:#fff;color:var(--text);font-size:14px;font-weight:700;
+    padding:12px;border-radius:8px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .restaurant-links a:first-child{background:var(--green-soft);color:var(--green-dark);border-color:#d5e8da;}
 
   .list-section{align-self:start;}
   .list-toggle{width:100%;background:transparent;border:none;cursor:pointer;color:var(--text);
@@ -187,14 +193,13 @@
   @keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:0;}}
 
   @media (min-width:720px){
-    .hero{grid-template-columns:1.2fr .8fr;align-items:center;}
     .actions{grid-template-columns:1fr 1fr;}
+    .restaurant-links{grid-template-columns:1fr 1fr;}
     .map-frame{height:320px;}
   }
   @media (min-width:960px){
     body{padding:calc(env(safe-area-inset-top) + 28px) 24px calc(env(safe-area-inset-bottom) + 42px);}
-    .app-grid{grid-template-columns:minmax(0,1fr) 420px;align-items:start;}
-    .list-section{position:sticky;top:20px;}
+    .app-grid{grid-template-columns:1fr;}
   }
   @media (max-width:380px){
     .add-form{grid-template-columns:1fr 72px;}
@@ -272,6 +277,21 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3l-6.5 6.5"/><path d="M21 3v5"/><path d="M21 3h-5"/><circle cx="9" cy="15" r="6"/></svg>
             Sortear passeio
           </button>
+        </section>
+
+        <section class="panel restaurants-card">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker">Onde comer por lá</div>
+              <h2 class="panel-title" id="restaurant-title">Restaurantes para pesquisar</h2>
+              <p class="panel-note">Links externos para procurar opções na cidade sorteada.</p>
+            </div>
+          </div>
+          <div class="restaurant-empty" id="restaurant-empty">Sorteie uma cidade para pesquisar restaurantes.</div>
+          <div class="restaurant-links" id="restaurant-links" hidden>
+            <a id="tripadvisor-link" target="_blank" rel="noopener">Pesquisar no TripAdvisor</a>
+            <a id="restaurant-maps-link" target="_blank" rel="noopener">Pesquisar no Google Maps</a>
+          </div>
         </section>
 
         <section class="panel">
@@ -378,6 +398,8 @@
   const rowsEl=$("rows"),listEl=$("list"),listToggle=$("list-toggle"),listCount=$("list-count");
   const searchEl=$("city-search"),onlyUnvisitedEl=$("only-unvisited");
   const mapFrame=$("map-frame"),mapEmpty=$("map-empty"),mapTitle=$("map-title");
+  const restaurantEmpty=$("restaurant-empty"),restaurantLinks=$("restaurant-links"),restaurantTitle=$("restaurant-title");
+  const tripadvisorLink=$("tripadvisor-link"),restaurantMapsLink=$("restaurant-maps-link");
   let current=null,spinning=false;
 
   function toast(msg){
@@ -426,6 +448,7 @@
   function reveal(city){
     current=city; metaEl.innerHTML=""; emptyEl.style.display="none";
     updateMap(city);
+    updateRestaurantCard(city);
     const cells=buildCells(city.cidade);
     if(reduceMotion){ spinning=false; showMeta(city); showActions(city); updateEligible(); return; }
     const settleAt=cells.map((_,i)=>8+i*3+Math.floor(Math.random()*4));
@@ -455,6 +478,9 @@
   }
   const mapsUrl=city=>"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(city.cidade+", SP, Brasil");
   const mapEmbedUrl=city=>"https://www.google.com/maps?q="+encodeURIComponent(city.cidade+", SP, Brasil")+"&output=embed";
+  // Integração atual: links de pesquisa; recomendações automáticas exigiriam API oficial e backend.
+  const tripadvisorSearchUrl=city=>"https://www.tripadvisor.com.br/Search?q="+encodeURIComponent("restaurantes em "+city.cidade+" SP");
+  const restaurantMapsSearchUrl=city=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("restaurantes em "+city.cidade+" SP Brasil");
   function updateMap(city){
     if(!city){
       mapFrame.src="";
@@ -468,6 +494,21 @@
     mapEmpty.hidden=true;
     mapTitle.textContent=city.cidade;
   }
+  function updateRestaurantCard(city){
+    if(!city){
+      restaurantTitle.textContent="Restaurantes para pesquisar";
+      restaurantEmpty.hidden=false;
+      restaurantLinks.hidden=true;
+      tripadvisorLink.removeAttribute("href");
+      restaurantMapsLink.removeAttribute("href");
+      return;
+    }
+    restaurantTitle.textContent="Restaurantes em "+city.cidade;
+    restaurantEmpty.hidden=true;
+    restaurantLinks.hidden=false;
+    tripadvisorLink.href=tripadvisorSearchUrl(city);
+    restaurantMapsLink.href=restaurantMapsSearchUrl(city);
+  }
   function clearDestination(message=""){
     current=null;
     actionsEl.classList.remove("show");
@@ -476,6 +517,7 @@
     emptyEl.style.display=message?"block":"none";
     emptyEl.textContent=message;
     updateMap(null);
+    updateRestaurantCard(null);
   }
   function heartFilled(){return `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.18L12 21z"/></svg>`;}
   function heartOutline(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/></svg>`;}
@@ -641,7 +683,7 @@
     clearDestination();
   });
 
-  loadRange();refreshRangeBounds();updateProgress();renderRows();updateEligible();updateMap(null);
+  loadRange();refreshRangeBounds();updateProgress();renderRows();updateEligible();updateMap(null);updateRestaurantCard(null);
 })();
 </script>
 </body>
