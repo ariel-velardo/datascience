@@ -12,6 +12,8 @@ https://ariel-velardo.github.io/datascience/projetos/gerador-de-viagens/
 
 - Sorteio de cidades ainda não visitadas
 - Filtro por distância máxima
+- Busca por cidade e filtro de cidades não visitadas
+- Visualização do destino sorteado em mapa
 - Cadastro manual de novas cidades pelo próprio app
 - Marcação de cidades já visitadas
 - Abertura da rota no Google Maps
