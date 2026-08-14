@@ -5,7 +5,8 @@ scikit-learn
 statsmodels
 catboost
 shap
-matplotlib
+plotly
+kaleido
 openpyxl
 jupyter
 ipykernel

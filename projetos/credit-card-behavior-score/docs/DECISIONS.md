@@ -271,3 +271,29 @@ Exceções:
 Status:
 
 Aceito.
+
+---
+
+## D016 — Biblioteca de visualização
+
+Decisão:
+
+Utilizar Plotly como biblioteca principal de visualização do projeto.
+
+Os notebooks deverão priorizar gráficos interativos e os mesmos objetos gráficos poderão ser exportados para formatos estáticos para utilização na apresentação executiva.
+
+Matplotlib e Seaborn não serão utilizados como padrão.
+
+Motivos:
+
+- interatividade durante a exploração;
+- qualidade visual adequada para comunicação executiva;
+- reutilização entre notebook e apresentação;
+- padronização visual centralizada;
+- redução da necessidade de reconstruir gráficos posteriormente.
+
+A confiabilidade das análises continuará dependendo da metodologia, dos dados e das métricas, e não da biblioteca de visualização.
+
+Status:
+
+Aceito.

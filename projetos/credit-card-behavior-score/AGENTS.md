@@ -118,7 +118,7 @@ Utilizar principalmente:
 - NumPy;
 - scikit-learn;
 - scipy;
-- matplotlib;
+- Plotly;
 - CatBoost quando necessário;
 - SHAP quando necessário.
 
@@ -230,3 +230,26 @@ Contribuições relevantes de IA deverão ser registradas em:
 docs/AI_USAGE.md
 
 Código gerado por IA deverá ser revisado antes de ser aceito.
+
+
+---
+
+## Padrão de Visualização
+
+Utilizar Plotly como biblioteca principal de visualização.
+
+Não utilizar Matplotlib ou Seaborn nos notebooks, salvo quando existir uma limitação técnica específica e previamente justificada.
+
+Os gráficos devem utilizar o padrão definido em:
+
+src/behavior_score/visualization.py
+
+Priorizar visualizações interativas durante a análise e exportar versões estáticas para artefatos executivos quando necessário.
+
+Não criar gráficos redundantes.
+
+Cada visualização deve responder a uma pergunta analítica clara.
+
+Antes de criar ou modificar visualizações, consultar também:
+
+docs/VISUAL_STANDARD.md
