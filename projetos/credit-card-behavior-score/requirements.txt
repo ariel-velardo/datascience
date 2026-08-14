@@ -1,0 +1,12 @@
+﻿pandas
+numpy
+scipy
+scikit-learn
+statsmodels
+catboost
+shap
+matplotlib
+openpyxl
+jupyter
+ipykernel
+pytest
