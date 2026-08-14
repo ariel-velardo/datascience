@@ -32,3 +32,6 @@ Thumbs.db
 
 # Backups locais do workspace
 _workspace_admin/backups/
+
+# Backups locais de projetos
+projetos/concessao_credito/_backup_politica_antiga_*/
