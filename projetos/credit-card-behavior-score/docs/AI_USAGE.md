@@ -92,5 +92,6 @@ Contribuições relevantes deverão ser registradas abaixo.
 | 2026-08-14 | OpenAI Codex | Revisão corretiva da auditoria e do diagnóstico temporal, auditoria do PSI, comparação de splits e atualização do gate metodológico | Sujeito à revisão humana |
 | 2026-08-15 | OpenAI Codex | Construção, execução e validação do notebook técnico final até a comparação entre Regressão Logística e CatBoost | Validação humana pendente para decisões de features, champion, interpretações e decisões de negócio |
 | 2026-08-16 | OpenAI Codex | Último gate de desenvolvimento: tuning controlado, robustez de features, calibração, explicabilidade e configuração candidata à avaliação OOT | Validação humana pendente |
-| A definir | Claude Code | A definir | A definir |
+| 2026-08-16 | OpenAI Codex | Fechamento humano do candidato pré-OOT com 13 features, `var12_estado`, configuração congelada e registro reprodutível de versões | Validação humana aplicada às decisões; abertura do OOT ainda pendente |
+| 2026-08-16 | Claude Code | Revisão independente + implementação das correções pré-OOT | Validação humana pendente |
 | A definir | Gemini | A definir | A definir |
