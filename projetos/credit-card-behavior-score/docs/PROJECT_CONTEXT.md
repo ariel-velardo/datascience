@@ -339,8 +339,24 @@ Uma arquitetura de produção poderá ser discutida conceitualmente caso agregue
 
 ## 11. Status Atual
 
-Etapa 0 — Estruturação do projeto e definição metodológica.
+Etapa 1 — Auditoria dos dados: concluída tecnicamente e sujeita à revisão humana final.
 
-Próxima etapa:
+Etapa 2 — Diagnóstico temporal e delineamento amostral: executada tecnicamente.
 
-Etapa 1 — Auditoria dos Dados.
+O split temporal permanece em validação humana. Nenhuma janela foi aceita como
+decisão metodológica definitiva e a modelagem ainda não começou.
+
+Após aprovação do delineamento, o OOT será congelado e não poderá orientar
+seleção de features, tratamentos guiados pelo target, tuning, hiperparâmetros ou
+seleção do modelo champion.
+
+As etapas posteriores continuam cobrindo:
+
+- EDA orientada à modelagem;
+- separação Treino/Validação/OOT;
+- análise e seleção de features;
+- seleção e avaliação de modelos;
+- explicabilidade;
+- estabilidade do modelo;
+- transformação para score entre 0 e 1000;
+- interpretação do score como apoio à decisão.

@@ -297,3 +297,42 @@ A confiabilidade das análises continuará dependendo da metodologia, dos dados 
 Status:
 
 Aceito.
+
+---
+
+## D017 — Delineamento temporal
+
+Decisão:
+
+Adotar o cenário A — 8/2/3:
+
+- treino de 2019-01 a 2019-08;
+- validação de 2019-09 a 2019-10;
+- OOT de 2019-11 a 2020-01.
+
+O cenário B — 9/2/2 foi avaliado como alternativa e não foi adotado. A partir
+desta aprovação, o OOT fica congelado e não pode ser utilizado para seleção de
+features, tratamentos orientados pelo target, tuning, escolha de
+hiperparâmetros, calibração ou seleção do champion. Sua abertura ocorrerá
+somente após a escolha definitiva do modelo para avaliação final fora do tempo.
+
+Status:
+
+Aceito.
+
+---
+
+## D018 — Estratégia do Notebook Final
+
+Decisão:
+
+A entrega técnica será composta por um único notebook:
+
+`notebooks/credit_card_behavior_score.ipynb`
+
+Os notebooks `00_data_audit.ipynb` e `01_eda_temporal.ipynb` permanecem como
+artefatos auxiliares de desenvolvimento e não constituem a entrega final.
+
+Status:
+
+Aceito.

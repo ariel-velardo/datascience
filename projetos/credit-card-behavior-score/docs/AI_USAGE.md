@@ -87,6 +87,10 @@ Contribuições relevantes deverão ser registradas abaixo.
 | Data | Ferramenta | Atividade | Validação humana |
 |---|---|---|---|
 | 2026-08-14 | ChatGPT | Estruturação inicial do projeto e planejamento metodológico | Revisado |
-| A definir | Codex | A definir | A definir |
+| 2026-08-14 | OpenAI Codex | Implementação, execução e validação da Etapa 1 — auditoria dos dados | Sujeito à revisão humana |
+| 2026-08-14 | OpenAI Codex | Implementação, execução e validação temporal, triagem de leakage e proposta de split Treino/Validação/OOT | Sujeito à revisão humana |
+| 2026-08-14 | OpenAI Codex | Revisão corretiva da auditoria e do diagnóstico temporal, auditoria do PSI, comparação de splits e atualização do gate metodológico | Sujeito à revisão humana |
+| 2026-08-15 | OpenAI Codex | Construção, execução e validação do notebook técnico final até a comparação entre Regressão Logística e CatBoost | Validação humana pendente para decisões de features, champion, interpretações e decisões de negócio |
+| 2026-08-16 | OpenAI Codex | Último gate de desenvolvimento: tuning controlado, robustez de features, calibração, explicabilidade e configuração candidata à avaliação OOT | Validação humana pendente |
 | A definir | Claude Code | A definir | A definir |
 | A definir | Gemini | A definir | A definir |

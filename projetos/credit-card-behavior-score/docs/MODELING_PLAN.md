@@ -19,7 +19,7 @@ Entregáveis:
 - AGENTS.md
 - CLAUDE.md
 
-Status: em andamento.
+Status: concluída.
 
 ---
 
@@ -28,6 +28,8 @@ Status: em andamento.
 Notebook:
 
 00_data_audit.ipynb
+
+Status: concluída tecnicamente, sujeita à revisão humana final.
 
 Perguntas principais:
 
@@ -77,11 +79,41 @@ Somente após esta etapa será definida a divisão temporal exata.
 
 ---
 
-## Etapa 2 — Análise Exploratória
+## Etapa 2 — Diagnóstico Temporal e Delineamento Amostral
 
 Notebook:
 
-01_eda.ipynb
+01_eda_temporal.ipynb
+
+Status: concluída; cenário 8/2/3 aprovado na decisão D017.
+
+Objetivos:
+
+- confirmar cronologia e granularidade;
+- diagnosticar evolução de volume, target e missing;
+- investigar temporalmente os códigos especiais;
+- calcular PSI exploratório com bins fixados pela referência;
+- aprofundar riscos de leakage temporal;
+- comparar os cenários 8/2/3 e 9/2/2 sem utilizar modelos.
+
+Gate:
+
+- o split 8/2/3 está aceito;
+- o OOT está congelado;
+- o OOT não poderá orientar feature selection, tratamento guiado pelo target,
+  tuning, hiperparâmetros ou escolha do champion;
+- avaliações futuras deverão reportar resultados agregados e por safra,
+  especialmente 2020-01.
+
+---
+
+## Etapa 3 — EDA orientada à modelagem
+
+Implementação:
+
+Seção lógica do notebook `credit_card_behavior_score.ipynb`.
+
+Status: concluída preliminarmente no desenvolvimento, sujeita à revisão humana.
 
 A EDA deverá apoiar decisões de modelagem.
 
@@ -134,7 +166,7 @@ As análises devem priorizar descobertas que afetem:
 
 ---
 
-## Etapa 3 — Delineamento das Amostras
+## Gate metodológico — Aprovação do delineamento das amostras
 
 Definir:
 
@@ -148,7 +180,8 @@ Princípio:
 
 separação cronológica.
 
-Não definir as safras exatas antes da auditoria dos dados.
+O delineamento aprovado na decisão D017 é: treino de 2019-01 a 2019-08,
+validação de 2019-09 a 2019-10 e OOT de 2019-11 a 2020-01.
 
 Treino:
 
@@ -179,9 +212,11 @@ Documentar para cada conjunto:
 
 ## Etapa 4 — Análise e Seleção de Variáveis
 
-Notebook:
+Implementação:
 
-02_feature_analysis.ipynb
+Seção lógica do notebook `credit_card_behavior_score.ipynb`.
+
+Status: concluída preliminarmente no desenvolvimento, sujeita à revisão humana.
 
 Análises candidatas:
 
@@ -228,9 +263,11 @@ justificativa
 
 ## Etapa 5 — Modelo de Referência
 
-Notebook:
+Implementação:
 
-03_modeling.ipynb
+Seção lógica do notebook `credit_card_behavior_score.ipynb`.
+
+Status: benchmark treinado e avaliado em Treino e Validação; OOT fechado.
 
 Modelo:
 
@@ -263,6 +300,12 @@ Todos os tratamentos deverão ser ajustados exclusivamente na amostra de treino.
 
 ## Etapa 6 — Modelo Challenger
 
+Implementação:
+
+Seção lógica do notebook `credit_card_behavior_score.ipynb`.
+
+Status: challenger treinado e avaliado em Treino e Validação; OOT fechado.
+
 Principal candidato:
 
 CatBoost.
@@ -286,6 +329,13 @@ Evitar buscas exaustivas sem necessidade.
 ---
 
 ## Etapa 7 — Avaliação dos Modelos
+
+Implementação:
+
+Seção lógica do notebook `credit_card_behavior_score.ipynb`.
+
+Status: comparação preliminar concluída em Treino e Validação. A avaliação OOT
+permanece pendente e bloqueada até a escolha definitiva do modelo.
 
 Avaliar em:
 
@@ -351,9 +401,9 @@ Perguntas principais:
 
 ## Etapa 9 — Construção do Score
 
-Notebook:
+Implementação:
 
-04_scoring_stability.ipynb
+Seção lógica do notebook `credit_card_behavior_score.ipynb`.
 
 Converter a saída do modelo para:
 
@@ -442,27 +492,38 @@ Não afirmar limites economicamente ótimos sem variáveis econômicas adicionai
 
 ## Etapa 13 — Notebook Final
 
-Arquivo:
+Arquivo único de entrega técnica:
 
 credit_card_behavior_score.ipynb
 
-Narrativa planejada:
+Os notebooks `00_data_audit.ipynb` e `01_eda_temporal.ipynb` são auxiliares de
+desenvolvimento. Nenhum novo notebook separado será criado para as etapas
+seguintes. A sequência metodológica será implementada no arquivo final com a
+seguinte estrutura lógica:
 
-1. problema de negócio;
-2. dados disponíveis;
-3. qualidade dos dados;
-4. desenho temporal;
-5. principais achados da EDA;
-6. decisões sobre variáveis;
-7. modelos;
-8. comparação dos modelos;
-9. explicabilidade;
-10. construção do score;
-11. segmentação;
-12. estabilidade;
-13. implicações de negócio;
-14. limitações;
-15. conclusão.
+1. contexto e objetivo;
+2. dados;
+3. auditoria;
+4. diagnóstico temporal;
+5. delineamento das amostras;
+6. EDA orientada à modelagem;
+7. análise e seleção de features;
+8. preparação dos dados;
+9. Regressão Logística;
+10. CatBoost;
+11. comparação dos modelos;
+12. calibração;
+13. explicabilidade;
+14. avaliação OOT;
+15. score 0–1000;
+16. faixas de risco;
+17. estabilidade;
+18. aplicação ao negócio;
+19. limitações;
+20. conclusão.
+
+Na execução atual, o desenvolvimento para após a comparação dos modelos. O OOT
+permanece fechado até revisão humana e escolha definitiva do modelo.
 
 Remover análises exploratórias que não contribuam para a narrativa final.
 
