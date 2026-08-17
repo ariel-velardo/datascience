@@ -94,4 +94,6 @@ Contribuições relevantes deverão ser registradas abaixo.
 | 2026-08-16 | OpenAI Codex | Último gate de desenvolvimento: tuning controlado, robustez de features, calibração, explicabilidade e configuração candidata à avaliação OOT | Validação humana pendente |
 | 2026-08-16 | OpenAI Codex | Fechamento humano do candidato pré-OOT com 13 features, `var12_estado`, configuração congelada e registro reprodutível de versões | Validação humana aplicada às decisões; abertura do OOT ainda pendente |
 | 2026-08-16 | Claude Code | Revisão independente + implementação das correções pré-OOT | Validação humana pendente |
+| 2026-08-16 | OpenAI Codex | Avaliação final OOT do candidato congelado, com protocolo definido antes da primeira predição OOT nesta execução, métricas, incerteza, estabilidade, calibração, lift, PSI e SHAP | Validação humana pendente |
+| 2026-08-16 | OpenAI Codex | Correção da narrativa OOT, alinhamento das features finais, migração de `var12_estado` e implementação testável da fórmula log-odds/PDO do Behavior Score | Modelo e OOT preservados; Base Score, PDO e Base Odds pendentes de decisão humana |
 | A definir | Gemini | A definir | A definir |

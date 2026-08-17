@@ -25,6 +25,8 @@ COLUNA_INDICE = "index"
 
 SEMENTE_ALEATORIA = 42
 
+# Universo histórico avaliado durante a exploração e o desenvolvimento.
+# Estas constantes não representam a especificação final do modelo.
 VARIAVEIS_NUMERICAS = [
     "var1",
     "var3",
@@ -49,6 +51,52 @@ VARIAVEIS_CATEGORICAS = [
 VARIAVEIS_MODELO = (
     VARIAVEIS_NUMERICAS
     + VARIAVEIS_CATEGORICAS
+)
+
+# Especificação final aprovada antes da avaliação OOT.
+FEATURES_FINAIS_ORIGINAIS = [
+    "var1",
+    "var3",
+    "var4",
+    "var5",
+    "var7",
+    "var8",
+    "var9",
+    "var11",
+    "var12",
+    "var14",
+    "cat_var2",
+    "cat_var10",
+    "cat_var15",
+]
+
+FEATURES_REMOVIDAS = [
+    "cat_var6",
+    "cat_var13",
+]
+
+VARIAVEIS_NUMERICAS_FINAIS = [
+    "var1",
+    "var3",
+    "var4",
+    "var5",
+    "var7",
+    "var8",
+    "var9",
+    "var11",
+    "var14",
+]
+
+VARIAVEIS_CATEGORICAS_FINAIS = [
+    "cat_var2",
+    "cat_var10",
+    "cat_var15",
+]
+
+VARIAVEIS_MODELO_FINAL = (
+    VARIAVEIS_NUMERICAS_FINAIS
+    + VARIAVEIS_CATEGORICAS_FINAIS
+    + ["var12_estado"]
 )
 
 COLUNAS_CONTROLE = [

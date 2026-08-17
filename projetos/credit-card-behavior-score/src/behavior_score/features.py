@@ -10,6 +10,28 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 
 CODIGOS_ESPECIAIS_VAR12 = (99997, 99998, 99999)
+ROTULO_VAR12_REGULAR = "REGULAR"
+ROTULO_VAR12_MISSING = "MISSING"
+
+
+def criar_var12_estado(serie_var12: pd.Series) -> pd.Series:
+    """Representa ``var12`` pelos estados categóricos da especificação final.
+
+    Os códigos especiais são preservados como texto, valores regulares recebem
+    ``REGULAR`` e valores ausentes recebem ``MISSING``.
+    """
+
+    estado = pd.Series(
+        ROTULO_VAR12_REGULAR,
+        index=serie_var12.index,
+        dtype="string",
+        name="var12_estado",
+    )
+    for codigo in CODIGOS_ESPECIAIS_VAR12:
+        mascara_codigo = serie_var12.eq(codigo).fillna(False)
+        estado.loc[mascara_codigo] = str(codigo)
+    estado.loc[serie_var12.isna()] = ROTULO_VAR12_MISSING
+    return estado
 
 
 class ConversorCategoricoTexto(BaseEstimator, TransformerMixin):
@@ -45,7 +67,11 @@ class ConversorCategoricoTexto(BaseEstimator, TransformerMixin):
 
 
 class ExtratorVar12Continua(BaseEstimator, TransformerMixin):
-    """Extrai a componente contínua de ``var12`` e mascara códigos especiais."""
+    """Implementa a representação histórica contínua de ``var12``.
+
+    Esta transformação foi usada no desenvolvimento, mas não corresponde à
+    especificação final baseada em ``var12_estado``.
+    """
 
     def __init__(
         self,
@@ -81,7 +107,11 @@ class ExtratorVar12Continua(BaseEstimator, TransformerMixin):
 
 
 class IndicadoresEspeciaisVar12(BaseEstimator, TransformerMixin):
-    """Cria indicadores binários para os códigos especiais observados em ``var12``."""
+    """Implementa indicadores da representação histórica de ``var12``.
+
+    Estes indicadores foram usados no desenvolvimento, mas não correspondem à
+    especificação final baseada em ``var12_estado``.
+    """
 
     def __init__(
         self,
@@ -117,10 +147,11 @@ def preparar_features_catboost(
     variaveis_numericas: list[str],
     variaveis_categoricas: list[str],
 ) -> pd.DataFrame:
-    """Prepara representação coerente para CatBoost sem aprender parâmetros.
+    """Prepara a representação histórica para CatBoost sem aprender parâmetros.
 
     Os códigos especiais de ``var12`` são preservados em indicadores e removidos
-    da componente contínua. Missing categórico vira rótulo explícito.
+    da componente contínua. Missing categórico vira rótulo explícito. Esta não é
+    a especificação final baseada em ``var12_estado``.
     """
 
     colunas_necessarias = set(variaveis_numericas + variaveis_categoricas)

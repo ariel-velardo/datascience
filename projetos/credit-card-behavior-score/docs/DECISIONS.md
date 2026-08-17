@@ -336,3 +336,49 @@ artefatos auxiliares de desenvolvimento e não constituem a entrega final.
 Status:
 
 Aceito.
+
+---
+
+## D019 — Protocolo final de avaliação OOT
+
+Decisão:
+
+1. O candidato CatBoost, suas 13 features originais, a representação categórica
+   `var12_estado`, os tratamentos, os hiperparâmetros e a ausência de calibração
+   foram congelados antes da abertura do OOT, no commit pré-OOT `0c5c6a7`.
+2. O modelo final será reajustado utilizando toda a população de Desenvolvimento,
+   formada por Treino de 2019-01 a 2019-08 e Validação de 2019-09 a 2019-10.
+3. Nenhuma linha de 2019-11, 2019-12 ou 2020-01 será utilizada no fit.
+4. A quantidade de árvores do refit será fixa e igual ao atributo `tree_count_`
+   lido programaticamente do objeto `modelo_candidato` congelado. O valor não será
+   inferido de `best_iteration` nem informado manualmente.
+5. O refit final não utilizará early stopping nem OOT como `eval_set`.
+6. Não haverá tuning, seleção de modelo ou alteração de hiperparâmetros usando OOT.
+7. Não haverá recalibração usando OOT.
+8. Não haverá alteração de features, representação ou tratamento usando OOT.
+9. Os resultados OOT serão utilizados exclusivamente para avaliação final de
+   generalização, estabilidade, calibração, ordenação e explicabilidade.
+10. A Regressão Logística com `C = 0.1` e regularização L2 será refitada em todo o
+    Desenvolvimento, com a especificação final de features, apenas como benchmark.
+    Seu resultado OOT não poderá substituir o champion congelado.
+
+Definições do protocolo estabelecidas antes da primeira predição OOT nesta execução:
+
+- `PR-AUC` preserva a definição de desenvolvimento por `average_precision_score`;
+- `ECE` usa 10 faixas equipopulacionais determinísticas, como no desenvolvimento;
+- viés de calibração absoluto é `probabilidade média - taxa observada`, em pontos
+  de probabilidade e com sinal; viés relativo divide esse valor pela taxa observada;
+- os intervalos de confiança de 95% usam 500 reamostragens bootstrap
+  estratificadas pelo target, seed 42 e percentis 2,5% e 97,5%;
+- os cortes dos decis de risco são os quantis das probabilidades do Desenvolvimento
+  produzidas pelo modelo final refitado; empates não serão resolvidos com o target e
+  cortes internos duplicados interromperão a execução em vez de redefinir faixas;
+- o PSI usa Desenvolvimento como referência, com cortes/categorias aprendidos
+  exclusivamente nessa população e aplicados sem alteração ao OOT agregado e mensal;
+- resultados por safra com apenas uma classe terão métricas de discriminação
+  indisponíveis, sem imputação de valor; as contagens e métricas de calibração
+  permanecerão reportadas quando definidas.
+
+Status:
+
+Aceito.

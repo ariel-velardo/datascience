@@ -4,10 +4,18 @@ import pytest
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 
+from src.behavior_score.config import (
+    FEATURES_FINAIS_ORIGINAIS,
+    FEATURES_REMOVIDAS,
+    VARIAVEIS_CATEGORICAS_FINAIS,
+    VARIAVEIS_MODELO_FINAL,
+    VARIAVEIS_NUMERICAS_FINAIS,
+)
 from src.behavior_score.features import (
     ConversorCategoricoTexto,
     ExtratorVar12Continua,
     IndicadoresEspeciaisVar12,
+    criar_var12_estado,
     preparar_features_catboost,
 )
 
@@ -68,3 +76,61 @@ def test_preparacao_catboost_preserva_flags_e_missing_categorico() -> None:
     assert np.isnan(resultado.loc[0, "var12"])
     assert resultado.loc[0, "var12_codigo_99997"] == 1
     assert resultado.loc[0, "cat_var2"] == "__MISSING__"
+
+
+def test_criar_var12_estado_cobre_especiais_regular_e_missing() -> None:
+    serie = pd.Series([99997, 99998, 99999, 42.5, np.nan])
+
+    resultado = criar_var12_estado(serie)
+
+    assert resultado.tolist() == [
+        "99997",
+        "99998",
+        "99999",
+        "REGULAR",
+        "MISSING",
+    ]
+    assert resultado.name == "var12_estado"
+    assert str(resultado.dtype) == "string"
+
+
+def test_configuracao_final_exclui_features_removidas() -> None:
+    assert FEATURES_FINAIS_ORIGINAIS == [
+        "var1",
+        "var3",
+        "var4",
+        "var5",
+        "var7",
+        "var8",
+        "var9",
+        "var11",
+        "var12",
+        "var14",
+        "cat_var2",
+        "cat_var10",
+        "cat_var15",
+    ]
+    assert FEATURES_REMOVIDAS == ["cat_var6", "cat_var13"]
+    assert VARIAVEIS_NUMERICAS_FINAIS == [
+        "var1",
+        "var3",
+        "var4",
+        "var5",
+        "var7",
+        "var8",
+        "var9",
+        "var11",
+        "var14",
+    ]
+    assert VARIAVEIS_CATEGORICAS_FINAIS == [
+        "cat_var2",
+        "cat_var10",
+        "cat_var15",
+    ]
+    assert VARIAVEIS_MODELO_FINAL == [
+        *VARIAVEIS_NUMERICAS_FINAIS,
+        *VARIAVEIS_CATEGORICAS_FINAIS,
+        "var12_estado",
+    ]
+    assert set(FEATURES_REMOVIDAS).isdisjoint(FEATURES_FINAIS_ORIGINAIS)
+    assert set(FEATURES_REMOVIDAS).isdisjoint(VARIAVEIS_MODELO_FINAL)

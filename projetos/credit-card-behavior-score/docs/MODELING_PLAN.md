@@ -267,7 +267,8 @@ Implementação:
 
 Seção lógica do notebook `credit_card_behavior_score.ipynb`.
 
-Status: benchmark treinado e avaliado em Treino e Validação; OOT fechado.
+Status: benchmark refitado no Desenvolvimento com a especificação final e avaliado
+no OOT conforme D019; permanece benchmark, sujeito à revisão humana final.
 
 Modelo:
 
@@ -304,7 +305,8 @@ Implementação:
 
 Seção lógica do notebook `credit_card_behavior_score.ipynb`.
 
-Status: challenger treinado e avaliado em Treino e Validação; OOT fechado.
+Status: candidato CatBoost congelado, refitado no Desenvolvimento e avaliado no
+OOT conforme D019, sem tuning ou recalibração; sujeito à revisão humana final.
 
 Principal candidato:
 
@@ -334,8 +336,10 @@ Implementação:
 
 Seção lógica do notebook `credit_card_behavior_score.ipynb`.
 
-Status: comparação preliminar concluída em Treino e Validação. A avaliação OOT
-permanece pendente e bloqueada até a escolha definitiva do modelo.
+Status: comparação de Desenvolvimento e avaliação OOT concluídas conforme o
+protocolo D019, definido antes da primeira predição OOT nesta execução. O OOT
+não orientou seleção, tuning, features ou
+recalibração; a revisão humana final permanece pendente.
 
 Avaliar em:
 
@@ -404,6 +408,9 @@ Perguntas principais:
 Implementação:
 
 Seção lógica do notebook `credit_card_behavior_score.ipynb`.
+
+Status: fórmula log-odds/PDO implementada; Base Score, PDO e Base Odds pendentes
+de decisão humana antes do cálculo de scores individuais.
 
 Converter a saída do modelo para:
 
@@ -522,8 +529,11 @@ seguinte estrutura lógica:
 19. limitações;
 20. conclusão.
 
-Na execução atual, o desenvolvimento para após a comparação dos modelos. O OOT
-permanece fechado até revisão humana e escolha definitiva do modelo.
+Na execução atual, o desenvolvimento, o congelamento do candidato e a avaliação
+OOT foram concluídos. A transformação matemática do score 0–1000 está
+implementada, sem aplicação às probabilidades; Base Score, PDO e Base Odds
+dependem de decisão humana. Faixas e etapas operacionais posteriores não foram
+iniciadas.
 
 Remover análises exploratórias que não contribuam para a narrativa final.
 
