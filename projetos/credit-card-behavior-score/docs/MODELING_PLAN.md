@@ -409,8 +409,9 @@ Implementação:
 
 Seção lógica do notebook `credit_card_behavior_score.ipynb`.
 
-Status: fórmula log-odds/PDO implementada; Base Score, PDO e Base Odds pendentes
-de decisão humana antes do cálculo de scores individuais.
+Status: concluída. A fórmula log-odds/PDO e a convenção operacional aprovada na
+decisão D020 — Base Score = 600, PDO = 50 e Base Odds = 20:1 — foram aplicadas
+às probabilidades congeladas de Desenvolvimento e OOT.
 
 Converter a saída do modelo para:
 
@@ -434,13 +435,20 @@ Avaliar:
 
 ## Etapa 10 — Faixas de Risco
 
-Criar faixas operacionais de score.
+Status: concluída conforme D021, sem uso de target ou OOT para definir cortes.
 
-Metodologias iniciais candidatas:
+Criar cinco faixas operacionais a partir dos decis de risco já congelados nas
+probabilidades do Desenvolvimento:
 
-- quantis;
-- pontos de mudança de risco;
-- comportamento da taxa observada.
+- decis 1–2: Muito Alto Risco;
+- decis 3–4: Alto Risco;
+- decis 5–6: Médio Risco;
+- decis 7–8: Baixo Risco;
+- decis 9–10: Muito Baixo Risco.
+
+O decil 1 representa a maior probabilidade do evento e o menor score. Os cortes
+serão convertidos para limites de score com precisão completa e aplicados sem
+alteração ao OOT. O target não será usado para escolher ou otimizar limites.
 
 Avaliar cada faixa por:
 
@@ -451,15 +459,16 @@ Avaliar cada faixa por:
 - captura;
 - intervalo de score.
 
-As faixas finais deverão favorecer:
-
-- interpretação;
-- estabilidade;
-- monotonicidade.
+A estabilidade e a monotonicidade observada serão avaliadas como diagnósticos.
+Nenhum corte será redesenhado para forçar monotonicidade no Desenvolvimento ou
+no OOT.
 
 ---
 
 ## Etapa 11 — Estabilidade
+
+Status: concluída para distribuição mensal do score e PSI do score, com
+Desenvolvimento como referência congelada.
 
 Avaliar mensalmente:
 
@@ -473,7 +482,10 @@ Avaliar mensalmente:
 
 Investigar deteriorações entre safras.
 
-O PSI será utilizado como ferramenta diagnóstica e não como regra absoluta isolada.
+Para o PSI do score, os bins serão aprendidos exclusivamente no Desenvolvimento
+e reaplicados sem alteração ao OOT agregado e às safras 2019-11, 2019-12 e
+2020-01. O PSI será utilizado como ferramenta diagnóstica e não como regra
+absoluta isolada.
 
 ---
 
@@ -529,11 +541,10 @@ seguinte estrutura lógica:
 19. limitações;
 20. conclusão.
 
-Na execução atual, o desenvolvimento, o congelamento do candidato e a avaliação
-OOT foram concluídos. A transformação matemática do score 0–1000 está
-implementada, sem aplicação às probabilidades; Base Score, PDO e Base Odds
-dependem de decisão humana. Faixas e etapas operacionais posteriores não foram
-iniciadas.
+Na execução atual, o desenvolvimento, o congelamento do candidato, a avaliação
+OOT, o cálculo do score 0–1000, as cinco faixas de risco e os diagnósticos de
+estabilidade e PSI do score foram concluídos. A próxima fase cobre a consolidação
+da interpretação para aplicação ao negócio e a apresentação executiva.
 
 Remover análises exploratórias que não contribuam para a narrativa final.
 

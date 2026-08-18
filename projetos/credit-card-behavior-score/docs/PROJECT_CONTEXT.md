@@ -206,14 +206,24 @@ Direção:
 
 A transformação deverá:
 
-- preservar a ordenação do modelo;
+- preservar a ordem do modelo sem inversões, admitindo apenas empates nas caudas
+  quando houver clipping;
 - ser determinística;
 - ser documentada;
 - evitar interpretações arbitrárias.
 
-Poderá ser avaliada uma transformação baseada em log-odds e PDO.
+A transformação log-odds/PDO foi aprovada com a seguinte convenção operacional:
 
-Parâmetros da escala que não forem fornecidos pelo negócio deverão ser explicitamente documentados como premissas analíticas.
+- Base Score = 600;
+- PDO = 50;
+- Base Odds = 20:1;
+- odds = `(1 - p) / p`;
+- clipping operacional em [0, 1000].
+
+Os parâmetros foram escolhidos exclusivamente pelo diagnóstico da distribuição
+das probabilidades do Desenvolvimento, sem target e sem uso do OOT. A
+transformação não altera as probabilidades, a discriminação ou a ordenação do
+modelo antes de eventuais empates nas caudas causados pelo clipping.
 
 ---
 
@@ -339,24 +349,29 @@ Uma arquitetura de produção poderá ser discutida conceitualmente caso agregue
 
 ## 11. Status Atual
 
-Etapa 1 — Auditoria dos dados: concluída tecnicamente e sujeita à revisão humana final.
+As etapas de auditoria, diagnóstico temporal, desenvolvimento, congelamento do
+candidato e avaliação final OOT foram concluídas tecnicamente.
 
-Etapa 2 — Diagnóstico temporal e delineamento amostral: executada tecnicamente.
+O split temporal 8/2/3 está aprovado:
 
-O split temporal permanece em validação humana. Nenhuma janela foi aceita como
-decisão metodológica definitiva e a modelagem ainda não começou.
+- Treino: 2019-01 a 2019-08;
+- Validação: 2019-09 a 2019-10;
+- OOT: 2019-11 a 2020-01.
 
-Após aprovação do delineamento, o OOT será congelado e não poderá orientar
-seleção de features, tratamentos guiados pelo target, tuning, hiperparâmetros ou
-seleção do modelo champion.
+O candidato CatBoost foi congelado antes da abertura do OOT. A especificação
+final utiliza 13 features originais, com `var12` representada por
+`var12_estado`. O refit final foi realizado em todo o Desenvolvimento — Treino
+mais Validação — com 611 árvores, sem recalibração e sem linhas OOT no ajuste.
 
-As etapas posteriores continuam cobrindo:
+A avaliação OOT foi concluída sem alterar modelo, features, tratamentos,
+hiperparâmetros, calibração ou protocolo. O resultado técnico foi classificado
+como **B — boa capacidade de ordenação fora do tempo, com variabilidade temporal
+material**.
 
-- EDA orientada à modelagem;
-- separação Treino/Validação/OOT;
-- análise e seleção de features;
-- seleção e avaliação de modelos;
-- explicabilidade;
-- estabilidade do modelo;
-- transformação para score entre 0 e 1000;
-- interpretação do score como apoio à decisão.
+A convenção da escala também está aprovada: Base Score = 600, PDO = 50 e Base
+Odds = 20:1, com odds `(1 - p) / p`, score maior indicando menor risco estimado e
+clipping operacional em [0, 1000].
+
+O score, as cinco faixas de risco definidas em D021, a estabilidade temporal e o
+PSI do score foram implementados e avaliados. A fase seguinte é a consolidação da
+camada ilustrativa de aplicação ao negócio e da apresentação executiva.

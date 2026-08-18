@@ -382,3 +382,143 @@ Definições do protocolo estabelecidas antes da primeira predição OOT nesta e
 Status:
 
 Aceito.
+
+---
+
+## D020 — Convenção operacional da escala do Behavior Score
+
+Decisão:
+
+Adotar definitivamente a transformação log-odds/PDO já implementada em
+`src/behavior_score/scoring.py`, com os seguintes parâmetros:
+
+- Base Score = 600;
+- PDO = 50;
+- Base Odds = 20:1;
+- odds = `(1 - p) / p`;
+- score maior = menor risco estimado;
+- clipping operacional no intervalo [0, 1000].
+
+A escolha é uma convenção operacional de escala. Foi realizada a partir do
+diagnóstico da distribuição das probabilidades do Desenvolvimento, sem utilizar
+o target para escolher os parâmetros e sem utilizar o OOT. A configuração
+apresentou boa dispersão operacional no Desenvolvimento, mediana próxima de 600
+e ausência de clipping nessa população.
+
+A transformação é monotônica e não cria um novo modelo, não altera as
+probabilidades produzidas, a discriminação ou o ranking do modelo antes do
+eventual empate introduzido pelo clipping nas caudas.
+
+Status:
+
+Aceito.
+
+---
+
+## D021 — Cinco faixas operacionais de risco
+
+Decisão:
+
+Construir as cinco faixas exclusivamente a partir dos decis de risco congelados
+no Desenvolvimento conforme D019, agregando-os dois a dois:
+
+- decis 1–2: Muito Alto Risco;
+- decis 3–4: Alto Risco;
+- decis 5–6: Médio Risco;
+- decis 7–8: Baixo Risco;
+- decis 9–10: Muito Baixo Risco.
+
+O decil 1 representa a maior probabilidade do evento e o menor score. Na
+conversão dos cortes congelados de probabilidade para limites de score:
+
+- selecionar os quatro cortes pelos índices `[8, 6, 4, 2]`;
+- verificar por asserção que esses cortes caem nos decis `[3, 5, 7, 9]`;
+- preservar internamente os limites com precisão completa;
+- utilizar `right=False` no recorte em score;
+- exigir concordância registro a registro entre a agregação direta dos decis e a
+  classificação pelos limites convertidos de score.
+
+Os cortes serão aprendidos exclusivamente no Desenvolvimento e permanecerão
+congelados para aplicação sem alteração ao OOT. O target não será utilizado para
+escolher ou otimizar os limites; poderá ser usado somente depois da definição
+para avaliar as faixas. Estabilidade e monotonicidade observada serão tratadas
+apenas como diagnósticos, sem redesenho de cortes no Desenvolvimento ou no OOT.
+
+Status:
+
+Aceito.
+
+---
+
+## D022 — Rubrica da classificação técnica
+
+Decisão:
+
+Formalizar, após a avaliação, uma rubrica qualitativa em três níveis para tornar
+auditável o rótulo de classificação técnica. A rubrica não foi definida antes da
+avaliação e não constitui critério retroativo de seleção, aprovação ou troca do
+modelo. Ela organiza a comunicação dos resultados já produzidos e não altera o
+protocolo, as métricas ou o champion congelado.
+
+A classificação deve ser sustentada, de forma verificável, pela leitura conjunta
+das evidências registradas nos artefatos do projeto em três dimensões:
+
+- discriminação: métricas fora do tempo, ordenação, lift, captura e comparação
+  com o benchmark;
+- estabilidade temporal: diferenças entre Desenvolvimento e OOT, variação entre
+  safras, monotonicidade por decis ou faixas e PSI;
+- calibração: Brier Score, ECE, viés agregado e diferença entre probabilidade
+  média prevista e taxa observada por faixa.
+
+Os níveis são:
+
+- **A — desempenho forte e consistente:** a discriminação fora do tempo preserva
+  uma ordenação forte, não há ressalva temporal material documentada para a
+  leitura agregada ou por período, e a calibração é coerente no agregado e nas
+  faixas operacionais;
+- **B — boa capacidade de ordenação fora do tempo, com variabilidade temporal
+  material:** a discriminação sustenta o uso do modelo para ordenação, mas existe
+  ao menos uma ressalva material documentada de estabilidade temporal ou
+  calibração, que deve ser declarada e monitorada; o nível não equivale a
+  aprovação operacional;
+- **C — evidência insuficiente para o uso proposto:** a discriminação fora do
+  tempo não sustenta adequadamente a ordenação, ou a instabilidade temporal ou
+  os desvios de calibração comprometem o uso pretendido, exigindo revisão antes
+  de qualquer adoção operacional.
+
+Na ausência de limiares quantitativos previamente aprovados, esta rubrica não
+cria cortes numéricos retrospectivos. Toda atribuição deve registrar as
+evidências e as ressalvas das três dimensões. Para esta avaliação, mantém-se o
+nível **B**, conforme a descrição já adotada no notebook: boa capacidade de
+ordenação fora do tempo, com variabilidade temporal material.
+
+Status:
+
+Aceito.
+
+---
+
+## D023 — Extração pós-freeze da derivação de `var12_estado`
+
+Decisão:
+
+Registrar explicitamente que a derivação de `var12_estado` foi extraída do
+notebook para `src/behavior_score/features.py` no commit `85b10d2`, posterior ao
+freeze `0c5c6a7`. A extração preservou a partição dos estados observados, mas o
+rótulo reservado à ausência passou de `__MISSING__` para `MISSING`.
+
+Nesta base, essa categoria é vazia. `reports/tables/00_missing.csv` registra zero
+valores ausentes em `var12` nos 200.043 registros, e
+`reports/tables/final_var12_caracterizacao.csv` registra
+`ausencia_original = 0.0` em Treino e Validação. Portanto, nenhum registro é
+afetado pela mudança do rótulo e não há efeito numérico possível sobre split,
+estatística de target, predição ou métrica.
+
+Este registro reconhece expressamente que a extração ocorreu após o freeze. A
+conclusão de neutralidade é específica desta base e decorre da ausência observada
+de valores ausentes em `var12`; ela não apresenta a extração como anterior ao
+freeze nem autoriza outras alterações posteriores.
+
+Status:
+
+Aceito.

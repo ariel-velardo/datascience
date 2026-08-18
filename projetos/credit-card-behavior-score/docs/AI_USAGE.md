@@ -95,5 +95,7 @@ Contribuições relevantes deverão ser registradas abaixo.
 | 2026-08-16 | OpenAI Codex | Fechamento humano do candidato pré-OOT com 13 features, `var12_estado`, configuração congelada e registro reprodutível de versões | Validação humana aplicada às decisões; abertura do OOT ainda pendente |
 | 2026-08-16 | Claude Code | Revisão independente + implementação das correções pré-OOT | Validação humana pendente |
 | 2026-08-16 | OpenAI Codex | Avaliação final OOT do candidato congelado, com protocolo definido antes da primeira predição OOT nesta execução, métricas, incerteza, estabilidade, calibração, lift, PSI e SHAP | Validação humana pendente |
-| 2026-08-16 | OpenAI Codex | Correção da narrativa OOT, alinhamento das features finais, migração de `var12_estado` e implementação testável da fórmula log-odds/PDO do Behavior Score | Modelo e OOT preservados; Base Score, PDO e Base Odds pendentes de decisão humana |
+| 2026-08-16 | OpenAI Codex | Correção da narrativa OOT, alinhamento das features finais, migração de `var12_estado` e implementação testável da fórmula log-odds/PDO do Behavior Score | Modelo e OOT preservados; decisão de escala aprovada posteriormente |
+| 2026-08-17 | OpenAI Codex | Alinhamento documental da convenção operacional Base Score = 600, PDO = 50 e Base Odds = 20:1 | Decisão humana confirmada; aplicação registrada na etapa seguinte |
+| 2026-08-17 | OpenAI Codex | Implementação limpa, aplicação e execução completa da Seção 23 — score, faixas, monotonicidade, estabilidade mensal, PSI e leitura ilustrativa de negócio | Decisões D020/D021 preservadas; âncoras OOT reproduzidas e 30 testes aprovados |
 | A definir | Gemini | A definir | A definir |

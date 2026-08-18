@@ -52,14 +52,13 @@ notebooks/credit_card_behavior_score.ipynb
 
 ## Status
 
-Etapa 0 — Estruturação do projeto e definição metodológica.
-
-Próxima etapa:
-
-Etapa 1 — Auditoria dos Dados.
+O desenvolvimento está fechado e a avaliação final fora do tempo (OOT) foi
+concluída. Também estão concluídas a construção do Behavior Score de 0 a 1000,
+a definição das cinco faixas operacionais de risco e as análises de estabilidade
+temporal e PSI.
 
 ## Observação
 
-O projeto utiliza uma base fictícia e anonimizada para demonstração analítica.
+O projeto utiliza uma base anonimizada para demonstração analítica.
 
 O score resultante deverá ser interpretado como instrumento de ordenação de risco e não como uma política completa de crédito sem informações econômicas, operacionais e de governança adicionais.
