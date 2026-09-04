@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f7f8f4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Nossos Passeios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f8f4;
+    --bg-soft:#f3f5ef;
+    --surface:#ffffff;
+    --text:#1f2933;
+    --muted:#6b7280;
+    --green:#3f7d58;
+    --green-dark:#2f6043;
+    --green-soft:#e7f3ea;
+    --line:#dfe5dc;
+    --danger:#b45353;
+    --shadow:0 16px 38px rgba(31,41,51,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{background:var(--bg);color:var(--text);}
+  body{
+    font-family:'DM Sans',system-ui,sans-serif;line-height:1.5;min-height:100dvh;
+    background:
+      linear-gradient(180deg,#fff 0,var(--bg) 250px),
+      var(--bg);
+    padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 32px);
+  }
+  button,input{font:inherit;}
+  button,a,input{touch-action:manipulation;}
+  .app-shell{width:min(620px,100%);margin:0 auto;}
+  .hero{
+    display:grid;gap:16px;margin-bottom:16px;
+  }
+  .eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px;}
+  h1{font-family:'Fraunces',serif;font-optical-sizing:auto;font-weight:600;
+    font-size:clamp(34px,8vw,54px);line-height:1.02;letter-spacing:0;margin-bottom:8px;color:var(--text);}
+  .sub{color:var(--muted);font-size:15.5px;max-width:46ch;}
+
+  .progress-wrap{background:var(--green-soft);border:1px solid #d5e8da;border-radius:8px;padding:14px;}
+  .progress-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.02em;margin-bottom:10px;}
+  .progress-top b{color:var(--text);font-size:13px;}
+  .progress-top .heart{color:var(--green-dark);}
+  .bar{height:8px;background:#d9e5dd;border-radius:99px;overflow:hidden;}
+  .bar>span{display:block;height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--green),#78a878);transition:width .7s cubic-bezier(.22,1,.36,1);}
+
+  .app-grid{display:grid;gap:16px;}
+  .main-column{display:grid;gap:16px;align-content:start;}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;box-shadow:var(--shadow);}
+  .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+  .panel-kicker{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--green);font-weight:700;}
+  .panel-title{font-size:18px;line-height:1.2;font-weight:700;color:var(--text);}
+  .panel-note{font-size:13px;color:var(--muted);margin-top:3px;}
+
+  .board{position:relative;overflow:hidden;}
+  .flaps{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 5px;min-height:62px;align-items:center;
+    background:var(--bg-soft);border:1px dashed var(--line);border-radius:8px;padding:18px 10px;}
+  .cell{font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(22px,6vw,34px);line-height:1;
+    width:.76em;height:1.34em;display:flex;align-items:center;justify-content:center;
+    background:#eef7f0;color:var(--green-dark);border-radius:6px;border:1px solid #d2e5d7;position:relative;}
+  .cell::after{content:"";position:absolute;left:4px;right:4px;top:50%;height:1px;background:rgba(63,125,88,.16);}
+  .cell.flapping{animation:flap .18s linear;}
+  .cell.space{background:transparent;border:none;width:.34em;}
+  .cell.space::after{display:none;}
+  @keyframes flap{0%{transform:translateY(-6%) scaleY(.92);}100%{transform:none;}}
+  .board-meta{display:flex;justify-content:center;gap:10px;margin-top:14px;min-height:30px;flex-wrap:wrap;}
+  .chip{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.02em;background:var(--green-soft);
+    border:1px solid #d5e8da;color:var(--green-dark);padding:6px 12px;border-radius:999px;opacity:0;transform:translateY(6px);
+    transition:opacity .4s,transform .4s;}
+  .chip.show{opacity:1;transform:none;}
+  .chip .u{color:var(--muted);}
+  .board-empty,.list-empty{color:var(--muted);font-size:14px;text-align:center;background:var(--bg-soft);
+    border:1px dashed var(--line);border-radius:8px;padding:18px 12px;}
+  .board-empty{display:none;margin-top:12px;}
+
+  .filter{display:grid;gap:10px;}
+  .filter-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .filter-head label{font-size:14px;color:var(--text);font-weight:700;}
+  .filter-head .val{font-family:'Space Mono',monospace;color:var(--green-dark);font-size:15px;font-weight:700;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:99px;background:#d9e5dd;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+    background:var(--green);border:3px solid #fff;cursor:pointer;box-shadow:0 2px 10px rgba(63,125,88,.28);}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--green);
+    border:3px solid #fff;cursor:pointer;box-shadow:0 2px 10px rgba(63,125,88,.28);}
+  .range-scale{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;
+    font-size:10.5px;color:var(--muted);letter-spacing:.02em;}
+  .eligible{font-size:13px;color:var(--muted);text-align:center;}
+  .eligible b{color:var(--green-dark);}
+
+  .draw,.actions button,.actions a,.backup button,.add-form button,.row button,.row a{
+    border-radius:8px;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:transform .12s,background .2s,border-color .2s,opacity .2s;
+  }
+  .draw{width:100%;border:none;color:#fff;font-weight:700;font-size:16px;padding:15px;margin-top:14px;
+    background:linear-gradient(180deg,#4f8f64,var(--green));box-shadow:0 12px 22px rgba(63,125,88,.22);}
+  .draw:active,.actions button:active,.actions a:active,.backup button:active,.add-form button:active,.row button:active,.row a:active{
+    transform:translateY(1px);
+  }
+  .draw:disabled{opacity:.55;cursor:default;}
+  .draw svg,.actions svg,.backup svg{width:18px;height:18px;}
+
+  .actions{display:none;grid-template-columns:1fr;gap:10px;margin-top:14px;}
+  .actions.show{display:grid;}
+  .actions button,.actions a{font-size:14.5px;font-weight:700;padding:13px 10px;border:1px solid var(--line);}
+  .btn-route{background:var(--text);color:#fff;}
+  .btn-route:active{background:#111827;}
+  .btn-visit{background:var(--green-soft);color:var(--green-dark);border-color:#d5e8da;}
+  .btn-visit:active{background:#dceee1;}
+
+  .map-shell{min-height:230px;background:var(--bg-soft);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .map-frame{width:100%;height:260px;border:0;display:block;background:var(--bg-soft);}
+  .map-frame[hidden],.map-empty[hidden]{display:none;}
+  .map-empty{min-height:230px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:24px;}
+  .restaurant-empty{color:var(--muted);font-size:14px;text-align:center;background:var(--bg-soft);
+    border:1px dashed var(--line);border-radius:8px;padding:18px 12px;}
+  .restaurant-links{display:grid;gap:10px;}
+  .restaurant-links[hidden],.restaurant-empty[hidden]{display:none;}
+  .restaurant-links a{border:1px solid var(--line);background:#fff;color:var(--text);font-size:14px;font-weight:700;
+    padding:12px;border-radius:8px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .restaurant-links a:first-child{background:var(--green-soft);color:var(--green-dark);border-color:#d5e8da;}
+
+  .list-section{align-self:start;}
+  .list-toggle{width:100%;background:transparent;border:none;cursor:pointer;color:var(--text);
+    display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;
+    font-size:16px;font-weight:700;padding:0 0 14px;border-bottom:1px solid var(--line);}
+  .list-toggle .count{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);font-weight:400;margin-left:auto;margin-right:12px;}
+  .list-toggle .arrow{transition:transform .3s;color:var(--muted);display:flex;}
+  .list-toggle.open .arrow{transform:rotate(180deg);}
+  .list{max-height:0;overflow:hidden;transition:max-height .5s ease;}
+  .list.open{max-height:none;}
+  .list-tools{display:grid;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);}
+  .list-search,.add-form input{width:100%;background:#fff;border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:14px;min-width:0;outline:none;}
+  .list-search:focus,.add-form input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(63,125,88,.12);}
+  .list-search::placeholder,.add-form input::placeholder{color:var(--muted);}
+  .list-check{display:flex;align-items:center;gap:8px;width:max-content;max-width:100%;color:var(--muted);
+    font-size:13.5px;cursor:pointer;user-select:none;}
+  .list-check input{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
+
+  .add-form{display:grid;grid-template-columns:1fr 82px 46px;gap:8px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center;}
+  .add-form input.km{text-align:center;font-family:'Space Mono',monospace;}
+  .add-form button{width:46px;height:44px;border:1px solid var(--green);background:var(--green);color:#fff;font-size:22px;line-height:1;}
+  .add-form button:active{background:var(--green-dark);}
+
+  #rows{display:grid;gap:10px;padding-top:14px;}
+  .row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;padding:13px;
+    border:1px solid var(--line);border-radius:8px;background:#fff;}
+  .row.done{background:#f8faf7;}
+  .row .city-main{min-width:0;}
+  .row .name{display:block;font-size:15px;font-weight:700;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .row.done .name{color:var(--muted);text-decoration:line-through;text-decoration-color:#a9b4aa;}
+  .row .status{display:inline-flex;margin-top:6px;font-size:12px;font-weight:700;color:#4b5563;background:#eef2f0;
+    border-radius:999px;padding:4px 8px;}
+  .row.done .status{color:var(--green-dark);background:var(--green-soft);}
+  .row .km{font-family:'Space Mono',monospace;font-size:12.5px;color:var(--green-dark);font-weight:700;white-space:nowrap;}
+  .row-actions{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .row .maps,.row .tick,.row .del{min-height:36px;padding:8px;border:1px solid var(--line);background:#fff;color:var(--muted);
+    font-size:12.5px;font-weight:700;}
+  .row .tick{color:var(--green-dark);background:var(--green-soft);border-color:#d5e8da;}
+  .row .del{color:var(--danger);}
+  .row svg{width:16px;height:16px;flex:none;}
+
+  .footer{margin-top:16px;}
+  .backup{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .backup button{background:#fff;border:1px solid var(--line);color:var(--text);
+    padding:12px 8px;font-size:13.5px;font-weight:700;box-shadow:0 8px 24px rgba(31,41,51,.06);}
+  .backup button:active{background:var(--bg-soft);}
+  .foot-center{text-align:center;}
+  .reset{background:none;border:none;color:var(--muted);cursor:pointer;font-family:'Space Mono',monospace;
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px;text-decoration:underline;text-underline-offset:3px;}
+  .signature{margin-top:10px;font-family:'Fraunces',serif;font-style:italic;font-size:13px;color:var(--muted);
+    text-align:center;display:flex;align-items:center;justify-content:center;gap:7px;}
+  .signature .orange{flex:none;}
+
+  .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 24px);transform:translateX(-50%) translateY(20px);
+    background:var(--text);color:#fff;border:1px solid rgba(255,255,255,.18);padding:12px 18px;border-radius:8px;
+    font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:60;box-shadow:0 12px 30px rgba(31,41,51,.22);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50;}
+  .hearts span{position:absolute;top:-30px;font-size:20px;animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:0;}}
+
+  @media (min-width:720px){
+    .actions{grid-template-columns:1fr 1fr;}
+    .restaurant-links{grid-template-columns:1fr 1fr;}
+    .map-frame{height:320px;}
+  }
+  @media (min-width:960px){
+    body{padding:calc(env(safe-area-inset-top) + 28px) 24px calc(env(safe-area-inset-bottom) + 42px);}
+    .app-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:380px){
+    .add-form{grid-template-columns:1fr 72px;}
+    .add-form button{grid-column:1/-1;width:100%;}
+    .row-actions{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .cell.flapping{animation:none;}.bar>span{transition:none;}.hearts{display:none;}
+  }
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">Planejador de passeios</div>
+        <h1>Nossos Passeios</h1>
+        <p class="sub">Escolha uma distância, sorteie uma cidade ainda não visitada e salve as próximas ideias de viagem no navegador.</p>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-top">
+          <span><b id="p-done">0</b> de <b id="p-total">0</b> cidades <span class="heart">visitadas</span></span>
+          <span id="p-pct">0%</span>
+        </div>
+        <div class="bar"><span id="p-bar"></span></div>
+      </div>
+    </header>
+
+    <main class="app-grid">
+      <div class="main-column">
+        <section class="panel board" aria-live="polite">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker">Destino sorteado</div>
+              <h2 class="panel-title">Próxima parada</h2>
+              <p class="panel-note">O resultado aparece aqui depois do sorteio.</p>
+            </div>
+          </div>
+          <div class="flaps" id="flaps"></div>
+          <div class="board-meta" id="meta"></div>
+          <div class="board-empty" id="empty"></div>
+
+          <div class="actions" id="actions">
+            <a class="btn-route" id="route" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-6-3V4l6 3m0 13l6-3m-6 3V7m6 10l6 3V7l-6-3m0 13V4"/></svg>
+              Ver rota
+            </a>
+            <button class="btn-visit" id="visit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/></svg>
+              Já fomos
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker">Sorteio</div>
+              <h2 class="panel-title">Distância e elegibilidade</h2>
+              <p class="panel-note">O sorteio considera apenas cidades não visitadas dentro do limite escolhido.</p>
+            </div>
+          </div>
+          <div class="filter">
+            <div class="filter-head">
+              <label for="range">Distância máxima</label>
+              <span class="val" id="range-val">75 km</span>
+            </div>
+            <input type="range" id="range" min="10" max="200" value="75" step="1">
+            <div class="range-scale"><span id="range-min">10 km</span><span id="range-max">200 km</span></div>
+            <div class="eligible" id="eligible"></div>
+          </div>
+
+          <button class="draw" id="draw">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3l-6.5 6.5"/><path d="M21 3v5"/><path d="M21 3h-5"/><circle cx="9" cy="15" r="6"/></svg>
+            Sortear passeio
+          </button>
+        </section>
+
+        <section class="panel restaurants-card">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker">Onde comer por lá</div>
+              <h2 class="panel-title" id="restaurant-title">Restaurantes para pesquisar</h2>
+              <p class="panel-note">Links externos para procurar opções na cidade sorteada.</p>
+            </div>
+          </div>
+          <div class="restaurant-empty" id="restaurant-empty">Sorteie uma cidade para pesquisar restaurantes.</div>
+          <div class="restaurant-links" id="restaurant-links" hidden>
+            <a id="tripadvisor-link" target="_blank" rel="noopener">Pesquisar no TripAdvisor</a>
+            <a id="restaurant-maps-link" target="_blank" rel="noopener">Pesquisar no Google Maps</a>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker">Mapa do destino</div>
+              <h2 class="panel-title" id="map-title">Localização</h2>
+              <p class="panel-note">O mapa usa embed público do Google Maps, sem API key.</p>
+            </div>
+          </div>
+          <div class="map-shell">
+            <iframe class="map-frame" id="map-frame" title="Mapa do destino" loading="lazy" referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+            <div class="map-empty" id="map-empty">Sorteie uma cidade para visualizar o mapa.</div>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel list-section">
+        <button class="list-toggle" id="list-toggle" aria-expanded="false">
+          Todas as cidades <span class="count" id="list-count"></span>
+          <span class="arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="list" id="list">
+          <div class="add-form">
+            <input class="city" id="add-city" type="text" placeholder="Nome da cidade" autocomplete="off">
+            <input class="km" id="add-km" type="number" inputmode="decimal" placeholder="km">
+            <button id="add-btn" aria-label="adicionar cidade">+</button>
+          </div>
+          <div class="list-tools">
+            <input class="list-search" id="city-search" type="search" placeholder="Buscar cidade" autocomplete="off" aria-label="Buscar cidade">
+            <label class="list-check" for="only-unvisited">
+              <input id="only-unvisited" type="checkbox">
+              <span>Só não visitadas</span>
+            </label>
+          </div>
+          <div id="rows"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer">
+      <div class="backup">
+        <button id="export">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+          Salvar backup
+        </button>
+        <button id="import">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 7V5a2 2 0 012-2h12a2 2 0 012 2v2"/></svg>
+          Restaurar backup
+        </button>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+      </div>
+      <div class="foot-center">
+        <button class="reset" id="reset">Voltar à lista original</button>
+        <p class="signature">
+          <svg class="orange" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="14" r="8" fill="#e88a2a"/><circle cx="12" cy="14" r="8" fill="none" stroke="#c9701c" stroke-width="1"/><path d="M12 6c1.5-1.6 3.4-1.9 4.6-1.4-.2 1.3-1.4 2.7-3 3" fill="#7f9a5a" stroke="#5f7a3f" stroke-width="1" stroke-linejoin="round"/></svg>
+          feito pra gente viajar mais
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hearts" id="hearts" aria-hidden="true"></div>
+  <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  const SEED = [{"cidade": "Barueri", "km": 37.0, "visitado": false}, {"cidade": "Carapicuíba", "km": 39.0, "visitado": true}, {"cidade": "Guarulhos", "km": 39.0, "visitado": false}, {"cidade": "Santana de Parnaíba", "km": 40.1, "visitado": true}, {"cidade": "Osasco", "km": 43.0, "visitado": true}, {"cidade": "Jandira", "km": 45.0, "visitado": true}, {"cidade": "Louveira", "km": 45.8, "visitado": true}, {"cidade": "Itupeva", "km": 48.5, "visitado": true}, {"cidade": "Itapevi", "km": 51.0, "visitado": true}, {"cidade": "Pirapora do Bom Jesus", "km": 52.0, "visitado": true}, {"cidade": "São Caetano do Sul", "km": 52.0, "visitado": true}, {"cidade": "Vinhedo", "km": 52.3, "visitado": true}, {"cidade": "Embu das Artes", "km": 53.0, "visitado": true}, {"cidade": "Taboão da Serra", "km": 53.0, "visitado": true}, {"cidade": "Cotia", "km": 54.0, "visitado": false}, {"cidade": "Itapecerica da Serra", "km": 56.0, "visitado": false}, {"cidade": "Itatiba", "km": 56.9, "visitado": true}, {"cidade": "Diadema", "km": 58.0, "visitado": false}, {"cidade": "Araçariguama", "km": 59.0, "visitado": false}, {"cidade": "Bom Jesus dos Perdões", "km": 61.0, "visitado": false}, {"cidade": "São Bernardo do Campo", "km": 62.0, "visitado": false}, {"cidade": "Cabreúva", "km": 63.3, "visitado": true}, {"cidade": "Vargem Grande Paulista", "km": 64.0, "visitado": false}, {"cidade": "Valinhos", "km": 64.9, "visitado": true}, {"cidade": "Campinas", "km": 67.9, "visitado": true}, {"cidade": "Bragança Paulista", "km": 69.0, "visitado": false}, {"cidade": "Nazaré Paulista", "km": 71.0, "visitado": false}, {"cidade": "Piracaia", "km": 72.0, "visitado": false}, {"cidade": "Santo André", "km": 72.0, "visitado": false}, {"cidade": "Arujá", "km": 74.0, "visitado": false}, {"cidade": "Embu-Guaçu", "km": 74.0, "visitado": false}, {"cidade": "Mauá", "km": 74.0, "visitado": false}, {"cidade": "São Lourenço da Serra", "km": 75.0, "visitado": false}, {"cidade": "São Roque", "km": 75.0, "visitado": false}, {"cidade": "Itu", "km": 76.0, "visitado": false}, {"cidade": "Morungaba", "km": 76.0, "visitado": false}, {"cidade": "Ferraz de Vasconcelos", "km": 77.0, "visitado": false}, {"cidade": "Salto", "km": 77.0, "visitado": false}, {"cidade": "Indaiatuba", "km": 79.0, "visitado": true}, {"cidade": "Vargem", "km": 79.0, "visitado": false}, {"cidade": "Itaquaquecetuba", "km": 80.0, "visitado": false}, {"cidade": "Mairinque", "km": 81.0, "visitado": false}, {"cidade": "Hortolândia", "km": 82.0, "visitado": false}, {"cidade": "Poá", "km": 84.0, "visitado": false}, {"cidade": "Suzano", "km": 86.0, "visitado": false}, {"cidade": "Alumínio", "km": 88.0, "visitado": false}, {"cidade": "Ibiúna", "km": 90.0, "visitado": false}, {"cidade": "Ribeirão Pires", "km": 90.0, "visitado": false}, {"cidade": "Santa Isabel", "km": 91.0, "visitado": false}, {"cidade": "Paulínia", "km": 92.0, "visitado": false}, {"cidade": "Juquitiba", "km": 93.0, "visitado": false}, {"cidade": "Sumaré", "km": 93.0, "visitado": false}, {"cidade": "Monte Mor", "km": 94.0, "visitado": false}, {"cidade": "Pinhalzinho", "km": 94.0, "visitado": false}, {"cidade": "Tuiuti", "km": 94.0, "visitado": false}, {"cidade": "Rio Grande da Serra", "km": 95.0, "visitado": false}, {"cidade": "Jaguariúna", "km": 96.0, "visitado": false}, {"cidade": "Mogi das Cruzes", "km": 96.0, "visitado": false}, {"cidade": "Joanópolis", "km": 97.0, "visitado": false}, {"cidade": "Nova Odessa", "km": 97.0, "visitado": false}];
+
+  const KEY="nossos_passeios_cities_v2";
+  const OLD_KEY="nossos_passeios_v1";
+  const RANGE_KEY="nossos_passeios_range_v1";
+  const LAST_DRAW_KEY="nossos_passeios_last_draw_v1";
+  const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let cities=loadCities();
+  let lastDrawnCityKey=loadLastDraw();
+
+  function loadCities(){
+    try{
+      const raw=localStorage.getItem(KEY);
+      if(raw){ const c=JSON.parse(raw); if(Array.isArray(c)&&c.length) return c; }
+      const old=localStorage.getItem(OLD_KEY);
+      if(old){ const vis=JSON.parse(old)||{}; return SEED.map(c=>({...c,visitado:!!vis[c.cidade]})); }
+    }catch(e){}
+    return SEED.map(c=>({...c}));
+  }
+  function persist(){ try{ localStorage.setItem(KEY,JSON.stringify(cities)); }catch(e){} }
+  function getCityKey(city){ return normalizeSearch(city.cidade); }
+  function loadLastDraw(){
+    try{ return localStorage.getItem(LAST_DRAW_KEY)||""; }catch(e){ return ""; }
+  }
+  function persistLastDraw(city){
+    lastDrawnCityKey=city?getCityKey(city):"";
+    try{
+      if(lastDrawnCityKey) localStorage.setItem(LAST_DRAW_KEY,lastDrawnCityKey);
+      else localStorage.removeItem(LAST_DRAW_KEY);
+    }catch(e){}
+  }
+  function drawPoolWithoutImmediateRepeat(pool){
+    if(pool.length<2||!lastDrawnCityKey) return pool;
+    const filtered=pool.filter(city=>getCityKey(city)!==lastDrawnCityKey);
+    return filtered.length?filtered:pool;
+  }
+  function loadRange(){
+    try{
+      const raw=localStorage.getItem(RANGE_KEY);
+      if(raw!==null){
+        const saved=Number(raw);
+        if(Number.isFinite(saved)) rangeEl.value=String(saved);
+      }
+    }catch(e){}
+  }
+  function persistRange(){ try{ localStorage.setItem(RANGE_KEY,rangeEl.value); }catch(e){} }
+
+  const $=id=>document.getElementById(id);
+  const flapsEl=$("flaps"),metaEl=$("meta"),emptyEl=$("empty");
+  const rangeEl=$("range"),rangeVal=$("range-val"),eligibleEl=$("eligible");
+  const drawBtn=$("draw"),actionsEl=$("actions"),routeEl=$("route"),visitBtn=$("visit");
+  const rowsEl=$("rows"),listEl=$("list"),listToggle=$("list-toggle"),listCount=$("list-count");
+  const searchEl=$("city-search"),onlyUnvisitedEl=$("only-unvisited");
+  const mapFrame=$("map-frame"),mapEmpty=$("map-empty"),mapTitle=$("map-title");
+  const restaurantEmpty=$("restaurant-empty"),restaurantLinks=$("restaurant-links"),restaurantTitle=$("restaurant-title");
+  const tripadvisorLink=$("tripadvisor-link"),restaurantMapsLink=$("restaurant-maps-link");
+  let current=null,spinning=false;
+
+  function toast(msg){
+    const t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),2600);
+  }
+
+  function refreshRangeBounds(){
+    if(!cities.length) return;
+    const kms=cities.map(c=>c.km);
+    const lo=Math.floor(Math.min(...kms)), hi=Math.ceil(Math.max(...kms));
+    rangeEl.min=lo; rangeEl.max=hi;
+    $("range-min").textContent=lo+" km"; $("range-max").textContent=hi+" km";
+    if(+rangeEl.value<lo) rangeEl.value=lo;
+    if(+rangeEl.value>hi) rangeEl.value=hi;
+    persistRange();
+  }
+  function updateProgress(){
+    const done=cities.filter(c=>c.visitado).length, total=cities.length;
+    const pct=total?Math.round(done/total*100):0;
+    $("p-done").textContent=done; $("p-total").textContent=total;
+    $("p-pct").textContent=pct+"%"; $("p-bar").style.width=pct+"%";
+  }
+  function eligible(){ const max=+rangeEl.value; return cities.filter(c=>!c.visitado&&c.km<=max); }
+  function updateEligible(){
+    rangeVal.textContent=rangeEl.value+" km";
+    const n=eligible().length;
+    eligibleEl.innerHTML=n>0
+      ? `<b>${n}</b> ${n===1?"cidade nova":"cidades novas"} até ${rangeEl.value} km`
+      : `Nenhuma cidade nova até ${rangeEl.value} km — aumente a distância ou revise as visitadas`;
+    drawBtn.disabled=n===0||spinning;
+  }
+
+  const CHARSET="ABCDEFGHIJKLMNOPQRSTUVWXYZÁÃÂÀÉÊÍÓÔÕÚÇ-";
+  function buildCells(text){
+    flapsEl.innerHTML="";
+    return [...text.toUpperCase()].map(ch=>{
+      const cell=document.createElement("div");
+      if(ch===" "){cell.className="cell space";flapsEl.appendChild(cell);return null;}
+      cell.className="cell";cell.textContent=ch;flapsEl.appendChild(cell);
+      return {el:cell,target:ch};
+    }).filter(Boolean);
+  }
+  const rand=s=>s[Math.floor(Math.random()*s.length)];
+
+  function reveal(city){
+    current=city; metaEl.innerHTML=""; emptyEl.style.display="none";
+    updateMap(city);
+    updateRestaurantCard(city);
+    const cells=buildCells(city.cidade);
+    if(reduceMotion){ spinning=false; showMeta(city); showActions(city); updateEligible(); return; }
+    const settleAt=cells.map((_,i)=>8+i*3+Math.floor(Math.random()*4));
+    let tick=0;
+    const iv=setInterval(()=>{
+      let allDone=true;
+      cells.forEach((c,i)=>{
+        if(tick>=settleAt[i]){c.el.textContent=c.target;return;}
+        allDone=false; c.el.textContent=rand(CHARSET);
+        c.el.classList.remove("flapping");void c.el.offsetWidth;c.el.classList.add("flapping");
+      });
+      tick++;
+      if(allDone){clearInterval(iv);spinning=false;showMeta(city);showActions(city);updateEligible();}
+    },55);
+  }
+  function tempoEstimado(km){
+    const min=Math.round(km/52*60/5)*5;
+    if(min<60) return min+" min";
+    const h=Math.floor(min/60),m=min%60;
+    return m?`${h}h${String(m).padStart(2,"0")}`:`${h}h`;
+  }
+  function showMeta(city){
+    metaEl.innerHTML=
+      `<span class="chip"><span class="u">a</span> ${city.km} km</span>`+
+      `<span class="chip"><span class="u">≈</span> ${tempoEstimado(city.km)} <span class="u">de carro</span></span>`;
+    requestAnimationFrame(()=>metaEl.querySelectorAll(".chip").forEach((c,i)=>setTimeout(()=>c.classList.add("show"),i*90)));
+  }
+  const mapsUrl=city=>"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(city.cidade+", SP, Brasil");
+  const mapEmbedUrl=city=>"https://www.google.com/maps?q="+encodeURIComponent(city.cidade+", SP, Brasil")+"&output=embed";
+  // Integração atual: links de pesquisa; recomendações automáticas exigiriam API oficial e backend.
+  const tripadvisorSearchUrl=city=>"https://www.tripadvisor.com.br/Search?q="+encodeURIComponent("restaurantes em "+city.cidade+" SP");
+  const restaurantMapsSearchUrl=city=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("restaurantes em "+city.cidade+" SP Brasil");
+  function updateMap(city){
+    if(!city){
+      mapFrame.src="";
+      mapFrame.hidden=true;
+      mapEmpty.hidden=false;
+      mapTitle.textContent="Localização";
+      return;
+    }
+    mapFrame.src=mapEmbedUrl(city);
+    mapFrame.hidden=false;
+    mapEmpty.hidden=true;
+    mapTitle.textContent=city.cidade;
+  }
+  function updateRestaurantCard(city){
+    if(!city){
+      restaurantTitle.textContent="Restaurantes para pesquisar";
+      restaurantEmpty.hidden=false;
+      restaurantLinks.hidden=true;
+      tripadvisorLink.removeAttribute("href");
+      restaurantMapsLink.removeAttribute("href");
+      return;
+    }
+    restaurantTitle.textContent="Restaurantes em "+city.cidade;
+    restaurantEmpty.hidden=true;
+    restaurantLinks.hidden=false;
+    tripadvisorLink.href=tripadvisorSearchUrl(city);
+    restaurantMapsLink.href=restaurantMapsSearchUrl(city);
+  }
+  function clearDestination(message=""){
+    current=null;
+    actionsEl.classList.remove("show");
+    flapsEl.innerHTML="";
+    metaEl.innerHTML="";
+    emptyEl.style.display=message?"block":"none";
+    emptyEl.textContent=message;
+    updateMap(null);
+    updateRestaurantCard(null);
+  }
+  function heartFilled(){return `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.18L12 21z"/></svg>`;}
+  function heartOutline(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/></svg>`;}
+  function showActions(city){
+    routeEl.href=mapsUrl(city);
+    visitBtn.innerHTML=city.visitado?`${heartFilled()} Já fomos ✓`:`${heartOutline()} Já fomos`;
+    actionsEl.classList.add("show");
+  }
+
+  function sortear(){
+    if(spinning) return;
+    const pool=eligible();
+    if(!pool.length){
+      clearDestination(cities.length&&cities.every(c=>c.visitado)
+        ? "Vocês já foram a todas as cidades da lista. Que casal! ✦"
+        : "Já visitaram tudo até essa distância. Puxa o slider pra mais longe 😉");
+      return;
+    }
+    spinning=true;drawBtn.disabled=true;actionsEl.classList.remove("show");
+    const drawPool=drawPoolWithoutImmediateRepeat(pool);
+    const city=drawPool[Math.floor(Math.random()*drawPool.length)];
+    persistLastDraw(city);
+    reveal(city);
+  }
+
+  function rainHearts(){
+    if(reduceMotion) return;
+    const box=$("hearts"),em=["❤️","💛","✨"];
+    for(let i=0;i<14;i++){
+      const s=document.createElement("span");s.textContent=em[i%em.length];
+      s.style.left=Math.random()*100+"%";s.style.animationDuration=(1.6+Math.random()*1.4)+"s";
+      s.style.animationDelay=(Math.random()*.3)+"s";s.style.fontSize=(14+Math.random()*16)+"px";
+      box.appendChild(s);setTimeout(()=>s.remove(),3200);
+    }
+  }
+  function toggleVisit(city){
+    const was=city.visitado; city.visitado=!city.visitado;
+    persist();updateProgress();renderRows();updateEligible();
+    if(current) showActions(current);
+    if(!was) rainHearts();
+  }
+
+  function addCity(){
+    const nameEl=$("add-city"),kmEl=$("add-km");
+    const name=nameEl.value.trim();
+    const km=parseFloat((kmEl.value+"").replace(",","."));
+    if(!name){ toast("Escreva o nome da cidade"); nameEl.focus(); return; }
+    if(!(km>0)){ toast("Coloque a distância em km"); kmEl.focus(); return; }
+    if(cities.some(c=>c.cidade.toLowerCase()===name.toLowerCase())){ toast("Essa cidade já está na lista"); return; }
+    cities.push({cidade:name,km:Math.round(km*10)/10,visitado:false});
+    cities.sort((a,b)=>a.km-b.km);
+    persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
+    nameEl.value="";kmEl.value="";nameEl.focus();
+    toast(`${name} adicionada ✦`);
+  }
+  function removeCity(city){
+    if(!confirm(`Remover "${city.cidade}" da lista?`)) return;
+    const removedKey=getCityKey(city);
+    cities=cities.filter(c=>c!==city);
+    if(current===city) clearDestination();
+    if(removedKey===lastDrawnCityKey) persistLastDraw(null);
+    persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
+  }
+
+  function normalizeSearch(value){
+    return value.toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  }
+  function escapeHtml(value){
+    return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  }
+  function filteredRows(){
+    const term=normalizeSearch(searchEl.value.trim());
+    const onlyUnvisited=onlyUnvisitedEl.checked;
+    return [...cities].sort((a,b)=>a.km-b.km).filter(city=>{
+      if(onlyUnvisited&&city.visitado) return false;
+      return !term||normalizeSearch(city.cidade).includes(term);
+    });
+  }
+  function clearListFilters(){
+    searchEl.value="";
+    onlyUnvisitedEl.checked=false;
+  }
+  function renderRows(){
+    rowsEl.innerHTML="";
+    const sorted=filteredRows();
+    if(!sorted.length){
+      const empty=document.createElement("p");
+      empty.className="list-empty";
+      empty.textContent=cities.length
+        ? "Nenhuma cidade encontrada com esse filtro."
+        : "Nenhuma cidade cadastrada ainda.";
+      rowsEl.appendChild(empty);
+    }
+    sorted.forEach(city=>{
+      const row=document.createElement("div");
+      row.className="row"+(city.visitado?" done":"");
+      const status=city.visitado?"Visitada":"Não visitada";
+      const visitLabel=city.visitado?"Desmarcar":"Marcar";
+      row.innerHTML=
+        `<div class="city-main">`+
+          `<span class="name">${escapeHtml(city.cidade)}</span>`+
+          `<span class="status">${status}</span>`+
+        `</div>`+
+        `<span class="km">${city.km} km</span>`+
+        `<div class="row-actions">`+
+          `<a class="maps" href="${mapsUrl(city)}" target="_blank" rel="noopener" aria-label="ver rota de ${escapeHtml(city.cidade)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Rota</span></a>`+
+          `<button class="tick" aria-label="${visitLabel.toLowerCase()} visitada"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>${visitLabel}</span></button>`+
+          `<button class="del" aria-label="remover ${escapeHtml(city.cidade)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg><span>Remover</span></button>`+
+        `</div>`;
+      row.querySelector(".tick").addEventListener("click",()=>toggleVisit(city));
+      row.querySelector(".del").addEventListener("click",()=>removeCity(city));
+      rowsEl.appendChild(row);
+    });
+    const done=cities.filter(c=>c.visitado).length;
+    const filterActive=!!searchEl.value.trim()||onlyUnvisitedEl.checked;
+    listCount.textContent=filterActive?`${sorted.length}/${cities.length}`:`${done}/${cities.length}`;
+  }
+
+  function exportBackup(){
+    try{
+      const blob=new Blob([JSON.stringify(cities,null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url; a.download="nossos_passeios_backup.json";
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      toast("Backup salvo ✦");
+    }catch(e){ toast("Não consegui salvar o backup aqui"); }
+  }
+  function importBackup(file){
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const data=JSON.parse(reader.result);
+        if(!Array.isArray(data)||!data.every(c=>c&&typeof c.cidade==="string"&&typeof c.km==="number"))
+          throw new Error("formato");
+        cities=data.map(c=>({cidade:c.cidade,km:c.km,visitado:!!c.visitado}));
+        clearListFilters();
+        persistLastDraw(null);
+        persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
+        clearDestination();
+        toast(`Backup restaurado — ${cities.length} cidades`);
+      }catch(e){ toast("Arquivo inválido. Use um backup deste app."); }
+    };
+    reader.readAsText(file);
+  }
+
+  rangeEl.addEventListener("input",()=>{ persistRange(); updateEligible(); });
+  searchEl.addEventListener("input",renderRows);
+  onlyUnvisitedEl.addEventListener("change",renderRows);
+  drawBtn.addEventListener("click",sortear);
+  visitBtn.addEventListener("click",()=>{ if(current) toggleVisit(current); });
+  $("add-btn").addEventListener("click",addCity);
+  $("add-city").addEventListener("keydown",e=>{ if(e.key==="Enter") $("add-km").focus(); });
+  $("add-km").addEventListener("keydown",e=>{ if(e.key==="Enter") addCity(); });
+  listToggle.addEventListener("click",()=>{
+    const open=listEl.classList.toggle("open");
+    listToggle.classList.toggle("open",open);
+    listToggle.setAttribute("aria-expanded",open);
+  });
+  $("export").addEventListener("click",exportBackup);
+  $("import").addEventListener("click",()=>$("import-file").click());
+  $("import-file").addEventListener("change",e=>{ if(e.target.files[0]) importBackup(e.target.files[0]); e.target.value=""; });
+  $("reset").addEventListener("click",()=>{
+    if(!confirm("Voltar à lista original da planilha? Isso descarta as cidades e marcações atuais.")) return;
+    cities=SEED.map(c=>({...c}));
+    clearListFilters();
+    persistLastDraw(null);
+    persist();refreshRangeBounds();updateProgress();renderRows();updateEligible();
+    clearDestination();
+  });
+
+  loadRange();refreshRangeBounds();updateProgress();renderRows();updateEligible();updateMap(null);updateRestaurantCard(null);
+})();
+</script>
+</body>
+</html>
