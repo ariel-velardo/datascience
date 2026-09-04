@@ -1,0 +1,13 @@
+﻿pandas
+numpy
+polars
+duckdb
+pyarrow
+openpyxl
+jupyterlab
+ipykernel
+matplotlib
+plotly
+scikit-learn
+requests
+tqdm
