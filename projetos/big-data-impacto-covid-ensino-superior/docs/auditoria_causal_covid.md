@@ -1015,7 +1015,150 @@ Escopo exato:
 
 ---
 
+## 21. Execução do passo mínimo e reavaliação dos gates
+
+**Status:** o passo de §20 foi **executado integralmente**. O relatório completo está em [gate_pre_tendencias.md](gate_pre_tendencias.md); esta seção registra os resultados que alteram os vereditos deste documento.
+
+**[FATO]** Nenhum DiD foi estimado, nenhum event study de *lags* foi produzido, nenhum matching foi feito e nenhuma estimativa de efeito causal existe no projeto. O único coeficiente pós-2020 reportado é a **quebra de 2020**, exigida pelo critério (iii) de §11.5 como referência de magnitude, e rotulada como tal.
+
+Artefatos produzidos: `data/interim/censo_cursos_slim_{2015..2019}.parquet` · `data/processed/modalidade_pre_covid_2015_2019.parquet` · `data/processed/tratamento_pre_covid.parquet` · `data/processed/painel_causal_pre_covid.parquet` · **`data/processed/gate_pre_tendencias.json`** · scripts `src/baixa_censos_pre_covid.py`, `src/constroi_tratamento_pre_covid.py`, `src/gate_pre_tendencias.py`.
+
+---
+
+### 21.1 O tratamento predeterminado foi construído — C1 passa
+
+**[FATO]** Censos 2015–2019 baixados com MD5 conferido (5/5), camada slim extraída, CSV e ZIP apagados: residual permanente de 4,69 MB contra 417,1 MB descomprimidos. Nenhum ano ≥ 2020 foi baixado.
+
+**[FATO]** Cobertura do tratamento sobre os 43.861 cursos do painel: **40.837 (93,11%)** — acima do limiar de 90% do GATE C1. Cursos com modalidade instável em 2015–2019: **0 de 40.730** — acima do limiar de 95% de estabilidade.
+
+> ### **GATE C1: 🔴 FALHA → 🟢 PASSA**
+
+### 21.2 O achado que reinterpreta o problema: a modalidade é imutável
+
+**[FATO] Nenhum dos 40.730 cursos observados em dois ou mais anos entre 2015 e 2019 mudou de `TP_MODALIDADE_ENSINO`.** E, entre os 39.289 cursos casados com o painel, a modalidade do snapshot de 2024 concorda com a de 2019 em **100,000%** dos casos.
+
+**[HIPÓTESE, com apoio forte]** `TP_MODALIDADE_ENSINO` é atributo **imutável** de `CO_CURSO`: quando uma IES passa a ofertar a distância um curso antes presencial, o Inep cria um **código novo**. Evidência **[FATO]**: dos 3.209 cursos EAD novos em 2019, **1.439 (44,8%)** pertencem a uma IES que já tinha em 2015 um curso presencial com o mesmo `CO_CINE_ROTULO`.
+
+**Consequência para §6.1 e §11.6:** a ressalva de que o teste anterior poderia estar contaminado por reclassificação pós-2020 está **fechada, e no sentido desfavorável** — não havia nada a corrigir na variável de tratamento. A falha de pré-tendências documentada em §11.6 **não era artefato: era o dado.**
+
+O ganho real da aquisição não foi o tratamento, e sim a **estratificação**: **[FATO]** o snapshot de 2024 estava certo sobre modalidade e área CINE (0% de divergência) e **errado sobre categoria administrativa (7,3%) e organização acadêmica (8,0%)**. Todas as especificações de §21.4 usam `CO_IES_2019`, `CATEGORIA_2019` e `CINE_AREA_2019`.
+
+### 21.3 O overlap melhorou pouco, e a concentração piorou
+
+**[FATO]** Restringindo aos cursos com tratamento pré-COVID estável, a renovação do braço EAD na coorte 2020 cai de 81,5% para **61,6%** — melhora real, mas **ainda muito acima do limiar de 35%** do GATE C4.
+
+**[FATO]** O número efetivo de IES (Kish) do braço EAD **não** melhorou: 11,6 (2015) · 14,6 (2019) · **13,4 (2020)**. Excluir cursos criados em 2020 remove sobretudo instituições menores, o que **aumenta** o peso dos grandes grupos. Na amostra de estimação da especificação principal, o N efetivo do braço EAD é **12,2 · 13,2 · 12,2** para τ = 0, 1 e 2.
+
+**[FATO]** As áreas CINE 05 (ciências naturais) e 08 (agricultura) seguem com 11 e 19 cursos EAD em 2019, contra 759 e 1.036 presenciais. Sem suporte utilizável.
+
+> **GATE C2: 🔴 FALHA (mantido)** · **GATE C4: 🔴 FALHA (mantido)** · **GATE C6: 🔴 FALHA (mantido, irrecuperável)**
+
+### 21.4 O teste de pré-tendências, refeito e estimado formalmente
+
+Event study sobre coortes, com τ fixo e efeito fixo `estrato × coorte` (§9), *outcome* = hazard condicional de desistência, ponderação pela população em risco, cluster por `CO_IES_2019`. **[FATO]** 33 especificações estimadas (3 τ × 5 estratos × 2 janelas, mais 3 não ponderadas), **todas com wild cluster bootstrap Rademacher de nulo imposto, B = 9.999, concluído** (seed 20260904).
+
+**A. Leads pré-2020, especificação principal S3 (IES × área CINE) [FATO]:**
+
+| τ | Ref. | Leads (δ, p.p., EP entre parênteses) | max\|δ\| | dp(δ) |
+|---|---|---|---|---|
+| 0 | 2019 | 2015: **+4,539** (2,44) · 2016: +1,904 (2,43) · 2017: +1,723 (1,27) · 2018: −0,064 (1,07) | **4,539** | 1,896 |
+| 1 | 2018 | 2015: +1,746 (2,03) · 2016: +1,037 (1,79) · 2017: +0,121 (1,06) | **1,746** | 0,815 |
+| 2 | 2017 | 2015: −1,391 (1,48) · 2016: **−3,288** (1,81) | **3,288** | 1,342 |
+
+Nas demais especificações o quadro é pior: **[FATO]** max\|δ\| chega a **6,698** (S1, τ=0) e **7,058** (S5, τ=0). Ao todo, **20 dos 45 leads** das especificações ponderadas excedem o limiar de FALHA de 2,0 p.p. de §11.5.
+
+**B. Intervalos de confiança e p-valores [FATO]:** os p-valores conjuntos vêm do WCB-R com B = 9.999; os IC95 individuais são CR1 analíticos (declarado em §8.6.1 do relatório). Com 12–13 IES efetivas no braço EAD, o CR1 é **anticonservador** — os IC95 individuais são, se algo, estreitos demais.
+
+**C. Teste conjunto dos leads (Wald / p por WCB-R, B = 9.999) [FATO]:**
+
+| Spec | τ=0 | τ=1 | τ=2 |
+|---|---|---|---|
+| S1 sem estrato | 19,21 / **0,0362** | 5,52 / 0,4556 | 5,01 / 0,1886 |
+| S2 IES | 10,52 / 0,2268 | 1,86 / 0,7809 | 3,33 / 0,3508 |
+| **S3 IES × área** | 13,54 / 0,1419 | 1,07 / 0,9147 | 4,83 / 0,1983 |
+| S4 IES × rótulo | 10,78 / 0,2153 | 0,62 / 0,9742 | 5,86 / 0,1539 |
+| S5 categoria × área | 15,64 / **0,0499** | 5,03 / 0,4635 | 3,43 / 0,3045 |
+| S3 não ponderado | 11,92 / **0,0254** | 1,51 / 0,6908 | 0,62 / 0,7460 |
+
+Nenhum p abaixo de 0,01. Três na faixa 0,01–0,10 — **exatamente as três especificações com os maiores leads**.
+
+**D. Magnitude dos leads versus a quebra de 2020 [FATO].** Comparando o maior lead com o coeficiente da coorte cujo ano-calendário é 2020:
+
+| τ | max\|δ_lead\| (S3) | Quebra de 2020 (S3) | Razão |
+|---|---|---|---|
+| 0 | 4,539 | +5,159 | **0,88×** |
+| 1 | 1,746 | +1,540 | **1,13×** |
+| 2 | 3,288 | −0,176 | **18,7×** |
+
+**Em 11 das 15 combinações τ × especificação, o maior lead supera a quebra de 2020.** Em τ = 2 não há quebra alguma a explicar: o coeficiente de 2020 é −0,176 p.p., indistinguível de zero, contra leads de até 3,288 p.p.
+
+### 21.5 Por que os p-valores altos não salvam o desenho
+
+A maioria dos p conjuntos é alta (0,14 a 0,97). **Isso é baixa potência, não tendências paralelas.**
+
+**[FATO]** Na especificação principal S3, τ = 0, o lead de 2015 é **+4,539 p.p. com IC95 = [−0,243 ; +9,320]**. O intervalo inclui zero — daí o p alto — **e inclui +9,320 p.p., isto é, 1,8 vez a própria quebra de 2020**. Em τ = 2, o IC do lead de 2016 comporta uma pré-tendência de até **39×** a quebra.
+
+O teste não distingue "ausência de pré-tendência" de "pré-tendência com o dobro do tamanho do efeito que se quer medir". **Um teste com esse intervalo é não informativo, não aprovador.** Ler H₀ não rejeitada como validação seria confundir ausência de evidência com evidência de ausência — e é precisamente o que o GATE C6, com ~12 IES efetivas, torna inevitável.
+
+Por isso o C3 é julgado por **magnitude substantiva e incerteza**, e não por p-valor. As duas leituras convergem: os leads são grandes em relação à quebra, e a incerteza é larga o bastante para acomodar pré-tendências ainda maiores.
+
+### 21.6 O agravante novo: a pré-tendência não tem sinal estável
+
+**[FATO]** Em τ = 0, os leads são **negativos e grandes** sem estrato (S1: −6,698) e **positivos e grandes** dentro da mesma IES e área (S3: +4,539) — a escolha do estrato **inverte o sinal**. Na própria especificação principal, o sinal inverte entre idades: **+4,539 (τ=0) → +1,746 (τ=1) → −3,288 (τ=2)**.
+
+**[HIPÓTESE]** É a assinatura de **recomposição**, não de tendência: o gap agregado é governado por quais IES e áreas entram na comparação em cada coorte — coerente com a renovação de 61,6% do braço EAD (§21.3) e com a dominância de uma dúzia de grupos (§11.4).
+
+Isto **agrava** o veredito de §11.6 de forma qualitativa: antes havia uma pré-tendência grande; agora sabe-se que ela é grande **e não é uma tendência**.
+
+> ### **GATE C3: 🔴 FALHA — agora conclusiva**
+>
+> Motivos, cada um suficiente: (i) leads de +4,539 e −3,288 p.p. contra limiar de 2,0; (iii) em τ=2, `σ_pré` é **7,6×** a quebra de 2020; (iv) o sinal inverte entre estratos e entre idades; (v) o *leave-one-institution-out* **não foi executado**, o que torna PASSA inatingível por construção. Os p altos não sustentam veredito favorável (§21.5).
+
+### 21.7 Painel de gates atualizado
+
+| Gate | Antes | **Depois** | Recuperável? |
+|---|---|---|---|
+| **C1** Tratamento predeterminado | 🔴 FALHA | 🟢 **PASSA** | — resolvido |
+| **C2** Overlap | 🔴 FALHA | 🔴 **FALHA** | Parcial, ao custo de validade externa |
+| **C3** Tendências paralelas | 🔴 FALHA *(não conclusiva)* | 🔴 **FALHA** *(conclusiva)* | **Não** — testada com o tratamento correto |
+| **C4** Estabilidade de composição | 🔴 FALHA | 🔴 **FALHA** | Parcial; renovação EAD 61,6% > 35% |
+| **C5** Age/period/cohort | 🟡 ALERTA | 🟡 **ALERTA** | Indeterminação linear permanente |
+| **C6** Dependência intra-IES | 🔴 FALHA | 🔴 **FALHA** | **Não** — 12,2 IES efetivas em S3 |
+| **C7** Sensibilidade | ⚪ não avaliado | ⚪ **não avaliado** | depende de estimativas que não devem existir |
+
+**C1 era o único gate barato e recuperável, e foi recuperado. Não salvou o desenho.** Essa é a informação decisiva que o passo de §20 comprou: o custo de continuar era baixo, e agora está pago; o resultado é negativo.
+
+### 21.8 Veredito final
+
+> # **CAUSAL NÃO IDENTIFICADO — ENCERRAR A LINHA CAUSAL**
+
+O veredito de §19 é **mantido e agora fechado**. A condição de revisão ali estabelecida — "resolver C1 e refazer o teste de pré-tendências com o tratamento predeterminado" — foi **cumprida**, e o teste **não reverteu**. Não há mais um teste barato pendente que possa mudar a conclusão.
+
+Aplicando a tabela de critério de continuação de §20: **resultado = FALHA → "Encerrar a linha causal."**
+
+**Nenhum DiD ou event study de efeito deve ser estimado ou reportado.** A regra estabelecida em §19 permanece vinculante, e agora sem cláusula de revisão pendente.
+
+**O que permanece verdadeiro e não é atingido por este veredito:**
+
+- Não significa que a pandemia não afetou a evasão. Significa que **este desenho, com estes dados, não consegue medir isso.**
+- O painel multi-coorte **não** foi desperdiçado. Ele sustenta um trabalho descritivo e longitudinal forte: a expansão do EAD de 24,3% para 50,4% dos ingressantes (2015→2020), a recomposição de entrada de 2020, o perfil de hazard condicional por idade de trajetória.
+- **[FATO]** O achado de §21.2 — a modalidade é atributo imutável de `CO_CURSO`, e a migração para EAD aparece como cursos novos, 44,8% deles na mesma IES e mesmo rótulo CINE de um presencial pré-existente — é um resultado substantivo por si só, e explica **mecanicamente** por que o DiD não pode funcionar: o "grupo tratado" e o "grupo de controle" não são a mesma população observada em dois regimes, são dois cadastros distintos que se renovam a taxas diferentes.
+
+**Reorientação recomendada, em ordem de retorno sobre esforço:**
+
+1. **Trabalho descritivo e longitudinal multi-coorte**, plenamente sustentado pelos dados já em disco.
+2. **Capítulo metodológico sobre por que a identificação falha**, ancorado nos números deste documento e do relatório do gate — com valor didático real, e honesto.
+3. **Desenho alternativo de §8.5** (variação de severidade local), apenas se houver apetite por dados externos, e sabendo que ele não reaproveita o EAD como comparação.
+
+### 21.9 Pendência declarada
+
+O *leave-one-institution-out* das 10 maiores IES EAD — critério (v) de §11.5 e teste **F2** de §17 — **não foi executado**. Ele não é necessário para o veredito de FALHA, já determinado pelos critérios (i), (iii) e (iv), e só poderia agravá-lo. Fica registrado como **não executado**, para que ninguém o leia como aprovado.
+
+---
+
 ## Anexo — O que foi feito nesta auditoria
+
+> **Escopo deste anexo:** ele descreve a auditoria original (§1–§20). O passo de §20 foi executado depois; os artefatos dessa execução — Censos 2015–2019, painel causal e o JSON do gate — estão listados em **§21** e em [gate_pre_tendencias.md](gate_pre_tendencias.md).
 
 **Nenhum dado bruto foi modificado. Nenhum Censo histórico foi baixado. Nenhum modelo causal foi implementado. Nenhum commit foi feito. O README não foi alterado.**
 

@@ -335,6 +335,235 @@ Amplitude pré: **4,334 p.p.** · dp: **2,173 p.p.** · variação 2019→2020: 
 
 > **Em todas as três idades de trajetória, a oscilação do gap dentro do período pré-choque é maior — em τ=2, muito maior — do que a mudança observada em 2020.** As séries com tratamento predeterminado são praticamente idênticas às da auditoria anterior, o que era esperado depois de §5.2.
 
-<!-- RESULTADOS_REGRESSAO -->
+## 8.5 Resultados do event study — leads pré-2020
+
+**[FATO]** Fonte: `data/processed/gate_pre_tendencias.json` — 33 especificações, todas com wild cluster bootstrap **B = 9.999** concluído (seed 20260904). Coeficientes em pontos percentuais de hazard, com erro-padrão CR1 clusterizado por `CO_IES_2019` entre parênteses.
+
+> **Leitura:** `δ_j` é o desvio, na coorte `j`, do gap presencial−EAD em relação ao gap da coorte de referência. Sob tendências paralelas, **todos** os `δ_j` deveriam ser ≈ 0.
+
+### τ = 0 (ref. = coorte 2019, 4 leads)
+
+| Spec | δ 2015 | δ 2016 | δ 2017 | δ 2018 | max\|δ\| | dp(δ) |
+|---|---|---|---|---|---|---|
+| **S1** sem estrato | −1,162 (5,03) | **−6,698** (2,67) | −1,867 (1,68) | **−5,216** (1,88) | **6,698** | 2,651 |
+| **S2** IES | **+4,758** (2,28) | **+2,424** (2,12) | +1,694 (1,17) | +0,349 (1,05) | **4,758** | 1,847 |
+| **S3** IES × área *(principal)* | **+4,539** (2,44) | +1,904 (2,43) | +1,723 (1,27) | −0,064 (1,07) | **4,539** | 1,896 |
+| **S4** IES × rótulo | **+4,257** (2,25) | **+2,207** (2,47) | +1,878 (1,47) | −0,549 (1,24) | **4,257** | 1,970 |
+| **S5** categoria × área | **−3,889** (4,58) | **−7,058** (2,68) | **−3,263** (1,80) | **−6,299** (1,83) | **7,058** | 1,836 |
+| S3 **não ponderado** | **+4,258** (1,50) | **+2,520** (1,50) | **+2,937** (0,98) | +1,736 (1,06) | **4,258** | 1,055 |
+
+### τ = 1 (ref. = coorte 2018, 3 leads)
+
+| Spec | δ 2015 | δ 2016 | δ 2017 | max\|δ\| | dp(δ) |
+|---|---|---|---|---|---|
+| **S1** sem estrato | **+5,151** (3,40) | **+2,612** (2,97) | −0,886 (2,19) | **5,151** | 3,031 |
+| **S2** IES | **+2,231** (1,74) | +1,592 (1,71) | +0,313 (1,06) | **2,231** | 0,977 |
+| **S3** IES × área *(principal)* | +1,746 (2,03) | +1,037 (1,79) | +0,121 (1,06) | **1,746** | 0,815 |
+| **S4** IES × rótulo | +1,420 (2,60) | +0,855 (2,60) | +0,376 (1,34) | **1,420** | 0,523 |
+| **S5** categoria × área | **+3,988** (2,91) | +1,487 (2,55) | −1,184 (1,95) | **3,988** | 2,586 |
+| S3 **não ponderado** | +1,619 (1,51) | +1,174 (1,29) | +1,477 (1,33) | **1,620** | 0,227 |
+
+### τ = 2 (ref. = coorte 2017, 2 leads)
+
+| Spec | δ 2015 | δ 2016 | max\|δ\| | dp(δ) |
+|---|---|---|---|---|
+| **S1** sem estrato | −1,882 (1,48) | **−4,335** (2,43) | **4,335** | 1,735 |
+| **S2** IES | −0,483 (1,51) | **−2,985** (1,73) | **2,985** | 1,769 |
+| **S3** IES × área *(principal)* | −1,391 (1,48) | **−3,288** (1,81) | **3,288** | 1,342 |
+| **S4** IES × rótulo | −1,960 (1,72) | **−2,852** (1,52) | **2,852** | 0,630 |
+| **S5** categoria × área | −1,907 (1,44) | **−3,025** (2,27) | **3,025** | 0,790 |
+| S3 **não ponderado** | −1,058 (1,35) | −0,330 (1,34) | **1,058** | 0,515 |
+
+Em negrito, `|δ| ≥ 2,0` p.p. — o limiar de FALHA de §11.5. **[FATO]** 20 dos 45 leads estimados nas especificações ponderadas excedem esse limiar.
+
+**Amostra de estimação da especificação principal S3 [FATO]:**
+
+| τ | Linhas | Cursos (pres. / EAD) | IES | Estratos × coorte | N efetivo IES EAD |
+|---|---|---|---|---|---|
+| 0 | 33.625 | 7.841 / 2.793 | 320 | 2.629 | **12,2** |
+| 1 | 25.653 | 7.671 / 2.718 | 314 | 1.957 | **13,2** |
+| 2 | 17.002 | 6.279 / 1.819 | 236 | 1.252 | **12,2** |
+
+### 8.5.1 A instabilidade que mais pesa: o sinal do lead depende da especificação
+
+**[FATO]** Em τ = 0, os leads são **negativos e grandes** sem estrato (S1: −6,698) e **positivos e grandes** dentro da mesma IES e da mesma área CINE (S3: +4,539). A escolha do estrato **inverte o sinal da pré-tendência**, com magnitude comparável nos dois sentidos.
+
+**[FATO]** Na especificação principal S3, o sinal também **inverte entre idades de trajetória**: +4,539 (τ=0) · +1,746 (τ=1) · −3,288 (τ=2).
+
+**[HIPÓTESE]** É o que se espera quando não existe tendência diferencial subjacente estável, e sim **recomposição**: o gap agregado é dominado por quais IES e quais áreas entram na comparação em cada coorte — consistente com §7.2 (renovação de 61,6% do braço EAD na coorte 2020) e com a dominância de uma dúzia de grupos educacionais (§11.4 da auditoria).
+
+Um pré-teste cujo **sinal** depende do estrato e da idade não sustenta a hipótese de tendências paralelas em nenhuma das duas direções.
 
 ---
+
+## 8.6 Teste conjunto dos leads — wild cluster bootstrap
+
+**[FATO]** H₀: todos os `δ_j` de lead são nulos. Estatística de Wald com VCV CR1; p-valor por **wild cluster bootstrap Rademacher com o nulo imposto (WCB-R), B = 9.999**, reamostragem por `CO_IES_2019`.
+
+| Spec | τ=0 — Wald / p | τ=1 — Wald / p | τ=2 — Wald / p |
+|---|---|---|---|
+| **S1** sem estrato | 19,21 / **0,0362** | 5,52 / 0,4556 | 5,01 / 0,1886 |
+| **S2** IES | 10,52 / 0,2268 | 1,86 / 0,7809 | 3,33 / 0,3508 |
+| **S3** IES × área *(principal)* | 13,54 / 0,1419 | 1,07 / 0,9147 | 4,83 / 0,1983 |
+| **S4** IES × rótulo | 10,78 / 0,2153 | 0,62 / 0,9742 | 5,86 / 0,1539 |
+| **S5** categoria × área | 15,64 / **0,0499** | 5,03 / 0,4635 | 3,43 / 0,3045 |
+| S3 **não ponderado** | 11,92 / **0,0254** | 1,51 / 0,6908 | 0,62 / 0,7460 |
+
+**[FATO]** Incluir a coorte pós-2020 na regressão (`inclui_pos_2020 = true`) não altera os leads e move o p-valor conjunto, no máximo, na terceira casa decimal (ex.: S2/τ=0: 0,2268 → 0,2261). Os leads são robustos à janela.
+
+**Nenhum p conjunto cai abaixo de 0,01.** Três caem na faixa 0,01–0,10 — e são exatamente as três especificações com os **maiores** leads (S1 e S5 em τ=0, e a versão não ponderada). Os p altos concentram-se em τ=1 e τ=2, onde há apenas **3 e 2 leads**.
+
+### 8.6.1 Escopo exato da inferência bootstrap — declarado
+
+**[FATO]** O WCB-R de B = 9.999 foi aplicado ao **teste conjunto**. Os erros-padrão e IC95 individuais dos leads são **CR1 analíticos**, não bootstrap.
+
+Isso importa, e por isso está declarado: **[FATO]** o número efetivo de IES do braço EAD na amostra de estimação de S3 é **12,2 · 13,2 · 12,2** — muito abaixo do limiar de 20 do GATE C6. Com esse número de clusters, o CR1 analítico é **anticonservador**: os IC95 individuais são, se algo, **estreitos demais**. O veredito desta seção não depende disso, porque se apoia em magnitude e não em significância — mas **nenhuma leitura de significância individual a 5% deve ser feita a partir das tabelas de §8.5**.
+
+---
+
+## 8.7 Magnitude dos leads versus a quebra de 2020
+
+Comparação exigida pelo critério (iii) de §11.5. A "quebra de 2020" é o coeficiente da coorte cujo **ano-calendário é 2020** (τ=0 → coorte 2020; τ=1 → coorte 2019; τ=2 → coorte 2018). **Ela é reportada exclusivamente como referência de magnitude, e não é uma estimativa de efeito causal.**
+
+| τ | Spec | max\|δ_lead\| | quebra 2020 (EP) | **razão lead / quebra** |
+|---|---|---|---|---|
+| 0 | S1 | 6,698 | +1,220 (0,98) | **5,49×** |
+| 0 | S2 | 4,758 | +4,815 (1,07) | 0,99× |
+| 0 | **S3** *(principal)* | **4,539** | **+5,159 (1,13)** | **0,88×** |
+| 0 | S4 | 4,257 | +5,917 (1,01) | 0,72× |
+| 0 | S5 | 7,058 | +2,132 (1,12) | **3,31×** |
+| 1 | S1 | 5,151 | +0,778 (1,11) | **6,62×** |
+| 1 | S2 | 2,231 | +1,591 (1,15) | **1,40×** |
+| 1 | **S3** *(principal)* | **1,746** | **+1,540 (0,97)** | **1,13×** |
+| 1 | S4 | 1,420 | +1,467 (1,13) | 0,97× |
+| 1 | S5 | 3,988 | +1,477 (1,09) | **2,70×** |
+| 2 | S1 | 4,335 | +0,016 (1,69) | **274×** |
+| 2 | S2 | 2,985 | −0,656 (1,50) | **4,55×** |
+| 2 | **S3** *(principal)* | **3,288** | **−0,176 (1,26)** | **18,7×** |
+| 2 | S4 | 2,852 | +0,438 (1,34) | **6,51×** |
+| 2 | S5 | 3,025 | +1,573 (1,59) | **1,92×** |
+
+**[FATO] Em 11 das 15 combinações τ × especificação, o maior lead pré-2020 supera a quebra de 2020.** Na especificação principal S3, a razão é 0,88× (τ=0), 1,13× (τ=1) e 18,7× (τ=2).
+
+**[FATO]** Critério (iii) de §11.5 — `σ_pré` versus `|θ̂|` — com `σ_pré = dp(δ_lead)` e `|θ̂|` = quebra de 2020, na especificação principal S3:
+
+| τ | dp(δ) | quebra 2020 | `\|θ̂\|/3` | Faixa do critério |
+|---|---|---|---|---|
+| 0 | 1,896 | 5,159 | 1,720 | `\|θ̂\|/3 ≤ σ < \|θ̂\|` → **ALERTA** |
+| 1 | 0,815 | 1,540 | 0,513 | `\|θ̂\|/3 ≤ σ < \|θ̂\|` → **ALERTA** |
+| 2 | 1,342 | 0,176 | 0,059 | `σ ≫ \|θ̂\|` (7,6×) → **FALHA** |
+
+Somente τ = 0 apresenta uma quebra de 2020 que se destaca da oscilação pré-choque — e, mesmo ali, apenas sob estratificação *within*-IES, e por margem estreita. Em τ = 2 **não há quebra**: o coeficiente de 2020 é −0,176 p.p., indistinguível de zero, contra leads de até 3,288 p.p.
+
+---
+
+## 8.8 O que os p-valores altos **não** dizem
+
+A maioria dos p conjuntos é alta (0,14 a 0,97). **Isso não é evidência de tendências paralelas.** É o que a baixa potência produz quando o braço de comparação tem ~12 IES efetivas.
+
+**[FATO]** Na especificação principal S3, τ = 0, o lead de 2015 vale **+4,539 p.p., com IC95 = [−0,243 ; +9,320]**. Esse intervalo:
+
+- **inclui zero** — daí o p alto; e
+- **inclui +9,320 p.p., ou seja, 1,8 vez a própria quebra de 2020 (+5,159 p.p.).**
+
+O teste não distingue "ausência de pré-tendência" de "pré-tendência com o dobro do tamanho do efeito que se pretende medir". Um teste com esse intervalo **não tem poder para validar coisa alguma**: ele é não informativo, não aprovador.
+
+O mesmo vale nas demais idades **[FATO]**:
+
+| τ | Lead | δ | IC95 | Quebra 2020 | O IC comporta pré-tendência de até |
+|---|---|---|---|---|---|
+| 0 | 2015 | +4,539 | [−0,243 ; +9,320] | +5,159 | **1,8×** a quebra |
+| 1 | 2015 | +1,746 | [−2,240 ; +5,733] | +1,540 | **3,7×** a quebra |
+| 2 | 2016 | −3,288 | [−6,828 ; +0,251] | −0,176 | **39×** a quebra |
+
+> **Regra aplicada aqui:** o GATE C3 é julgado por **magnitude substantiva e incerteza**, não por p-valor. Aceitar H₀ num teste sem potência é confundir *ausência de evidência* com *evidência de ausência*. As pré-tendências estimadas são **grandes em relação à quebra de 2020**, e a incerteza em torno delas é **larga o bastante para acomodar pré-tendências ainda maiores**. As duas leituras apontam na mesma direção, e nenhuma delas é favorável.
+
+---
+
+## 8.9 Aplicação dos critérios de §11.5
+
+Especificação principal S3 (IES × área CINE), por idade de trajetória:
+
+| Critério (§11.5) | τ = 0 | τ = 1 | τ = 2 |
+|---|---|---|---|
+| (i) `\|δ_j\| < 1,0` (PASSA) / `< 2,0` (ALERTA) | **+4,539** → 🔴 **FALHA** | 1,746 → 🟡 ALERTA | **−3,288** → 🔴 **FALHA** |
+| (ii) p conjunto | 0,1419 (> 0,10) | 0,9147 (> 0,10) | 0,1983 (> 0,10) |
+| (iii) `σ_pré` vs `\|θ̂\|` | 1,896 vs 5,159 → 🟡 ALERTA | 0,815 vs 1,540 → 🟡 ALERTA | 1,342 vs 0,176 → 🔴 **FALHA** |
+| (iv) nenhum lead muda de sinal | **inverte** (+4,539 … −0,064) → 🔴 **FALHA** | ok (todos +) | ok (todos −) |
+| (v) sobrevive ao *leave-one-institution-out* | ⚪ **NÃO EXECUTADO** | ⚪ **NÃO EXECUTADO** | ⚪ **NÃO EXECUTADO** |
+| (vi) ≥ 3 leads (PASSA) / ≥ 2 (ALERTA) | 4 → ok | 3 → ok | 2 → só ALERTA |
+| **Veredito por idade** | 🔴 **FALHA** | 🟡 **ALERTA** | 🔴 **FALHA** |
+
+Fora da especificação principal o quadro é **pior**, não melhor: **[FATO]** em τ = 0, S1 e S5 têm leads de 6,698 e 7,058 p.p., com p conjunto de 0,0362 e 0,0499; a versão não ponderada tem p = 0,0254 com quatro leads acima de 1,7 p.p.
+
+### Veredito do GATE C3
+
+> # 🔴 **FALHA**
+
+**Motivos determinantes — cada um suficiente isoladamente:**
+
+1. **[FATO]** Leads de **+4,539 p.p. (τ=0)** e **−3,288 p.p. (τ=2)** na especificação principal, contra o limiar de FALHA de 2,0 p.p. de §11.5. Ao todo, **20 dos 45 leads** das especificações ponderadas excedem esse limiar.
+2. **[FATO]** Em τ = 2, a oscilação pré-choque (dp 1,342) é **7,6 vezes** a quebra de 2020 (0,176 p.p.). Não há degrau a explicar.
+3. **[FATO]** O **sinal** da pré-tendência inverte com o estrato (τ=0: −6,698 em S1 contra +4,539 em S3) e com a idade de trajetória (S3: +4,539 → +1,746 → −3,288). Critério (iv) violado.
+4. **[FATO]** O critério (v) — *leave-one-institution-out* das 10 maiores IES EAD (teste F2 de §17) — **não foi executado**. PASSA é, por construção, inatingível sem ele.
+5. Os p-valores altos **não sustentam** veredito favorável: os IC95 dos leads comportam pré-tendências de **1,8× a 39×** a quebra de 2020 (§8.8).
+
+**A ressalva de §11.6 da auditoria está fechada.** O teste foi refeito com tratamento **predeterminado** (Censos 2015–2019; modalidade verificada como imutável em §5.2), com estratificação genuinamente pré-choque, com event study formal e com wild cluster bootstrap de 9.999 réplicas. **O resultado não se reverteu** — como antecipado em §11.6, a oscilação era grande demais e o braço EAD, concentrado demais.
+
+O que a nova evidência **acrescenta** ao veredito anterior é qualitativo, e agrava: sabe-se agora que a pré-tendência **não tem sinal estável**. Antes havia uma pré-tendência grande; agora sabe-se que ela é grande **e não é uma tendência** — é recomposição.
+
+---
+
+## 9. Veredito e recomendação
+
+### 9.1 Situação dos gates após esta execução
+
+| Gate | Antes | **Depois** | Observação |
+|---|---|---|---|
+| **C1** Tratamento predeterminado | 🔴 FALHA | 🟢 **PASSA** | **[FATO]** cobertura 93,11% (≥ 90%); 0 cursos com modalidade instável em 2015–2019 (≥ 95%) |
+| **C2** Overlap | 🔴 FALHA | 🔴 **FALHA** | áreas CINE 05 e 08 sem suporte; 4–5 IES concentram 50% dos ingressantes EAD |
+| **C3** Tendências paralelas | 🔴 FALHA *(não conclusivo)* | 🔴 **FALHA** *(conclusivo)* | §8.9 |
+| **C4** Estabilidade de composição | 🔴 FALHA | 🔴 **FALHA** | renovação do braço EAD cai de 81,5% para 61,6% — segue acima de 35% |
+| **C5** Age/period/cohort | 🟡 ALERTA | 🟡 **ALERTA** | indeterminação linear permanente (§10.6 da auditoria) |
+| **C6** Dependência intra-IES | 🔴 FALHA | 🔴 **FALHA** | **[FATO]** N efetivo de IES EAD na amostra S3: **12,2 · 13,2 · 12,2** |
+| **C7** Sensibilidade | ⚪ não avaliado | ⚪ **não avaliado** | depende de estimativas que não devem existir |
+
+**C1 foi recuperado — e recuperá-lo não salvou o desenho.** Era exatamente o teste que valia a pena fazer: barato, decisivo, e agora respondido.
+
+### 9.2 Recomendação
+
+> ## **ENCERRAR a linha causal COVID × presencial/EAD.**
+
+Aplicando a tabela de critério de continuação de §20 da auditoria: **resultado do passo 5 = FALHA → "Encerrar a linha causal."**
+
+Não é um gate marginal. **[FATO]** Três gates fundamentais permanecem em falha (C2, C3, C4), e um deles — **C6** — é **irrecuperável por construção**: o braço de comparação tem ~12 instituições efetivas. Nenhum estimador, amostra ou especificação altera a estrutura do mercado brasileiro de EAD.
+
+**Nenhum DiD deve ser estimado.** A regra de §19 da auditoria permanece vinculante: enquanto C3 estiver em falha, nenhuma estimativa de efeito deve ser reportada, nem mesmo como preliminar.
+
+**Reorientação recomendada, em ordem de retorno sobre esforço:**
+
+1. **Trabalho descritivo e longitudinal multi-coorte** — plenamente sustentado pelos dados já em disco: a expansão do EAD de 24,3% para 50,4% dos ingressantes (2015 → 2020), a recomposição da entrada de 2020, o perfil de hazard condicional por idade de trajetória, a renovação do parque EAD.
+2. **Capítulo metodológico sobre por que a identificação falha**, ancorado nos números deste documento. **[FATO]** O achado de §5.2 — a modalidade é atributo imutável de `CO_CURSO`, e a migração para EAD aparece como **cursos novos**, sendo que 44,8% dos cursos EAD novos de 2019 pertencem a uma IES que já tinha um presencial com o mesmo rótulo CINE em 2015 — é um resultado substantivo e publicável por si só, e explica **mecanicamente** por que o desenho DiD não pode funcionar aqui.
+3. **Desenho alternativo de §8.5 da auditoria** (variação de severidade local), apenas se houver apetite por dados externos — sabendo que ele não reaproveita o braço EAD como comparação.
+
+### 9.3 O que este documento **não** fez
+
+**[FATO]** Nenhum DiD estimado · nenhum event study de *lags* · nenhum matching · nenhuma estimativa de efeito causal · nenhum dado bruto modificado · nenhum Censo de ano ≥ 2020 baixado · nenhum commit.
+
+O único coeficiente pós-2020 reportado é a **quebra de 2020**, exigida pelo critério (iii) de §11.5 como referência de magnitude, e rotulada como tal em todas as tabelas e no próprio JSON: `"papel": "QUEBRA/pos (referencia de magnitude, NAO e efeito)"`.
+
+### 9.4 Pendência declarada
+
+O *leave-one-institution-out* das 10 maiores IES EAD (critério (v) de §11.5; teste F2 de §17) **não foi executado**. Ele não é necessário para o veredito de FALHA — já determinado pelos critérios (i), (iii) e (iv) — e só poderia agravá-lo. Fica registrado como **não executado**, para que ninguém o leia como aprovado.
+
+---
+
+## 10. Reprodução
+
+```bash
+python src/baixa_censos_pre_covid.py        # Censos 2015-2019, slim, MD5 conferido
+python src/constroi_tratamento_pre_covid.py # tratamento predeterminado + painel causal
+python src/gate_pre_tendencias.py           # event study dos leads + WCB B=9.999
+```
+
+**[FATO]** Saída do último passo: `data/processed/gate_pre_tendencias.json` — 33 especificações (3 τ × 5 estratos × 2 janelas, mais 3 não ponderadas), todas com `"B": 9999`. Seed fixa `20260904`; o wild bootstrap é determinístico dado o seed, de modo que as tabelas acima são reproduzíveis sem nova execução.
