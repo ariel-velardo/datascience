@@ -1,0 +1,68 @@
+# ============================================================
+# Python
+# ============================================================
+
+.venv/
+venv/
+env/
+
+__pycache__/
+*.py[cod]
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ============================================================
+# Jupyter
+# ============================================================
+
+.ipynb_checkpoints/
+
+# ============================================================
+# IDE / Sistema
+# ============================================================
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# Dados
+#
+# Dados brutos e derivados nao sao versionados.
+# Mantemos apenas .gitkeep para preservar a estrutura.
+# ============================================================
+
+data/raw/*
+!data/raw/.gitkeep
+
+data/interim/*
+!data/interim/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+
+# ============================================================
+# Outputs reproduziveis
+# ============================================================
+
+outputs/figures/*
+!outputs/figures/.gitkeep
+
+outputs/tables/*
+!outputs/tables/.gitkeep
+
+# ============================================================
+# Temporarios
+# ============================================================
+
+*.zip
+*.7z
+*.rar
+*.tmp
+*.temp
+*.log
