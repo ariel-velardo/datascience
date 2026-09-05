@@ -1,10 +1,73 @@
+# ============================================================
+# Python
+# ============================================================
+
 .venv/
+venv/
+env/
+
 __pycache__/
+*.py[cod]
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+
+# ============================================================
+# Jupyter
+# ============================================================
+
 .ipynb_checkpoints/
 
-data/raw/
-data/interim/
-data/processed/
+
+# ============================================================
+# IDE / Sistema operacional
+# ============================================================
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# ============================================================
+# Dados
+#
+# Mantemos somente os arquivos .gitkeep para preservar
+# a estrutura das pastas no repositorio.
+# ============================================================
+
+data/raw/*
+!data/raw/.gitkeep
+
+data/interim/*
+!data/interim/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+
+
+# ============================================================
+# Outputs reproduziveis
+# ============================================================
+
+outputs/figures/*
+!outputs/figures/.gitkeep
+
+outputs/tables/*
+!outputs/tables/.gitkeep
+
+
+# ============================================================
+# Arquivos temporarios / downloads
+# ============================================================
 
 *.zip
-*.parquet
+*.tmp
+*.temp
+*.log
